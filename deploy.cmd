@@ -1,0 +1,1 @@
+copy/y dist\*.* \github.io\dharmacloud.github.io\swipegallery

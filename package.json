@@ -1,0 +1,19 @@
+{
+  "name": "swipegallery",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "esbuild": "^0.17.19",
+    "esbuild-svelte": "^0.7.3",
+    "svelte": "^3.59.1",
+    "svelte-swipe": "^1.9.2"
+  }
+}
