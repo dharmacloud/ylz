@@ -1,0 +1,22 @@
+{
+    "name": "永樂北藏",
+    "short_name": "YongLeBeiCang",
+    "description": "永樂北藏",
+    "icons": [
+        {
+            "src": "logo128.png",
+            "sizes": "128x128",
+            "type": "image/png"
+        },
+        {
+            "src": "logo512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "index.html",
+    "display": "fullscreen",
+    "theme_color": "#34a1ff",
+    "background_color": "#34a1ff",
+    "orientation": "portrait"
+}
