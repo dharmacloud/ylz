@@ -16,12 +16,13 @@ export const gowikipedia=()=>{
 <iframe class="iframe" title="wiki" {src}></iframe>
 {:else}
 <span class="entry" on:click={gowikipedia} class:clickable={!!e.attrs.wiki}>{e.attrs.id}</span>
-{text}
+<span class="text">{text}</span>
 {/if}
 </div>
 <style>
 .iframe {width:100%;height: 100%;}
-.entry {font-size:150%}
+.entry {font-size:8vh}
+.text {font-size:5vh}
 .popup {position:absolute;top:5%;left:5%;width:90%;height:90%;background:#dfdfdf}
 .clickable {text-decoration: underline;}
 </style>

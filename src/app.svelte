@@ -37,5 +37,5 @@ const onDict=async (t)=>{
 </div>
 <style>
 .app {height:97vh} /* splitpane divider need this */
-.closepopup {position:absolute;right:0px;top:0px;color:red;font-weight: bold;}
+.closepopup {z-index:99;font-size:150%;position:absolute;right:0px;top:0px;color:black;font-weight: bold;}
 </style>

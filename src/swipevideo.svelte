@@ -22,17 +22,16 @@ const getDirection=()=>{
 	// if (Math.abs(touchy-starty)>30) return 0;
 	const deltax=touchx-startx;
     const deltay=touchy-starty;
-
-	if (deltax>60 && deltay<20) {
-		return (deltax>250)?-2:-1;
-	} else if (deltax<-60 && deltay<20) {
-		return (deltax<-250) ?2:1;
+	if (deltax>30 && Math.abs(deltay)<Math.abs(deltax)/2 ) {
+		return (deltax>200)?-2:-1;
+	} else if (deltax<-30 && Math.abs(deltay)<Math.abs(deltax)/2) {
+		return (deltax<-200) ?2:1;
 	}
 
-    if (deltax<20 && deltay>60) {
-        return (deltay>250)?-4:-3;
-    } else if (deltax<20 && deltay<-60) {
-        return (deltay<-250) ?4:3;
+    if (Math.abs(deltax)<20 && deltay>30) {
+        return (deltay>200)?-4:-3;
+    } else if (Math.abs(deltax)<20 && deltay<-30) {
+        return (deltay<-200) ?4:3;
     }
 	return 0;
 }
@@ -103,6 +102,6 @@ const ontouchend=async e=>{
 video {height:100%;user-select: none; pointer-events: none;}
 .swipe {position:absolute;margin-top:50%;left:40%}
 .pagenumber {position:absolute ; bottom:1%;font-size: 200%;}
-.sponsor {user-select:none;pointer-events:none;
+.sponsor {user-select:none;pointer-events:none;font-size:5vh;
 position:absolute; color:red;opacity: 0.75; right:1.2em;top:65vh;writing-mode: vertical-lr}
 </style>
