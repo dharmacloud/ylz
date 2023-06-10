@@ -1,41 +1,50 @@
 <script>
-import { openPtk,guessEntry } from "ptk";
+import { openPtk} from 'ptk'
 import SwipeVideo from "./swipevideo.svelte";
-import DictPopup from "./dictpopup.svelte"
+import Mainmenu from "./mainmenu.svelte";
 let ptk;
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import { onMount } from "svelte";
+import {activebookid} from './store.js'
+import TapText from './taptext.svelte'
 registerServiceWorker();
 
 onMount(async ()=>{
     ptk=await openPtk("dc");
+    console.log(ptk)
 });
-let def='',showdict=false;
-const closeDict=()=>{
+let showdict=false,showmainmenu=true,address='',tofind='';
+const closePopup=()=>{
     showdict=false;
+    showmainmenu=false;
 }
-
-const onDict=async (t)=>{
-    const entry=guessEntry( t,ptk.defines.e.fields.id.values);
-    const defs=await ptk.fetchAddress('e#'+entry);
-    if (defs.length) {
-        def=defs.join('\n')
-        showdict=true;
-    }
-
+const onMainmenu=()=>{
+    showdict=false;
+    showmainmenu=true;
+}
+const onTapText=(t,_address)=>{
+    showdict=true;
+    tofind=t;
+    showmainmenu=false;
+    address=_address;
 }
 </script>
 
 <div class="app">
 <!-- <SwipeGallery {items}/> -->
-<SwipeVideo src="vcpp.webm" {ptk} {onDict}/>
-{#if showdict}
+<SwipeVideo src={$activebookid+".webm"} {ptk} {onTapText} {onMainmenu}/>
+{#if showdict || showmainmenu}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class="closepopup" on:click={closeDict}>╳</span>
-<DictPopup {def}/>
+<span class="closepopup" on:click={closePopup}>╳</span>
+{/if}
+
+{#if showdict}
+<TapText {address} {tofind} {ptk}/>
+{:else if showmainmenu && ptk}
+<Mainmenu {ptk} onclose={closePopup}/>
 {/if}
 </div>
 <style>
-.app {height:97vh} /* splitpane divider need this */
-.closepopup {z-index:99;font-size:150%;position:absolute;right:0px;top:0px;color:black;font-weight: bold;}
+.app {height:100vh;} /* splitpane divider need this */
+.closepopup {z-index:99;font-size:200%;position:absolute;right:0.5em;top:0.5em;color:black;font-weight: bold;}
 </style>
