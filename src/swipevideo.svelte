@@ -74,7 +74,7 @@ const mousewheel=(e)=>{
 }
 const getCharXY=(div,x,y)=>{
 	const [left,right]=videoRect();
-    const cx=folioLines-Math.floor((x/(right-left))*folioLines)+1;
+    const cx=folioLines-Math.floor(((x-left)/(right-left))*folioLines)-1;
     const cy=Math.floor((y/(div.clientHeight-div.clientTop))*folioChars);
     return [cx,cy];
 }
@@ -90,12 +90,11 @@ const onclick=async (e,_x,_y)=>{
 }
 const ontouchend=async e=>{
 	if (touching!==-1 && direction!==0) {
-		if (direction==1) mp4player.currentTime+=-1;
+		if (direction==1) mp4player.currentTime+=-1.1;
 		else if (direction==2) mp4player.currentTime=0;
-		else if (direction==-1) mp4player.currentTime+=1;
+		else if (direction==-1) mp4player.currentTime+=1.1;
 		else if (direction==-2) mp4player.currentTime=mp4player.duration;
 		else if (direction==3||direction==4) {
-			console.log('main')
 			onMainmenu();
 		}
 	} else {

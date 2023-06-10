@@ -45,6 +45,6 @@ const onTapText=(t,_address)=>{
 {/if}
 </div>
 <style>
-.app {height:100vh;} /* splitpane divider need this */
+.app {height:99.5vh;} /* splitpane divider need this */
 .closepopup {z-index:99;font-size:200%;position:absolute;right:0.5em;top:0.5em;color:black;font-weight: bold;}
 </style>
