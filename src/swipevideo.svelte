@@ -4,8 +4,8 @@ let mp4player;
 let touching=-1;
 let touchx=0,touchy=0,startx=0,starty=0,direction=0;
 import {up1,up2,turnleft,turnright,swipenext,swipeprev,swipestart,swipeend,down1,down2} from './swipeshapes.js';
-import {fetchFolioText,getConreatePos} from 'ptk'
-import {activebookid} from './store.js'
+import {fetchFolioText,getConreatePos,folio2ChunkLine} from 'ptk'
+import {activebookid,activefolio} from './store.js'
 const swipeshapes=[ down2,down1, swipeend,turnright, , turnleft,swipestart, up1,up2];
 export let ptk,folioChars=17,folioLines=5;
 export let onTapText=function(){};
@@ -21,9 +21,6 @@ const videoRect=()=>{
 const inVideoRect=(x)=>{
 	const [left,right]=videoRect();
 	return (x>left && x<right);
-}
-const videoLeft=()=>{
-	return videoRect()[0];
 }
 
 const ontouchstart=(e)=>{
@@ -42,16 +39,17 @@ const getDirection=()=>{
 	// if (Math.abs(touchy-starty)>30) return 0;
 	const deltax=touchx-startx;
     const deltay=touchy-starty;
+	const w=mp4player.videoWidth/2;
 	if (deltax>30 && Math.abs(deltay)<Math.abs(deltax)/2 ) {
-		return (deltax>200)?-2:-1;
+		return (deltax>w)?-2:-1;
 	} else if (deltax<-30 && Math.abs(deltay)<Math.abs(deltax)/2) {
-		return (deltax<-200) ?2:1;
+		return (deltax<-w) ?2:1;
 	}
 
     if (Math.abs(deltax)<Math.abs(deltay)/2 && deltay>30) {
-        return (deltay>200)?-4:-3;
+        return (deltay>w)?-4:-3;
     } else if (Math.abs(deltax)<Math.abs(deltay)/2 && deltay<-30) {
-        return (deltay<-200) ?4:3;
+        return (deltay<-w) ?4:3;
     }
 	return 0;
 }
@@ -78,6 +76,8 @@ const getCharXY=(div,x,y)=>{
     const cy=Math.floor((y/(div.clientHeight-div.clientTop))*folioChars);
     return [cx,cy];
 }
+
+
 const onclick=async (e,_x,_y)=>{
     const x=_x||e.offsetX;
     const y=_y||e.offsetY;
@@ -85,8 +85,11 @@ const onclick=async (e,_x,_y)=>{
 	
     const [cx,cy]=getCharXY(mp4player, x,y);
     const [foliotext,from,to]=await fetchFolioText(ptk,$activebookid,1+Math.floor(mp4player.currentTime));
-    const t=getConreatePos(foliotext[cx],cy,foliotext[cx+1]);
-    await onTapText(t);
+    const [t,pos]=getConreatePos(foliotext[cx],cy,foliotext[cx+1]);
+	//get the ck-lineoff 
+
+	const address=await folio2ChunkLine(ptk,foliotext, from,cx,pos);
+	await onTapText(t,address);
 }
 const ontouchend=async e=>{
 	if (touching!==-1 && direction!==0) {
@@ -104,9 +107,18 @@ const ontouchend=async e=>{
 	direction=0;
     
 }
+const gotoFolio=(t,bkid)=>{
+	if (t!==mp4player?.currentTime+0.1) {
+		setTimeout(()=>{
+			mp4player.currentTime=t+0.1;
+		},1000);
+	}
+}
+$: gotoFolio($activefolio,$activebookid);
+
 </script>
 {#if mp4player?.currentTime==0}
-<div class="sponsor">中區供佛齋僧</div>
+<div class="sponsor">中部全國供佛齋僧大會</div>
 {/if}
 <!-- svelte-ignore missing-declaration -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -130,6 +142,6 @@ const ontouchend=async e=>{
 video { height:100%;user-select: none; pointer-events: none;width:100%}
 .swipe {position:absolute;margin-top:50%;left:40%}
 .pagenumber {position:absolute ; bottom:1%;font-size: 200%;}
-.sponsor {user-select:none;pointer-events:none;font-size:4vh;
-position:absolute; color:red;opacity: 0.75; right:1.1em;top:65vh;writing-mode: vertical-lr}
+.sponsor {user-select:none;pointer-events:none;font-size:4vh;font-weight: bold;
+position:absolute; color:red;opacity: 0.75; right:1.1em;top:50vh;writing-mode: vertical-lr}
 </style>

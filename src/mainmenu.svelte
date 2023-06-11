@@ -1,10 +1,10 @@
 <script>
-import Filelist from './filelist.svelte'   
+import Foliolist from './foliolist.svelte'   
 export let ptk;
 export let onclose;
 </script>
 <div class="popup">
-<Filelist {ptk} {onclose}/>
+<Foliolist {ptk} {onclose}/>
 
 </div>
 <style>

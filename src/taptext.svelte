@@ -6,6 +6,7 @@ import {guessEntry } from "ptk";
 export let tofind='';
 export let ptk;
 export let address='';
+export let closePopup;
 let thetab='translations';
 let def='';
 const onDict=async (t)=>{
@@ -18,15 +19,14 @@ const onDict=async (t)=>{
         thetab='dict'
     }
 }
-
 $: onDict(tofind)
 </script>
-
 <div class="popup">
     <div class="tabs">    
         <!-- <span class='clickable' class:selected={thetab=="library"} on:click={()=>maintab.set("library")}>📚</span> -->
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="toc"} on:click={()=>thetab="toc"}>目錄</span>
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="translations"} on:click={()=>thetab="translations"}>異譯</span>
         {#if def}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -35,8 +35,7 @@ $: onDict(tofind)
       </div>
     
       <div class="tab-content" class:visible={thetab=='toc'}><Toc/></div>
-
-      <div class="tab-content" class:visible={thetab=='translations'}><Translations/></div>
+      <div class="tab-content" class:visible={thetab=='translations'}><Translations {closePopup} {address} {ptk}/></div>
       {#if def}
       <div class="tab-content" class:visible={thetab=='dict'}><DictPopup {def} {ptk}/></div>
       {/if}

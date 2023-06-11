@@ -18,7 +18,7 @@ export const gorefer=async (e)=>{
     def=defs.join('\n')
 }
 </script>
-<div>
+<div class="dictpopup">
 {#if showwiki}
 <iframe class="iframe" title="wiki" {src}></iframe>
 {:else}
@@ -29,10 +29,9 @@ export const gorefer=async (e)=>{
 {/if}
 </div>
 <style>
+.dictpopup {height:90%}
 .iframe {width:100%;height: 100%;}
 .entry {font-size:7vh}
 .text {font-size:5vh}
-
-.clickable {text-decoration: underline;}
 
 </style>

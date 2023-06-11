@@ -13,7 +13,7 @@ onMount(async ()=>{
     ptk=await openPtk("dc");
     console.log(ptk)
 });
-let showdict=false,showmainmenu=true,address='',tofind='';
+let showdict=false,address='',tofind='',showmainmenu=true;
 const closePopup=()=>{
     showdict=false;
     showmainmenu=false;
@@ -39,7 +39,7 @@ const onTapText=(t,_address)=>{
 {/if}
 
 {#if showdict}
-<TapText {address} {tofind} {ptk}/>
+<TapText {address} {tofind} {ptk} {closePopup}/>
 {:else if showmainmenu && ptk}
 <Mainmenu {ptk} onclose={closePopup}/>
 {/if}
