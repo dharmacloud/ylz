@@ -35,7 +35,8 @@ const goFolio=(ptk,line)=>{
 {:then}
 {#each out as item}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div><span class:selecteditem={item.heading?.bk?.at==$activebook} on:click={()=>goFolio(item.ptk,item.line)} class="clickable author">{getBookTitle(item.ptk,item.heading?.bk?.at)}</span> {item.linetext.replace(/\^[a-z\d]+/g,'')} </div>
+<div class:selecteditem={item.heading?.bk?.at==$activebook}><span  on:click={()=>goFolio(item.ptk,item.line)} class="clickable author">{getBookTitle(item.ptk,item.heading?.bk?.at)}</span> {item.linetext.replace(/\^[a-z\d]+/g,'')} </div>
+<div class="hr"/>
 {/each}
 <div>--</div>
 {/await}
