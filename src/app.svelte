@@ -11,6 +11,7 @@ registerServiceWorker();
 
 onMount(async ()=>{
     ptk=await openPtk("dc");
+    await openPtk("dc_sanskrit");
     console.log(ptk)
 });
 let showdict=false,address='',tofind='',showmainmenu=true;

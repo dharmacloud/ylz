@@ -27,7 +27,7 @@ const selectbook=nbk=>{
 const getBookName=nbk=>{
     const bk=ptk.defines.bk;
     const bookname=bk.innertext.get(nbk); 
-    return bookname + '-'+ bk.fields.heading.values[nbk];
+    return bk.fields.heading.values[nbk]+'-'+bookname;
 }
 </script>
 
