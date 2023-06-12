@@ -5,7 +5,8 @@ import { parseOfftext } from 'ptk/offtext';
 export let closePopup=function(){};
 export let address;
 export let ptk;
-const [start,end,line]=ptk.rangeOfAddress(address);
+const [start,end,lineoff]=ptk.rangeOfAddress(address);
+
 
 const out=[];
 const getBookTitle=(ptk,nbk)=>{
@@ -30,17 +31,21 @@ const goFolio=(ptk,line)=>{
     
     closePopup();
 }
+const hasfolio=(ptk,line)=>{
+    const folioat=ptk.nearestTag(line+1,'folio');
+    return folioat>-1;
+}
 const puretext=(_text)=>{
     const [text]=parseOfftext(_text);
     return text;
 }
 </script>
 <div class="paralleltext">
-{#await getParallelLines(ptk,start+line,out)}
+{#await getParallelLines(ptk,start+lineoff,out)}
 {:then}
 {#each out as item}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div class:selecteditem={item.heading?.bk?.at==$activebook}><span  on:click={()=>goFolio(item.ptk,item.line)} class="clickable author">{getBookTitle(item.ptk,item.heading?.bk?.at)}←</span>{puretext(item.linetext)}</div>
+<div class:selecteditem={item.heading?.bk?.at==$activebook}><span  on:click={()=>goFolio(item.ptk,item.line)} class="clickable author">{getBookTitle(item.ptk,item.heading?.bk?.at)}{hasfolio(item.ptk)?'←':' '}</span>{puretext(item.linetext)}</div>
 <div class="hr"/>
 {/each}
 <div>--</div>

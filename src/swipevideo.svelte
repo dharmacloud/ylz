@@ -4,13 +4,13 @@ let mp4player;
 let touching=-1;
 let touchx=0,touchy=0,startx=0,starty=0,direction=0;
 import {up1,up2,turnleft,turnright,swipenext,swipeprev,swipestart,swipeend,down1,down2} from './swipeshapes.js';
-import {fetchFolioText,getConreatePos,folio2ChunkLine} from 'ptk'
+import {fetchFolioText,getConreatePos,folio2ChunkLine,extractPuncPos} from 'ptk'
 import {activebookid,activefolio} from './store.js'
 const swipeshapes=[ down2,down1, swipeend,turnright, , turnleft,swipestart, up1,up2];
 export let ptk,folioChars=17,folioLines=5;
 export let onTapText=function(){};
 export let onMainmenu=function(){};
-
+let foliotext='',foliofrom=0;
 const videoRect=()=>{
 	const r=mp4player.clientHeight / mp4player.videoHeight;
 	const w=mp4player.videoWidth * r;
@@ -69,6 +69,7 @@ const mousewheel=(e)=>{
 		mp4player.currentTime+=-1;
 	}
 	e.preventDefault();
+	updateFolioText();
 }
 const getCharXY=(div,x,y)=>{
 	const [left,right]=videoRect();
@@ -84,12 +85,11 @@ const onclick=async (e,_x,_y)=>{
 	if (!inVideoRect(x)) return;
 	
     const [cx,cy]=getCharXY(mp4player, x,y);
-    const [foliotext,from,to]=await fetchFolioText(ptk,$activebookid,1+Math.floor(mp4player.currentTime));
 	
     const [t,pos]=getConreatePos(foliotext[cx],cy,foliotext[cx+1]);
 	//get the ck-lineoff 
 
-	const address=await folio2ChunkLine(ptk,foliotext, from,cx,pos);
+	const address=  'bk#'+$activebookid +'.'+ await folio2ChunkLine(ptk,foliotext, foliofrom,cx,pos);
 	await onTapText(t,address);
 }
 const ontouchend=async e=>{
@@ -101,6 +101,7 @@ const ontouchend=async e=>{
 		else if (direction==3||direction==4) {
 			onMainmenu();
 		}
+		updateFolioText();
 	} else {
         // onclick(e,touchx,touchy);
     }
@@ -108,17 +109,23 @@ const ontouchend=async e=>{
 	direction=0;
     
 }
-const gotoFolio=(t,bkid)=>{
+const updateFolioText=async ()=>{
+    [foliotext,foliofrom]=await fetchFolioText(ptk,$activebookid,1+Math.floor(mp4player?.currentTime||0));
+	const puncs=extractPuncPos(foliotext);
+}
+const gotoFolio=async (t)=>{
+	
 	if (t!==mp4player?.currentTime+0.1) {
 		setTimeout(()=>{
 			mp4player.currentTime=t+0.1;
 		},1000);
 	}
+	updateFolioText();	
 }
-$: gotoFolio($activefolio,$activebookid);
+$: if (ptk) gotoFolio($activefolio,$activebookid);
 
 </script>
-{#if mp4player?.currentTime==0}
+{#if mp4player?.currentTime<1}
 <div class="sponsor">中部全國供佛齋僧大會</div>
 {/if}
 <!-- svelte-ignore missing-declaration -->
