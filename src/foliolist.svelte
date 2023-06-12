@@ -30,9 +30,10 @@ const getBookName=nbk=>{
     return bk.fields.heading.values[nbk]+'-'+bookname;
 }
 </script>
-
+<div class="toctext">經錄</div>
 {#each books as nbk}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div class="book" on:click={()=>selectbook(nbk)}><span class:selecteditem={$activebook==nbk} >{getBookName(nbk)}</span></div>
 {/each}
+
 

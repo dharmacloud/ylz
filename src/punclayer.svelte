@@ -44,7 +44,7 @@ const puncStyle=(line,ch,text)=>{
 <div class="vline" style={getVLine(4)}></div> -->
 </div>
 <style>
-    .puncs {z-index:9;position:absolute;user-select: none;}
+    .puncs {z-index:9;position:absolute;user-select: none;overflow:hidden}
     .punc {z-index:9;position:absolute;color:rgba(255, 0, 0,0.6);font-family: bolder;}
     /* .vline{position:absolute;z-index:9;background:rgba(128,128,128,0.3);} */
 </style>
