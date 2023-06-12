@@ -14,22 +14,33 @@ const puncStyle=(line,ch,text)=>{
         yinc=unith*0.4;
     }
     if (text=='﹁'||text=='﹃'){
-        xinc=-unitw*0.6;
+        xinc=-unitw*0.4;
         yinc=unith*0.6;
     } else if (text=='﹄' ||text=='﹂'){
         xinc=-unitw*0.7;
         yinc=unith*0.6;
     }
-    const style='left:'+Math.floor(xinc+unitw*(folioLines-line) - unitw*0.2 )+'px; top:'+Math.floor(yinc+unith*(ch-1)- unith*0.2)+'px;font-size:'+fontsize+'px';
+    const style='left:'+Math.floor(xinc+unitw*(folioLines-line) - unitw*0.25 )+'px; top:'
+    +Math.floor(frame.top+yinc+unith*(ch-1)- unith*0.2)+'px;font-size:'+fontsize+'px';
     return style;
 }
+const getVLine=(i)=>{
+    return 'left:'+unitw*i+'px;top:0px;width:2px;height:'+frame.height+'px';
+}
 </script>
+
 <div class="puncs" style={stylestring(frame)} >
 {#each puncs as punc}
 <span class="punc" style={puncStyle(punc.line,punc.ch,punc.text)}>{punc.text}</span>
 {/each}
+
+<div class="vline" style={getVLine(1)}></div>
+<div class="vline" style={getVLine(2)}></div>
+<div class="vline" style={getVLine(3)}></div>
+<div class="vline" style={getVLine(4)}></div>
 </div>
 <style>
-    .puncs {z-index:9;position:absolute}
+    .puncs {z-index:9;position:absolute;user-select: none;}
     .punc {z-index:9;position:absolute;color:rgba(255, 0, 0,0.6);font-family: bolder;}
+    .vline{position:absolute;z-index:9;background:rgba(128,128,128,0.3);}
 </style>
