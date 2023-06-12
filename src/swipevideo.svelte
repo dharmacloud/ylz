@@ -1,4 +1,5 @@
 <script>
+import PuncLayer from './punclayer.svelte';
 export let src;
 let mp4player;
 let touching=-1;
@@ -10,16 +11,17 @@ const swipeshapes=[ down2,down1, swipeend,turnright, , turnleft,swipestart, up1,
 export let ptk,folioChars=17,folioLines=5;
 export let onTapText=function(){};
 export let onMainmenu=function(){};
-let foliotext='',foliofrom=0;
+let foliotext='',foliofrom=0,puncs=[];
 const videoRect=()=>{
+	if (!mp4player) return [0,0,0,0];
 	const r=mp4player.clientHeight / mp4player.videoHeight;
 	const w=mp4player.videoWidth * r;
-	const left=(mp4player.clientWidth- w)/2;
+	const left=Math.floor((mp4player.clientWidth- w)/2);
 	const right= left + w ;
-	return [left,right] ;
+	return [left,0,right,mp4player.clientHeight] ;
 }
 const inVideoRect=(x)=>{
-	const [left,right]=videoRect();
+	const [left,top,right]=videoRect();
 	return (x>left && x<right);
 }
 
@@ -72,7 +74,7 @@ const mousewheel=(e)=>{
 	updateFolioText();
 }
 const getCharXY=(div,x,y)=>{
-	const [left,right]=videoRect();
+	const [left,top,right]=videoRect();
     const cx=folioLines-Math.floor(((x-left)/(right-left))*folioLines)-1;
     const cy=Math.floor((y/(div.clientHeight-div.clientTop))*folioChars);
     return [cx,cy];
@@ -94,9 +96,9 @@ const onclick=async (e,_x,_y)=>{
 }
 const ontouchend=async e=>{
 	if (touching!==-1 && direction!==0) {
-		if (direction==1) mp4player.currentTime+=-1.1;
+		if (direction==1) mp4player.currentTime+=-1.001;
 		else if (direction==2) mp4player.currentTime=0;
-		else if (direction==-1) mp4player.currentTime+=1.1;
+		else if (direction==-1) mp4player.currentTime+=1.001;
 		else if (direction==-2) mp4player.currentTime=mp4player.duration;
 		else if (direction==3||direction==4) {
 			onMainmenu();
@@ -109,9 +111,10 @@ const ontouchend=async e=>{
 	direction=0;
     
 }
+
 const updateFolioText=async ()=>{
     [foliotext,foliofrom]=await fetchFolioText(ptk,$activebookid,1+Math.floor(mp4player?.currentTime||0));
-	const puncs=extractPuncPos(foliotext);
+	puncs=extractPuncPos(foliotext,folioLines);
 }
 const gotoFolio=async (t)=>{
 	
@@ -123,7 +126,10 @@ const gotoFolio=async (t)=>{
 	updateFolioText();	
 }
 $: if (ptk) gotoFolio($activefolio,$activebookid);
-
+const videoFrame=()=>{
+	const frame=videoRect();
+	return {left:frame[0],top:frame[1],width:frame[2]-frame[0],height:frame[3]-frame[1]};
+}
 </script>
 {#if mp4player?.currentTime<1}
 <div class="sponsor">中部全國供佛齋僧大會</div>
@@ -138,8 +144,12 @@ $: if (ptk) gotoFolio($activefolio,$activebookid);
  {#if touching>-1 && direction}<span class="swipe">{@html swipeshapes[direction+4]}</span>{/if}
 
 <span class="pagenumber">{1+Math.floor(mp4player?.currentTime)}</span>
-<!-- svelte-ignore a11y-media-has-caption -->
+
+{#key puncs}
+<PuncLayer frame={ videoFrame()  } {folioChars} {folioLines} {puncs} />
+{/key}
 {#key src}
+<!-- svelte-ignore a11y-media-has-caption -->
 <video bind:this={mp4player}>
     <source {src} type="video/webm"/>
 </video>

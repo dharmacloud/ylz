@@ -42,13 +42,15 @@ const puretext=(_text)=>{
 </script>
 <div class="paralleltext">
 {#await getParallelLines(ptk,start+lineoff,out)}
+Loading...
 {:then}
 {#each out as item}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div class:selecteditem={item.heading?.bk?.at==$activebook}><span  on:click={()=>goFolio(item.ptk,item.line)} class="clickable author">{getBookTitle(item.ptk,item.heading?.bk?.at)}{hasfolio(item.ptk)?'←':' '}</span>{puretext(item.linetext)}</div>
 <div class="hr"/>
 {/each}
-<div>--</div>
+<div class="endmarker">※※※</div>
+<div class="endmarker">※※※</div>
 {/await}
 </div>
 
