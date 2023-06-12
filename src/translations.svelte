@@ -1,12 +1,11 @@
 <script>
 import {getParallelLines} from 'ptk/align/';
-import {activefolio,activebook,activebookid} from './store.js'
+import {activefolio,activebook,activebookid,activePtk} from './store.js'
 import { parseOfftext } from 'ptk/offtext';
 export let closePopup=function(){};
 export let address;
 export let ptk;
 const [start,end,lineoff]=ptk.rangeOfAddress(address);
-
 
 const out=[];
 const getBookTitle=(ptk,nbk)=>{
@@ -18,7 +17,7 @@ const goFolio=(ptk,line)=>{
     const pb=ptk.defines.pb;
     const bk=ptk.defines.bk;
     const folio=ptk.defines.folio;
-
+    if (!pb) return 
     const pbat=ptk.nearestTag(line+1,'pb')-1;
     const bkat=ptk.nearestTag(line+1,'bk')-1;
     const folioat=ptk.nearestTag(line+1,'folio')-1;
@@ -28,7 +27,7 @@ const goFolio=(ptk,line)=>{
 
     activebookid.set(folio.fields.id.values[folioat]);
     activefolio.set( parseInt(pbid)-1);
-    
+    activePtk.set(ptk.name);
     closePopup();
 }
 const hasfolio=(ptk,line)=>{
@@ -49,7 +48,6 @@ Loading...
 <div class:selecteditem={item.heading?.bk?.at==$activebook}><span  on:click={()=>goFolio(item.ptk,item.line)} class="clickable author">{getBookTitle(item.ptk,item.heading?.bk?.at)}{hasfolio(item.ptk)?'←':' '}</span>{puretext(item.linetext)}</div>
 <div class="hr"/>
 {/each}
-<div class="endmarker">※※※</div>
 <div class="endmarker">※※※</div>
 {/await}
 </div>

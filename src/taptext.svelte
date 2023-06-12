@@ -2,13 +2,14 @@
 import DictPopup from "./dictpopup.svelte"
 import Translations from "./translations.svelte"
 import Toc from "./toc.svelte"
-import {guessEntry } from "ptk";
+import {activePtk} from './store.js'
+import {guessEntry ,usePtk} from "ptk";
 export let tofind='';
-export let ptk;
+
 export let address='';
 export let closePopup;
 let thetab='translations';
-let def='';
+let def='',ptk;
 const onDict=async (t)=>{
     const entry=guessEntry( t,ptk.defines.e.fields.id.values);
     const defs=await ptk.fetchAddress('e#'+entry);
@@ -19,6 +20,7 @@ const onDict=async (t)=>{
         thetab='dict'
     }
 }
+$: ptk=usePtk($activePtk);
 $: onDict(tofind)
 </script>
 <div class="popup">
@@ -34,7 +36,7 @@ $: onDict(tofind)
         {/if}
       </div>
     
-      <div class="tab-content" class:visible={thetab=='toc'}><Toc/></div>
+      <div class="tab-content" class:visible={thetab=='toc'}><Toc {address} {closePopup} {ptk} /></div>
       <div class="tab-content" class:visible={thetab=='translations'}><Translations {closePopup} {address} {ptk}/></div>
       {#if def}
       <div class="tab-content" class:visible={thetab=='dict'}><DictPopup {def} {ptk}/></div>

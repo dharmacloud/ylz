@@ -5,12 +5,13 @@ let mp4player;
 let touching=-1;
 let touchx=0,touchy=0,startx=0,starty=0,direction=0;
 import {up1,up2,turnleft,turnright,swipenext,swipeprev,swipestart,swipeend,down1,down2} from './swipeshapes.js';
-import {fetchFolioText,getConreatePos,folio2ChunkLine,extractPuncPos} from 'ptk'
-import {activebookid,activefolio} from './store.js'
+import {fetchFolioText,getConreatePos,folio2ChunkLine,extractPuncPos,usePtk} from 'ptk'
+import {activebookid,activefolio,activePtk} from './store.js'
 const swipeshapes=[ down2,down1, swipeend,turnright, , turnleft,swipestart, up1,up2];
-export let ptk,folioChars=17,folioLines=5;
+export let folioChars=17,folioLines=5;
 export let onTapText=function(){};
 export let onMainmenu=function(){};
+let ptk=usePtk($activePtk)
 let foliotext='',foliofrom=0,puncs=[];
 const videoRect=()=>{
 	if (!mp4player) return [0,0,0,0];
@@ -75,6 +76,7 @@ const mousewheel=(e)=>{
 }
 const getCharXY=(div,x,y)=>{
 	const [left,top,right]=videoRect();
+	
     const cx=folioLines-Math.floor(((x-left)/(right-left))*folioLines)-1;
     const cy=Math.floor((y/(div.clientHeight-div.clientTop))*folioChars);
     return [cx,cy];
@@ -82,17 +84,18 @@ const getCharXY=(div,x,y)=>{
 
 
 const onclick=async (e,_x,_y)=>{
-    const x=_x||e.offsetX;
-    const y=_y||e.offsetY;
+    const x=_x||e.clientX;
+    const y=_y||e.clientY;
+
 	if (!inVideoRect(x)) return;
 	
     const [cx,cy]=getCharXY(mp4player, x,y);
-	
+
     const [t,pos]=getConreatePos(foliotext[cx],cy,foliotext[cx+1]);
 	//get the ck-lineoff 
 
 	const address=  'bk#'+$activebookid +'.'+ await folio2ChunkLine(ptk,foliotext, foliofrom,cx,pos);
-	await onTapText(t,address);
+	await onTapText(t,address,ptk.name);
 }
 const ontouchend=async e=>{
 	if (touching!==-1 && direction!==0) {
@@ -111,24 +114,25 @@ const ontouchend=async e=>{
 	direction=0;
     
 }
-
 const updateFolioText=async ()=>{
     [foliotext,foliofrom]=await fetchFolioText(ptk,$activebookid,1+Math.floor(mp4player?.currentTime||0));
 	puncs=extractPuncPos(foliotext,folioLines);
 }
-const gotoFolio=async (t)=>{
-	
+const gotoFolio=async (t)=>{	
 	if (t!==mp4player?.currentTime+0.1) {
 		setTimeout(()=>{
 			mp4player.currentTime=t+0.1;
-		},1000);
+			updateFolioText();	
+		},500);
 	}
-	updateFolioText();	
 }
-$: if (ptk) gotoFolio($activefolio,$activebookid);
+$: gotoFolio($activefolio,$activebookid);
 const videoFrame=()=>{
 	const frame=videoRect();
 	return {left:frame[0],top:frame[1],width:frame[2]-frame[0],height:frame[3]-frame[1]};
+}
+const videoloaded=()=>{
+	gotoFolio($activefolio);
 }
 </script>
 {#if mp4player?.currentTime<1}
@@ -139,21 +143,24 @@ const videoFrame=()=>{
 <div class="container" 	on:touchstart|passive={ontouchstart}
 	on:touchmove|passive={ontouchmove}
 	on:touchend|passive={ontouchend}
-    on:click={onclick}
+	on:click={onclick}
     on:wheel={mousewheel}>
  {#if touching>-1 && direction}<span class="swipe">{@html swipeshapes[direction+4]}</span>{/if}
 
 <span class="pagenumber">{1+Math.floor(mp4player?.currentTime)}</span>
 
-{#key puncs}
-<PuncLayer frame={ videoFrame()  } {folioChars} {folioLines} {puncs} />
-{/key}
+
 {#key src}
 <!-- svelte-ignore a11y-media-has-caption -->
-<video bind:this={mp4player}>
+<video bind:this={mp4player} on:loadeddata ={videoloaded}>
     <source {src} type="video/webm"/>
 </video>
 {/key}
+
+{#key puncs}
+<PuncLayer frame={ videoFrame()  } {folioChars} {folioLines} {puncs} />
+{/key}
+
 </div>
 <style>
 .container {width:100%;background-color: rgb(243, 208, 160);height: 100%;}

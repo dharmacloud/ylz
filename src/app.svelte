@@ -1,5 +1,5 @@
 <script>
-import { openPtk} from 'ptk'
+import { openPtk,usePtk} from 'ptk'
 import SwipeVideo from "./swipevideo.svelte";
 import Mainmenu from "./mainmenu.svelte";
 let ptk;
@@ -8,11 +8,11 @@ import { onMount } from "svelte";
 import {activebookid} from './store.js'
 import TapText from './taptext.svelte'
 registerServiceWorker();
-
+let loaded=false;
 onMount(async ()=>{
     ptk=await openPtk("dc");
     await openPtk("dc_sanskrit");
-    console.log(ptk)
+    loaded=true;
 });
 let showdict=false,address='',tofind='',showmainmenu=false;
 const closePopup=()=>{
@@ -23,15 +23,18 @@ const onMainmenu=()=>{
     showdict=false;
     showmainmenu=true;
 }
-const onTapText=(t,_address)=>{
+const onTapText=(t,_address,ptkname)=>{
     showdict=true;
     tofind=t;
     showmainmenu=false;
     address=_address;
+    ptk=usePtk(ptkname);
 }
 </script>
 
 <div class="app">
+{#if loaded}
+
 <!-- <SwipeGallery {items}/> -->
 <SwipeVideo src={$activebookid+".webm"} {ptk} {onTapText} {onMainmenu}/>
 {#if showdict || showmainmenu}
@@ -40,9 +43,13 @@ const onTapText=(t,_address)=>{
 {/if}
 
 {#if showdict}
-<TapText {address} {tofind} {ptk} {closePopup}/>
+<TapText {address} {tofind}  {closePopup}/>
 {:else if showmainmenu && ptk}
 <Mainmenu {ptk} onclose={closePopup}/>
+{/if}
+
+{:else}
+LOADING
 {/if}
 </div>
 <style>
