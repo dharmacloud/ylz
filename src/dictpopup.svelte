@@ -23,15 +23,12 @@ export const gorefer=async (e)=>{
 <iframe class="iframe" title="wiki" {src}></iframe>
 {:else}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class="entry" on:click={gowikipedia} class:clickable={!!e?.attrs.wiki}>{e?.attrs.id}</span>
+<span class="dictentry" on:click={gowikipedia} class:clickable={!!e?.attrs.wiki}>{e?.attrs.id}</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span on:click={gorefer} class="text">{@html rendertext}</span>
+<span on:click={gorefer} class="dicttext">{@html rendertext}</span>
 {/if}
 </div>
 <style>
 .dictpopup {height:90%}
 .iframe {width:100%;height: 100%;}
-.entry {font-size:7vh}
-.text {font-size:5vh}
-
 </style>

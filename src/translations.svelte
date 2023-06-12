@@ -1,6 +1,7 @@
 <script>
 import {getParallelLines} from 'ptk/align/';
 import {activefolio,activebook,activebookid} from './store.js'
+import { parseOfftext } from 'ptk/offtext';
 export let closePopup=function(){};
 export let address;
 export let ptk;
@@ -29,21 +30,20 @@ const goFolio=(ptk,line)=>{
     
     closePopup();
 }
+const puretext=(_text)=>{
+    const [text]=parseOfftext(_text);
+    return text;
+}
 </script>
-<div class="text">
+<div class="paralleltext">
 {#await getParallelLines(ptk,start+line,out)}
 {:then}
 {#each out as item}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div class:selecteditem={item.heading?.bk?.at==$activebook}><span  on:click={()=>goFolio(item.ptk,item.line)} class="clickable author">{getBookTitle(item.ptk,item.heading?.bk?.at)}</span> {item.linetext.replace(/\^[a-z\d]+/g,'')} </div>
+<div class:selecteditem={item.heading?.bk?.at==$activebook}><span  on:click={()=>goFolio(item.ptk,item.line)} class="clickable author">{getBookTitle(item.ptk,item.heading?.bk?.at)}←</span>{puretext(item.linetext)}</div>
 <div class="hr"/>
 {/each}
 <div>--</div>
 {/await}
 </div>
 
-
-<style>
-
-.text {font-size:5vh;}
-</style>

@@ -85,6 +85,7 @@ const onclick=async (e,_x,_y)=>{
 	
     const [cx,cy]=getCharXY(mp4player, x,y);
     const [foliotext,from,to]=await fetchFolioText(ptk,$activebookid,1+Math.floor(mp4player.currentTime));
+	
     const [t,pos]=getConreatePos(foliotext[cx],cy,foliotext[cx+1]);
 	//get the ck-lineoff 
 
