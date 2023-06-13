@@ -1,10 +1,9 @@
 <script>
 import { bsearchNumber ,styledNumber,chunkOfFolio} from "ptk";
-import {activefolio,activebookid} from './store.js'
+import {activefolio} from './store.js'
 export let ptk;
 export let address;
 export let closePopup;
-export let pbid;
 let tocitems=[],cknow;
 const getTocItems=address=>{
     const m=address.match(/(bk#?[a-z_\d]+)/);

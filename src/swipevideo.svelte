@@ -6,7 +6,7 @@ let touching=-1;
 let touchx=0,touchy=0,startx=0,starty=0,direction=0;
 import {up1,up2,turnleft,turnright,swipestart,swipeend,down1,down2} from './swipeshapes.js';
 import {fetchFolioText,getConreatePos,folio2ChunkLine,extractPuncPos,usePtk} from 'ptk'
-import {autoplay,activebookid,activefolio,activePtk} from './store.js'
+import {autoplay,activebookid,activefolio,activePtk, maxfolio} from './store.js'
 import {onDestroy,onMount} from 'svelte'
 const swipeshapes=[ down2,down1, swipeend,turnright, , turnleft,swipestart, up1,up2];
 export let folioChars=17,folioLines=5;
@@ -126,11 +126,12 @@ const ontouchend=async e=>{
 const updateFolioText=async ()=>{
     [foliotext,foliofrom]=await fetchFolioText(ptk,$activebookid,1+Math.floor(mp4player?.currentTime||0));
 	puncs=extractPuncPos(foliotext,folioLines);
+	activefolio.set(Math.floor(mp4player.currentTime));
 }
 const gotoFolio=async (t)=>{	
-	if (t!==mp4player?.currentTime+0.1) {
+	if (Math.floor(t)!==Math.floor(mp4player?.currentTime)) {
 		setTimeout(()=>{
-			mp4player.currentTime=t+0.1;
+			mp4player.currentTime=(t||0)+0.001;
 			updateFolioText();	
 		},500);
 	}
@@ -142,6 +143,7 @@ const videoFrame=()=>{
 }
 const videoloaded=()=>{
 	gotoFolio($activefolio);
+	maxfolio.set(mp4player.duration);
 }
 let timer;
 let seconds=0;
@@ -190,7 +192,7 @@ onDestroy(()=>{
 .container {width:100%;background-color: rgb(243, 208, 160);height: 100%;}
 video { height:100%;user-select: none; pointer-events: none;width:100%;}
 .swipe {position:absolute;top:50%;left:50%;transform: translate(-50%,-50%); }
-.pagenumber {position:absolute ; bottom:1%;font-size: 200%;}
+.pagenumber {position:absolute ; bottom:1%;font-size: 200%;left:0.1em;z-index: 999;color:brown}
 .sponsor {user-select:none;pointer-events:none;font-size:4vh;font-weight: bold;
 position:absolute; color:red;opacity: 0.75; right:1.1em;top:50vh;writing-mode: vertical-lr}
 </style>
