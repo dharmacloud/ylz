@@ -14,7 +14,7 @@ onMount(async ()=>{
     await openPtk("dc_sanskrit");
     loaded=true;
 });
-let showdict=false,address='',tofind='',showmainmenu=false;
+let showdict=false,address='',tofind='',showmainmenu=true;
 const closePopup=()=>{
     showdict=false;
     showmainmenu=false;
@@ -53,6 +53,6 @@ LOADING
 {/if}
 </div>
 <style>
-.app {height:99.5vh;} /* splitpane divider need this */
+.app {height:99.5vh;top:0px} /* splitpane divider need this */
 .closepopup {z-index:999;font-size:200%;position:absolute;right:0.5em;top:0.5em;color:black;font-weight: bold;}
 </style>

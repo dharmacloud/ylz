@@ -1,4 +1,5 @@
 <script>
+/* TODO Galaxy Fold ratio smaller than 450/1000, causing punc miss place */
 export let frame={};
 export let puncs=[];
 export let folioChars=17,folioLines=5;
@@ -8,17 +9,17 @@ const stylestring=(f)=>{
     return `left:${f.left}px;width:${f.width}px;top:${f.top}px;height:${f.height}px`
 }
 const puncStyle=(line,ch,text)=>{
-    let fontsize=unith*0.9 ,yinc=unith*0.2,xinc=0;
+    let fontsize=unith*0.9 ,yinc=unith*0.2,xinc=-unitw*0.1;
     
     if (text=='？'||text=='！') {
         fontsize=fontsize/1.5;
         yinc+=unith*0.4;
     } else  if (text=='﹁'||text=='﹃'){
-        xinc+=-unitw*0.4;
-        yinc+=unith*0.6;
+        xinc+=-unitw*0.3;
+        yinc+=unith*0.45;
     } else if (text=='﹄' ||text=='﹂'){
-        xinc+=-unitw*0.7;
-        yinc+=unith*0.6;
+        xinc+=-unitw*0.6;
+        yinc+=unith*0.4;
     } else if ( !isPunc(text[0])){ //ck marker
         // xinc+=-unitw*0.2;
         yinc+=unith;

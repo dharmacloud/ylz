@@ -4,15 +4,17 @@ export let src;
 let mp4player;
 let touching=-1;
 let touchx=0,touchy=0,startx=0,starty=0,direction=0;
-import {up1,up2,turnleft,turnright,swipenext,swipeprev,swipestart,swipeend,down1,down2} from './swipeshapes.js';
+import {up1,up2,turnleft,turnright,swipestart,swipeend,down1,down2} from './swipeshapes.js';
 import {fetchFolioText,getConreatePos,folio2ChunkLine,extractPuncPos,usePtk} from 'ptk'
-import {activebookid,activefolio,activePtk} from './store.js'
+import {autoplay,activebookid,activefolio,activePtk} from './store.js'
+import {onDestroy,onMount} from 'svelte'
 const swipeshapes=[ down2,down1, swipeend,turnright, , turnleft,swipestart, up1,up2];
 export let folioChars=17,folioLines=5;
 export let onTapText=function(){};
 export let onMainmenu=function(){};
 let ptk=usePtk($activePtk)
 let foliotext='',foliofrom=0,puncs=[];
+
 const videoRect=()=>{
 	if (!mp4player) return [0,0,0,0];
 	const r=mp4player.clientHeight / mp4player.videoHeight;
@@ -97,6 +99,13 @@ const onclick=async (e,_x,_y)=>{
 	const address=  'bk#'+$activebookid +'.'+ await folio2ChunkLine(ptk,foliotext, foliofrom,cx,pos);
 	await onTapText(t,address,ptk.name);
 }
+const autoplayfolio=()=>{
+	mp4player.currentTime+=1.001;
+	if (mp4player.currentTime>=mp4player.duration) {
+		mp4player.currentTime=0;
+	}
+	updateFolioText();
+}
 const ontouchend=async e=>{
 	if (touching!==-1 && direction!==0) {
 		if (direction==1) mp4player.currentTime+=-1.001;
@@ -134,6 +143,21 @@ const videoFrame=()=>{
 const videoloaded=()=>{
 	gotoFolio($activefolio);
 }
+let timer;
+let seconds=0;
+onMount(()=>{
+	timer=setInterval(()=>{
+		if ($autoplay && seconds>$autoplay) {
+			autoplayfolio();
+			seconds=0;
+		}
+		seconds++;
+	},1000);
+})
+
+onDestroy(()=>{
+	clearInterval(timer)
+})
 </script>
 {#if mp4player?.currentTime<1}
 <div class="sponsor">中部全國供佛齋僧大會</div>
@@ -164,8 +188,8 @@ const videoloaded=()=>{
 </div>
 <style>
 .container {width:100%;background-color: rgb(243, 208, 160);height: 100%;}
-video { height:100%;user-select: none; pointer-events: none;width:100%}
-.swipe {position:absolute;margin-top:50%;left:40%}
+video { height:100%;user-select: none; pointer-events: none;width:100%;}
+.swipe {position:absolute;top:50%;left:50%;transform: translate(-50%,-50%); }
 .pagenumber {position:absolute ; bottom:1%;font-size: 200%;}
 .sponsor {user-select:none;pointer-events:none;font-size:4vh;font-weight: bold;
 position:absolute; color:red;opacity: 0.75; right:1.1em;top:50vh;writing-mode: vertical-lr}

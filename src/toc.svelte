@@ -27,9 +27,12 @@ const gofolio=(at)=>{
     activefolio.set( parseInt(pbid)-1);
     closePopup();
 }
-
+const getCk=(address)=>{
+    const m=address.match(/ck#?(\d+)/);
+    if (m) return m[1];
+}
 $: tocitems=getTocItems(address);
-$: cknow=address.match(/ck#?(\d+)/)[1];
+$: cknow=getCk(address);
 </script>
 <div  class="toctext">
 {#each tocitems as item}
