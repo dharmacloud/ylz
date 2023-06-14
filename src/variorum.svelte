@@ -1,4 +1,42 @@
 <script>
-
+import { parseAddress,parseAction, fetchAddress,styledNumber } from "ptk";
+import SentenceNav from "./sentencenav.svelte";
+export let ptk;
+export let address;
+let text='';
+const updateVariorum=async (address)=>{
+    const r=ptk.defines.r;
+    if (!r) return ;
+    const addr=parseAddress(address);
+    const act=parseAction(addr.action);
+    
+    const id=act[act.length-1][1]+':'+addr.highlightline;
+    
+    let at=r.fields.id.values.indexOf(id);
+    
+    if (~at) {
+        const from=r.linepos[at];
+        let to=r.linepos[at+1];//need terminator at the end
+        at++;
+        while (to==from) {
+            at++;
+            to=r.linepos[at];
+        }
+        await ptk.loadLines([[from,to]]);
+        const lines=ptk.slice(from,to);
+        if (lines[lines.length-1].indexOf('^ck')) lines.pop();//drop ^ck line at the end
+        lines[0]='<div class="sourcetext">'+lines[0].replace(/\^r(\d+):/g,(m,m1)=>styledNumber(m1))+'</div>';
+        text=lines.join('<br/>');
+    }
+}
+$: updateVariorum(address)
 </script>
-集註
+
+<div class="toctext">
+<SentenceNav {ptk} bind:address/>
+{@html text}
+
+<SentenceNav {ptk} bind:address/>
+<div class="endmarker">※※※</div>
+</div>
+

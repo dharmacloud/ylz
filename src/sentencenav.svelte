@@ -24,7 +24,7 @@ const nextSentence=()=>{
     } else {
         if (ckid<maxchunk) {
             action=act[0].join('#')+'.ck#'+(ckid+1);
-            hl=1;
+            hl=1;//hide the chunk line
         }
     }
     address=makeAddress('',action,0,0,hl);

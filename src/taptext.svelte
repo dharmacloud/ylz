@@ -39,8 +39,8 @@ $: onDict(tofind)
       </div>
     
       <div class="tab-content" class:visible={thetab=='toc'}><Toc {address} {closePopup} {ptk} /></div>
-      <div class="tab-content" class:visible={thetab=='translations'}><Translations {closePopup} {address} {ptk}/></div>
-      <div class="tab-content" class:visible={thetab=='variorum'}><Variorum {closePopup} {address} {ptk}/></div>
+      <div class="tab-content" class:visible={thetab=='translations'}><Translations {closePopup} bind:address {ptk}/></div>
+      <div class="tab-content" class:visible={thetab=='variorum'}><Variorum {closePopup} bind:address {ptk}/></div>
       {#if def}
       <div class="tab-content" class:visible={thetab=='dict'}><DictPopup {def} {ptk}/></div>
       {/if}
