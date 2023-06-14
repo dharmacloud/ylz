@@ -14,7 +14,7 @@ onMount(async ()=>{
     await openPtk("dc_sanskrit");
     loaded=true;
 });
-let showdict=false,address='',tofind='',showmainmenu=true;
+let showdict=false,address='',tofind='',showmainmenu=false;
 const closePopup=()=>{
     showdict=false;
     showmainmenu=false;

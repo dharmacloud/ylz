@@ -2,12 +2,13 @@
 import {getParallelLines} from 'ptk/align/';
 import {activefolio,activebook,activebookid,activePtk} from './store.js'
 import { parseOfftext } from 'ptk/offtext';
+import SentenceNav from './sentencenav.svelte'
 export let closePopup=function(){};
 export let address;
 export let ptk;
-const [start,end,lineoff]=ptk.rangeOfAddress(address);
+$: [start,end, _from,_till ,lineoff]=ptk.rangeOfAddress(address);
 
-const out=[];
+let translations=[];
 const getBookTitle=(ptk,nbk)=>{
     const bk=ptk.defines.bk;
     const heading=bk.fields.heading.values[nbk];
@@ -38,17 +39,21 @@ const puretext=(_text)=>{
     const [text]=parseOfftext(_text);
     return text;
 }
+
+const updateTranslation=async (address)=>{
+    translations=await getParallelLines(ptk,start+lineoff)
+}
+$: updateTranslation(address);
 </script>
 <div class="paralleltext">
-{#await getParallelLines(ptk,start+lineoff,out)}
-Loading...
-{:then}
-{#each out as item}
+<SentenceNav {ptk} bind:address/>
+<div class="hr"/>
+{#each translations as item}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div class:selecteditem={item.heading?.bk?.at==$activebook}><span  on:click={()=>goFolio(item.ptk,item.line)} class="clickable author">{getBookTitle(item.ptk,item.heading?.bk?.at)}{hasfolio(item.ptk)?'←':' '}</span>{puretext(item.linetext)}</div>
 <div class="hr"/>
 {/each}
+<SentenceNav {ptk} bind:address/>
 <div class="endmarker">※※※</div>
-{/await}
 </div>
 

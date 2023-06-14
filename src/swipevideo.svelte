@@ -132,8 +132,10 @@ const gotoFolio=async (t)=>{
 	if (Math.floor(t)!==Math.floor(mp4player?.currentTime)) {
 		setTimeout(()=>{
 			mp4player.currentTime=(t||0)+0.001;
-			updateFolioText();	
+			updateFolioText();
 		},500);
+	} else {
+		updateFolioText();
 	}
 }
 $: gotoFolio($activefolio,$activebookid);
