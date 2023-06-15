@@ -22,8 +22,8 @@ const updateVariorum=async (address)=>{
             at++;
             to=r.linepos[at];
         }
-        await ptk.loadLines([[from,to]]);
-        const lines=ptk.slice(from,to);
+        await ptk.loadLines([[from,to+1]]);
+        const lines=ptk.slice(from,to+1);
         if (lines[lines.length-1].indexOf('^ck')) lines.pop();//drop ^ck line at the end
         lines[0]='<div class="sourcetext">'+lines[0].replace(/\^r(\d+):/g,(m,m1)=>styledNumber(m1))+'</div>';
         text=lines.join('<br/>');

@@ -5,9 +5,12 @@ import Mainmenu from "./mainmenu.svelte";
 let ptk;
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import { onMount } from "svelte";
-import {activebookid} from './store.js'
+import {activebookid,isIOS} from './store.js'
 import TapText from './taptext.svelte'
 registerServiceWorker();
+
+isIOS.set(!!navigator.userAgent.match(/iPad|iPhone/));
+
 let loaded=false;
 onMount(async ()=>{
     ptk=await openPtk("dc");
@@ -36,7 +39,7 @@ const onTapText=(t,_address,ptkname)=>{
 {#if loaded}
 
 <!-- <SwipeGallery {items}/> -->
-<SwipeVideo src={$activebookid+".webm"} {ptk} {onTapText} {onMainmenu}/>
+<SwipeVideo src={$activebookid+($isIOS?".mov":".webm")} {ptk} {onTapText} {onMainmenu}/>
 {#if showdict || showmainmenu}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="closepopup" on:click={closePopup}>╳</span>
