@@ -1,6 +1,6 @@
 <script>
 import PuncLayer from './punclayer.svelte';
-import {isIOS} from './store.js'
+import {isAndroid} from './store.js'
 export let src;
 let mp4player;
 let touching=-1;
@@ -185,11 +185,7 @@ onDestroy(()=>{
 {#key src}
 <!-- svelte-ignore a11y-media-has-caption -->
 <video bind:this={mp4player} on:loadeddata ={videoloaded}>
-{#if $isIOS}
-	<source {src} type="video/mp4"/>
-{:else}
-    <source {src} type="video/webm"/>
-{/if}
+	<source {src} type={"video/"+($isAndroid?"webm":"mp4")}/>
 </video>
 {/key}
 

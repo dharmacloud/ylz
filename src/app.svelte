@@ -5,12 +5,12 @@ import Mainmenu from "./mainmenu.svelte";
 let ptk;
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import { onMount } from "svelte";
-import {activebookid,isIOS} from './store.js'
+import {activebookid,isAndroid} from './store.js'
 import TapText from './taptext.svelte'
 registerServiceWorker();
 
-isIOS.set(!!navigator.userAgent.match(/iPad|iPhone/));
-
+isAndroid.set(!!navigator.userAgent.match(/Android/i));
+console.log($isAndroid)
 let loaded=false;
 onMount(async ()=>{
     ptk=await openPtk("dc");
@@ -39,7 +39,7 @@ const onTapText=(t,_address,ptkname)=>{
 {#if loaded}
 
 <!-- <SwipeGallery {items}/> -->
-<SwipeVideo src={$activebookid+($isIOS?".mp4":".webm")} {ptk} {onTapText} {onMainmenu}/>
+<SwipeVideo src={$activebookid+($isAndroid?".webm":".mp4")} {ptk} {onTapText} {onMainmenu}/>
 {#if showdict || showmainmenu}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="closepopup" on:click={closePopup}>╳</span>

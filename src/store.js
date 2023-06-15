@@ -7,4 +7,4 @@ export const activebookid=writable('vcpp_kumarajiva');
 export const activefolio=writable(0);
 export const autoplay=writable(0);
 export const maxfolio=writable(0);
-export const isIOS=writable(false)
+export const isAndroid=writable(false)
