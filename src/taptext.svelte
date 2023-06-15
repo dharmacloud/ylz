@@ -31,6 +31,7 @@ $: onDict(tofind)
         <span class='clickable' class:selected={thetab=="toc"} on:click={()=>thetab="toc"}>分</span>
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="translations"} on:click={()=>thetab="translations"}>譯</span>
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="variorum"} on:click={()=>thetab="variorum"}>註</span>
         {#if def}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
