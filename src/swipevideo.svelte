@@ -186,7 +186,7 @@ onDestroy(()=>{
 <!-- svelte-ignore a11y-media-has-caption -->
 <video bind:this={mp4player} on:loadeddata ={videoloaded}>
 {#if $isIOS}
-	<source {src} type="video/mov"/>
+	<source {src} type="video/mp4"/>
 {:else}
     <source {src} type="video/webm"/>
 {/if}

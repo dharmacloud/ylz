@@ -39,7 +39,7 @@ const onTapText=(t,_address,ptkname)=>{
 {#if loaded}
 
 <!-- <SwipeGallery {items}/> -->
-<SwipeVideo src={$activebookid+($isIOS?".mov":".webm")} {ptk} {onTapText} {onMainmenu}/>
+<SwipeVideo src={$activebookid+($isIOS?".mp4":".webm")} {ptk} {onTapText} {onMainmenu}/>
 {#if showdict || showmainmenu}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="closepopup" on:click={closePopup}>╳</span>
