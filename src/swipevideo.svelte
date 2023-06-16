@@ -89,18 +89,11 @@ const getCharXY=(div,x,y)=>{
 const onclick=async (e,_x,_y)=>{
     const x=_x||e.clientX;
     const y=_y||e.clientY;
-
 	if (!inVideoRect(x)) return;
-	
     const [cx,cy]=getCharXY(mp4player, x,y);
-
     const [t,pos]=getConreatePos(foliotext[cx],cy,foliotext[cx+1]);
 	//get the ck-lineoff 
-
-	
-	
 	const address=  'bk#'+$activebookid +'.'+ await folio2ChunkLine(ptk,foliotext, foliofrom,cx,pos);
-	
 	await onTapText(t,address,ptk.name);
 }
 const autoplayfolio=()=>{
@@ -184,7 +177,7 @@ onDestroy(()=>{
 
 {#key src}
 <!-- svelte-ignore a11y-media-has-caption -->
-<video bind:this={mp4player} on:loadeddata ={videoloaded}>
+<video loop autoplay bind:this={mp4player} on:loadeddata ={videoloaded}>
 	<source {src} type={"video/"+($isAndroid?"webm":"mp4")}/>
 </video>
 {/key}
