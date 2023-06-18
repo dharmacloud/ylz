@@ -1,9 +1,8 @@
 <script>
 import Slider from './3rd/rangeslider.svelte';
-import {autoplay,activefolio,maxfolio, isAndroid} from './store.js';
+import {autoplay,activefolio,maxfolio} from './store.js';
 let value=[$autoplay,0];
 let folio=[$activefolio];
-let mp4player;
 const setValue=(e)=>{
     const v=e.detail[0];
     if (v!=$autoplay) autoplay.set(v);

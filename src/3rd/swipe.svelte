@@ -12,7 +12,7 @@
   export let active_item = 0; //readonly
   export let is_vertical = false;
   export let allow_infinite_swipe = false;
-
+  
   let activeIndicator = 0,
     indicators,
     total_elements = 0,
@@ -33,6 +33,7 @@
 
   let fire = createEventDispatcher();
 
+  let movingcount=0;
   function init() {
     swipeItemsWrapper = swipeWrapper.querySelector('.swipeable-slot-wrapper');
     swipeElements = swipeItemsWrapper.querySelectorAll('.swipeable-item');
@@ -153,6 +154,7 @@ transition-duration: ${touch_end ? transitionDuration : '0'}ms;
 
   function onMove(e) {
     if (touch_active) {
+      movingcount++;
       e.stopImmediatePropagation();
       e.stopPropagation();
       let _axis = e.touches ? e.touches[0][page_axis] : e[page_axis],
@@ -178,8 +180,11 @@ transition-duration: ${touch_end ? transitionDuration : '0'}ms;
     }
   }
 
+  let startx,starty;
   function onMoveStart(e) {
     // e.preventDefault();
+    fire('start');
+    movingcount=0;
     e.stopImmediatePropagation();
     e.stopPropagation();
     touch_active = true;
@@ -188,6 +193,15 @@ transition-duration: ${touch_end ? transitionDuration : '0'}ms;
       longTouch = true;
     }, 250);
     axis = e.touches ? e.touches[0][page_axis] : e[page_axis];
+
+    if (e.touches) {
+      startx=e.touches[0].pageX;
+  		starty=e.touches[0].pageY;
+    } else {
+      startx=e.clientX;
+      starty=e.clientY;
+    }
+    
     eventDelegate('add');
   }
 
@@ -247,7 +261,24 @@ transition-duration: ${touch_end ? transitionDuration : '0'}ms;
 
     eventDelegate('remove');
     let swipe_direction = direction ? 'right' : 'left';
-    fire('change', { active_item, swipe_direction, active_element: swipeElements[active_item] });
+
+
+    let x,y;
+    if (e?.changedTouches) {
+      x=e.changedTouches[0].pageX;
+  		y=e.changedTouches[0].pageY;
+    } else {
+      x=e?.clientX;
+      y=e?.clientY;
+    }
+
+    if (Math.abs(startx-x)<3 && Math.abs(starty-y)<3 && movingcount<3) {
+      fire('click',{x,y});
+    } else {
+      setTimeout(()=>{
+        fire('change', { active_item, swipe_direction, active_element: swipeElements[active_item] });
+      },transitionDuration);
+    }
   }
 
   function changeItem(item) {
@@ -277,6 +308,9 @@ transition-duration: ${touch_end ? transitionDuration : '0'}ms;
     let step = activeIndicator + 1;
     goTo(step);
   }
+  const onclick=e=>{
+    console.log('swiper click')
+  }
 </script>
 
 <div class="swipe-panel">
@@ -287,11 +321,10 @@ transition-duration: ${touch_end ? transitionDuration : '0'}ms;
       </div>
     </div>
   </div>
-  <div class="swipe-handler" on:touchstart={onMoveStart} on:mousedown={onMoveStart} />
+  <div class="swipe-handler" on:touchstart={onMoveStart} on:mousedown={onMoveStart} on:click={onclick}/>
   {#if showIndicators}
     <div class="swipe-indicator swipe-indicator-inside">
       {#each indicators as x, i}
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span
           class="dot {activeIndicator == i ? 'is-active' : ''}"
           on:click={() => {

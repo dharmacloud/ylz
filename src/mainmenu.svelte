@@ -2,7 +2,7 @@
 import Foliolist from './foliolist.svelte'   
 import Setting from './setting.svelte'
 export let ptk;
-export let onclose;
+export let closePopup;
 let thetab='list';
 </script>
 <div class="popup">
@@ -13,7 +13,7 @@ let thetab='list';
         <span class='clickable' class:selected={thetab=="setting"} on:click={()=>thetab="setting"}>設置</span>
 
     </div>
-    <div class="tab-content" class:visible={thetab=='list'}><Foliolist {ptk} {onclose}/></div>
+    <div class="tab-content" class:visible={thetab=='list'}><Foliolist {ptk} {closePopup}/></div>
     <div class="tab-content" class:visible={thetab=='setting'}><Setting/></div>
 </div>
 <style>

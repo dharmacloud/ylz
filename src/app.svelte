@@ -1,16 +1,17 @@
 <script>
 import { openPtk,usePtk} from 'ptk'
-import SwipeVideo from "./swipevideo.svelte";
+// import SwipeVideo from "./swipevideo.svelte";
+import SwipeZipImage from "./swipezipimage.svelte";
 import Mainmenu from "./mainmenu.svelte";
-let ptk;
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import { onMount } from "svelte";
 import {activebookid,isAndroid} from './store.js'
 import TapText from './taptext.svelte'
+let ptk;
 registerServiceWorker();
 
 isAndroid.set(!!navigator.userAgent.match(/Android/i));
-console.log($isAndroid)
+
 let loaded=false;
 onMount(async ()=>{
     ptk=await openPtk("dc");
@@ -33,13 +34,18 @@ const onTapText=(t,_address,ptkname)=>{
     address=_address;
     ptk=usePtk(ptkname);
 }
+
 </script>
 
-<div class="app">
+
+<div class="app" >
 {#if loaded}
 
-<!-- <SwipeGallery {items}/> -->
-<SwipeVideo src={$activebookid+($isAndroid?".webm":".mp4")} {ptk} {onTapText} {onMainmenu}/>
+<!-- <SwipeVideo src={$activebookid+($isAndroid?".webm":".mp4")} {ptk} {onTapText} {onMainmenu}/> -->
+{#key $activebookid}
+<SwipeZipImage src={$activebookid+".zip"} {ptk} {onTapText} {onMainmenu}/>
+{/key}
+
 {#if showdict || showmainmenu}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="closepopup" on:click={closePopup}>╳</span>
@@ -48,11 +54,11 @@ const onTapText=(t,_address,ptkname)=>{
 {#if showdict}
 <TapText {address} {tofind}  {closePopup}/>
 {:else if showmainmenu && ptk}
-<Mainmenu {ptk} onclose={closePopup}/>
+<Mainmenu {ptk} {closePopup}/>
 {/if}
 
 {:else}
-LOADING
+....SYSTEM LOADING... need es2015
 {/if}
 </div>
 <style>

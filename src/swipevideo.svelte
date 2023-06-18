@@ -124,11 +124,13 @@ const updateFolioText=async ()=>{
     [foliotext,foliofrom]=await fetchFolioText(ptk,$activebookid,1+Math.floor(mp4player?.currentTime||0));
 	puncs=extractPuncPos(foliotext,folioLines);
 	activefolio.set(Math.floor(mp4player.currentTime));
+	if (!mp4player?.paused) mp4player?.pause();
 }
-const gotoFolio=async (t)=>{	
+const gotoFolio=async (t)=>{
+	if (!mp4player?.paused) mp4player?.pause();
 	if (Math.floor(t)!==Math.floor(mp4player?.currentTime)) {
 		setTimeout(()=>{
-			mp4player.currentTime=(t||0)+0.001;
+			mp4player.currentTime=Math.floor(t||0)+0.01;
 			updateFolioText();
 		},500);
 	} else {
@@ -143,6 +145,8 @@ const videoFrame=()=>{
 const videoloaded=()=>{
 	gotoFolio($activefolio);
 	maxfolio.set(mp4player.duration);
+	mp4player.autoplay=false;
+	mp4player.pause();
 }
 let timer;
 let seconds=0;
@@ -153,12 +157,16 @@ onMount(()=>{
 			seconds=0;
 		}
 		seconds++;
+
 	},1000);
 })
 
 onDestroy(()=>{
 	clearInterval(timer)
 })
+const setHandle=node=>{
+	mp4player=node;
+}
 </script>
 {#if mp4player?.currentTime<1}
 <div class="sponsor">中部全國供佛齋僧大會</div>
@@ -177,7 +185,7 @@ onDestroy(()=>{
 
 {#key src}
 <!-- svelte-ignore a11y-media-has-caption -->
-<video loop autoplay bind:this={mp4player} on:loadeddata ={videoloaded}>
+<video loop autoplay on:loadeddata={videoloaded} use:setHandle>
 	<source {src} type={"video/"+($isAndroid?"webm":"mp4")}/>
 </video>
 {/key}

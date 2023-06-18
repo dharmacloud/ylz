@@ -1,3 +1,4 @@
+copy/y ..\jinglu\*.zip  dist
 copy/y dist\*.* \github.io\dharmacloud.github.io\swipegallery
 copy/y dist\dc\*.* \github.io\dharmacloud.github.io\swipegallery\dc
 copy/y dist\dc_sanskrit\*.* \github.io\dharmacloud.github.io\swipegallery\dc_sanskrit

@@ -1,6 +1,6 @@
 <script>
 import {getParallelLines} from 'ptk/align/';
-import {activefolio,activebook,activebookid,activePtk} from './store.js'
+import {activefolio,activebookid,activePtk} from './store.js'
 import { parseOfftext } from 'ptk/offtext';
 import SentenceNav from './sentencenav.svelte'
 export let closePopup=function(){};
@@ -23,8 +23,6 @@ const goFolio=(ptk,line)=>{
     const bkat=ptk.nearestTag(line+1,'bk')-1;
     const folioat=ptk.nearestTag(line+1,'folio')-1;
     const pbid=pb.fields.id.values[pbat];
-
-    activebook.set(bkat)
 
     activebookid.set(folio.fields.id.values[folioat]);
     activefolio.set( parseInt(pbid)-1);
@@ -50,7 +48,7 @@ $: updateTranslation(address);
 <div class="hr"/>
 {#each translations as item}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div class:selecteditem={item.heading?.bk?.at==$activebook}><span  on:click={()=>goFolio(item.ptk,item.line)} class="clickable author">{getBookTitle(item.ptk,item.heading?.bk?.at)}{hasfolio(item.ptk)?'←':' '}</span>{puretext(item.linetext)}</div>
+<div class:selecteditem={item.heading?.bkid==$activebookid}><span  on:click={()=>goFolio(item.ptk,item.line)} class="clickable author">{getBookTitle(item.ptk,item.heading?.bk?.at)}{hasfolio(item.ptk)?'←':' '}</span>{puretext(item.linetext)}</div>
 <div class="hr"/>
 {/each}
 <SentenceNav {ptk} bind:address/>

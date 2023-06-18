@@ -1,7 +1,8 @@
 <script>
 export let ptk;
-import {activebook,activebookid, activefolio} from './store.js';
-export let onclose=function(){};
+import {activebookid, activefolio} from './store.js';
+export let closePopup=function(){};
+
 const getBookList=()=>{
     const folio=ptk.defines.folio;
     const bk=ptk.defines.bk;
@@ -10,7 +11,7 @@ const getBookList=()=>{
         const id=folio.fields.id.values[i];
         const at=bk.fields.id.values.indexOf(id);
         if (~at) {
-            out.push(at);
+            out.push([at, id]);
         }
     }
     return out;
@@ -18,10 +19,9 @@ const getBookList=()=>{
 const books=getBookList();
 const selectbook=nbk=>{
     const bk=ptk.defines.bk;
-    activebook.set(nbk);
     activebookid.set(bk.fields.id.values[nbk]);
     activefolio.set(0);
-    onclose();
+    closePopup();
 }
 
 const getBookName=nbk=>{
@@ -30,9 +30,9 @@ const getBookName=nbk=>{
     return bk.fields.heading.values[nbk]+'-'+bookname;
 }
 </script>
-{#each books as nbk}
+{#each books as [nbk,bkid]}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div class="book" on:click={()=>selectbook(nbk)}><span class:selecteditem={$activebook==nbk} >{getBookName(nbk)}</span></div>
+<div class="book" on:click={()=>selectbook(nbk)}><span class:selecteditem={$activebookid==bkid} >{getBookName(nbk)}</span></div>
 {/each}
 
 

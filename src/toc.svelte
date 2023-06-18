@@ -6,8 +6,9 @@ export let address;
 export let closePopup;
 let tocitems=[],cknow;
 const getTocItems=address=>{
-    const m=address.match(/(bk#?[a-z_\d]+)/);
     const out=[];
+    if (!address) return out;
+    const m=address.match(/(bk#?[a-z_\d]+)/);
     const [from,to]=ptk.rangeOfAddress(m[1]);
     const ck=ptk.defines.ck;
     const at=bsearchNumber (ck.linepos, from);
