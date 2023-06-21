@@ -7,10 +7,9 @@ let touching=-1;
 let touchx=0,touchy=0,startx=0,starty=0,direction=0;
 import {up1,up2,turnleft,turnright,swipestart,swipeend,down1,down2} from './swipeshapes.js';
 import {fetchFolioText,getConreatePos,folio2ChunkLine,extractPuncPos,usePtk} from 'ptk'
-import {autoplay,activebookid,activefolio,activePtk, maxfolio} from './store.js'
-import {onDestroy,onMount} from 'svelte'
+import {folioLines, folioChars,activebookid,activefolio,activePtk, maxfolio} from './store.js'
 const swipeshapes=[ down2,down1, swipeend,turnright, , turnleft,swipestart, up1,up2];
-export let folioChars=17,folioLines=5;
+
 export let onTapText=function(){};
 export let onMainmenu=function(){};
 let ptk=usePtk($activePtk)
@@ -79,9 +78,8 @@ const mousewheel=(e)=>{
 }
 const getCharXY=(div,x,y)=>{
 	const [left,top,right]=videoRect();
-	
-    const cx=folioLines-Math.floor(((x-left)/(right-left))*folioLines)-1;
-    const cy=Math.floor((y/(div.clientHeight-div.clientTop))*folioChars);
+    const cx=$folioLines-Math.floor(((x-left)/(right-left))*$folioLines)-1;
+    const cy=Math.floor((y/(div.clientHeight-div.clientTop))*$folioChars);
     return [cx,cy];
 }
 
@@ -96,13 +94,13 @@ const onclick=async (e,_x,_y)=>{
 	const address=  'bk#'+$activebookid +'.'+ await folio2ChunkLine(ptk,foliotext, foliofrom,cx,pos);
 	await onTapText(t,address,ptk.name);
 }
-const autoplayfolio=()=>{
-	mp4player.currentTime+=1.001;
-	if (mp4player.currentTime>=mp4player.duration) {
-		mp4player.currentTime=0;
-	}
-	updateFolioText();
-}
+// const autoplayfolio=()=>{
+// 	mp4player.currentTime+=1.001;
+// 	if (mp4player.currentTime>=mp4player.duration) {
+// 		mp4player.currentTime=0;
+// 	}
+// 	updateFolioText();
+// }
 const ontouchend=async e=>{
 	if (touching!==-1 && direction!==0) {
 		if (direction==1) mp4player.currentTime+=-1.001;
@@ -122,7 +120,7 @@ const ontouchend=async e=>{
 }
 const updateFolioText=async ()=>{
     [foliotext,foliofrom]=await fetchFolioText(ptk,$activebookid,1+Math.floor(mp4player?.currentTime||0));
-	puncs=extractPuncPos(foliotext,folioLines);
+	puncs=extractPuncPos(foliotext,$folioLines);
 	activefolio.set(Math.floor(mp4player.currentTime));
 	if (!mp4player?.paused) mp4player?.pause();
 }
@@ -148,22 +146,22 @@ const videoloaded=()=>{
 	mp4player.autoplay=false;
 	mp4player.pause();
 }
-let timer;
-let seconds=0;
-onMount(()=>{
-	timer=setInterval(()=>{
-		if ($autoplay && seconds>$autoplay) {
-			autoplayfolio();
-			seconds=0;
-		}
-		seconds++;
+// let timer;
+// let seconds=0;
+// onMount(()=>{
+// 	timer=setInterval(()=>{
+// 		if ($autoplay && seconds>$autoplay) {
+// 			autoplayfolio();
+// 			seconds=0;
+// 		}
+// 		seconds++;
 
-	},1000);
-})
+// 	},1000);
+// })
 
-onDestroy(()=>{
-	clearInterval(timer)
-})
+// onDestroy(()=>{
+// 	clearInterval(timer)
+// })
 const setHandle=node=>{
 	mp4player=node;
 }
@@ -200,6 +198,5 @@ const setHandle=node=>{
 video { height:100%;user-select: none; pointer-events: none;width:100%;}
 .swipe {position:absolute;top:50%;left:50%;transform: translate(-50%,-50%); }
 .pagenumber {position:absolute ; bottom:1%;font-size: 200%;left:0.1em;z-index: 999;color:brown}
-.sponsor {user-select:none;pointer-events:none;font-size:4vh;font-weight: bold;
-position:absolute; color:red;opacity: 0.75; right:1.1em;top:50vh;writing-mode: vertical-lr}
+
 </style>

@@ -1,9 +1,19 @@
 <script>
-import { bsearchNumber ,styledNumber,chunkOfFolio} from "ptk";
-import {activefolio} from './store.js'
+import Slider from './3rd/rangeslider.svelte';
+import { bsearchNumber ,styledNumber,chunkOfFolio,debounce} from "ptk";
+import {activefolio,maxfolio,activebookid} from './store.js';
+let folio=[$activefolio];
 export let ptk;
 export let address;
 export let closePopup;
+
+const setFolio=async (e)=>{
+    const v=e.detail[0];
+    activefolio.set(parseInt(v));
+    address=  'bk#'+$activebookid +'.ck#'+ chunkOfFolio(ptk,$activebookid,v);
+}
+
+
 let tocitems=[],cknow;
 const getTocItems=address=>{
     const out=[];
@@ -33,11 +43,23 @@ const getCk=(address)=>{
 }
 $: tocitems=getTocItems(address);
 $: cknow=getCk(address);
+
 </script>
 <div  class="toctext">
+<div class="jumper">
+跳到第{ (folio[0]||0)+1}頁 <Slider bind:value={folio} on:input={debounce(setFolio,500)} max={$maxfolio} min={0} />
+</div>
+
+<div class="toc">
 {#each tocitems as item}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div on:click={()=>gofolio(item.at)} class="tocitem" class:selecteditem={cknow==item.id}>{styledNumber(item.id,'①') + item.caption}</div>
 {/each}
 <div class="endmarker">※※※</div>
 </div>
+</div>
+
+<style>
+.jumper {height:10vh}
+.toc {overflow-y: auto;height:80vh}
+</style>

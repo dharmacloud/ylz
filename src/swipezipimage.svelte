@@ -1,28 +1,36 @@
 <script>
-import {onMount} from 'svelte';
+import TranscriptLayer from './transcriptlayer.svelte';
 import PuncLayer from './punclayer.svelte';
 import Swipe from './3rd/swipe.svelte';
 import SwipeItem from './3rd/swipeitem.svelte';
+import {rotatingwheel} from './3rd/rotatingwheel.js';
 export let src;
 import {fetchFolioText,getConreatePos,folio2ChunkLine,extractPuncPos,usePtk} from 'ptk'
 import {ZipStore} from 'ptk/zip';
-import {activePtk,activebookid,activefolio,autoplay,maxfolio} from './store.js'
+import {playing,folioLines,folioChars,activePtk,activebookid,activefolio,maxfolio,mediaid} from './store.js'
 let ptk=usePtk($activePtk)
 let foliotext='',foliofrom=0,puncs=[],ready,images=[],hidepunc=false;
-export let folioChars=17,folioLines=5,totalpages=0,swiper;
+export let totalpages=0;
 export let onTapText=function(){};
-
+let swiper;
+let defaultIndex=0;
+let stableleft=0;
 const imageFrame=()=>{
     const img=document.getElementsByClassName('swipe')[defaultIndex];
 	if (!img || !img.clientHeight) return [0,0,0,0];
     
 	const r=img.clientHeight / img.naturalHeight;
     const rect=img.getBoundingClientRect();
+    if (rect.left<0) {//還沒捲好
+        rect.left=stableleft;
+    } else {
+        stableleft=rect.left; //穩定的
+    }
 	const w=img.naturalWidth * r;
 	const left=Math.floor((img.clientWidth- w)/2) + rect.x;
 	return {left,top:rect.y,width:w,height:img.clientHeight} ;
 }
-let defaultIndex=0;
+
 const swipeConfig = {
     autoplay: false,
     delay: 0,
@@ -58,10 +66,10 @@ const swipeChanged=(obj)=>{
 const updateFolioText=async ()=>{
     hidepunc=false;
     [foliotext,foliofrom]=await fetchFolioText(ptk,$activebookid,1+Math.floor($activefolio));
-	puncs=extractPuncPos(foliotext,folioLines);
+	puncs=extractPuncPos(foliotext,$folioLines);
 }
 const mousewheel=(e)=>{
-	if (e.ctrlKey) return;
+	if (e.ctrlKey ) return;
     hidepunc=true;
 	if (e.deltaY>0) {
 		swiper.prevItem();
@@ -74,7 +82,7 @@ const getCharXY=(x,y)=>{
 	const {left,top,width,height}=imageFrame();
     x-=left;
     y-=top;	
-    const cx=folioLines-Math.floor((x/width)*folioLines)-1;
+    const cx=$folioLines-Math.floor((x/width)*$folioLines)-1;
     const cy=Math.floor((y/height)*folioChars);
     return [cx,cy];
 }
@@ -101,19 +109,6 @@ const gotofolio=(folio)=>{
 $: loadZip(src);
 $: gotofolio($activefolio); //trigger by goto folio in setting.svelte
 let seconds=0;
-onMount(()=>{
-	timer=setInterval(()=>{
-		if ($autoplay && seconds>$autoplay) {
-            if (defaultIndex==0) { //last page
-                swiper.goTo(totalpages-1); //goback to first page
-            } else {
-                swiper.prevItem();
-            }
-			seconds=0;
-		}
-		seconds++;
-	},1000);
-})
 
 </script>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -128,25 +123,34 @@ onMount(()=>{
     {/each}    
 </Swipe>
 </div>
+{:else}
+<div class="message">{@html rotatingwheel}</div>
 {/if}
 <span class="pagenumber">{totalpages-defaultIndex}</span>
 
 {#key puncs}
 {#if !hidepunc}
-<PuncLayer frame={ imageFrame()  } {folioChars} {folioLines} {puncs} />
+<PuncLayer frame={ imageFrame()  } folioChars={$folioChars} folioLines={$folioLines} {puncs} />
+<TranscriptLayer frame={ imageFrame()  } {totalpages} folioLines={$folioLines} {swiper}/>
 {/if}
 {/key}
+
+<!-- {#if $mediaid} -->
+
+<!-- {/if} -->
 
 
 <style>
 img { height:100%}
 .pagenumber {position:absolute ; bottom:1%;font-size: 200%;left:0.1em;z-index: 999;color:brown}
-.swipe {position:absolute;top:50%;left:50%;transform: translate(-50%,-50%); }
+.message {position:absolute;top:50%;left:50%;transform: translate(-50%,-50%); }
 .swipe-holder{
     height: 100%;
     width: 100%; 
-    background-color: rgb(243, 208, 160);
+    
 }
+.swipe {position:absolute;top:50%;left:50%;transform: translate(-50%,-50%); }
+
 .sponsor {user-select:none;pointer-events:none;font-size:4vh;font-weight: bold;z-index:10;
 position:absolute; color:red;opacity: 0.75; right:1.1em;top:50vh;writing-mode: vertical-lr}
 </style>

@@ -123,6 +123,7 @@
     }
   }
 
+
   function generateTranslateValue(value) {
     return is_vertical ? `translate3d(0, ${value}px, 0)` : `translate3d(${value}px, 0, 0)`;
   }
@@ -308,9 +309,7 @@ transition-duration: ${touch_end ? transitionDuration : '0'}ms;
     let step = activeIndicator + 1;
     goTo(step);
   }
-  const onclick=e=>{
-    console.log('swiper click')
-  }
+
 </script>
 
 <div class="swipe-panel">
@@ -321,10 +320,12 @@ transition-duration: ${touch_end ? transitionDuration : '0'}ms;
       </div>
     </div>
   </div>
-  <div class="swipe-handler" on:touchstart={onMoveStart} on:mousedown={onMoveStart} on:click={onclick}/>
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
+  <div class="swipe-handler" on:touchstart={onMoveStart} on:mousedown={onMoveStart} />
   {#if showIndicators}
     <div class="swipe-indicator swipe-indicator-inside">
       {#each indicators as x, i}
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span
           class="dot {activeIndicator == i ? 'is-active' : ''}"
           on:click={() => {

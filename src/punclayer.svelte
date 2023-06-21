@@ -3,12 +3,9 @@
 export let frame={};
 export let puncs=[];
 export let folioChars=17,folioLines=5;
+import {stylestring} from './unit.js'
 const unitw=frame.width/folioLines , unith= frame.height/folioChars;
-
 import {isPunc} from 'ptk'
-const stylestring=(f)=>{
-    return `left:${f.left}px;width:${f.width}px;top:${f.top}px;height:${f.height}px`
-}
 
 const puncStyle=(line,ch,text)=>{
     let fontsize=unith*0.9 ,yinc=unith*0.2,xinc=-unitw*0.1;
@@ -48,8 +45,3 @@ const puncStyle=(line,ch,text)=>{
 <div class="vline" style={getVLine(3)}></div>
 <div class="vline" style={getVLine(4)}></div> -->
 </div>
-<style>
-    .puncs {z-index:9;position:absolute;user-select: none;overflow:hidden;pointer-events: none;user-select: none;}
-    .punc {z-index:9;position:absolute;color:rgba(255, 0, 0,0.6);font-family: bolder;}
-    /* .vline{position:absolute;z-index:9;background:rgba(128,128,128,0.3);} */
-</style>
