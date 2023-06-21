@@ -5,6 +5,7 @@ const selectmedia=e=>{
     mediaid.set(parseInt(e.target.selectedOptions[0].attributes.value.nodeValue)||0);
 }
 const humanDuration=(t)=>{
+    if (!t) return ''
     const minutes=Math.floor(t/60);
     const seconds=t - minutes*60;
     return `${minutes}:${seconds}`;

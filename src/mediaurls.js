@@ -16,12 +16,12 @@ stamps.forEach(unpack);
 
 export const mediaurls=[
     {youtube:'',author:'-靜默-'},
-    {youtube:'RquHJ4jzXKs',author:'法鼓山'},
     {youtube:'5C4INS3hK40',author:'養德寺'},
+    {youtube:'RquHJ4jzXKs',author:'法鼓山'},
     {youtube:'m9ZmMrY88qE', author:'心定法師',start:425,end:2178, timestamp:venxinding},
     {youtube:'z-IpOREVDHo',author:'見輝法師'},
     {youtube:'ZK_W_Qy2C3k',author:'蔣勳'},
-    {youtube:'xyPmW3TeTNk',author:'黃慧音'},
-    // {youtube:'1dVZ_bFWmgM',author:'黃慧音2'},
+    // {youtube:'xyPmW3TeTNk',author:'黃慧音'},
+    // {youtube:'1dVZ_bFWmgM',author:'黃慧音2'}, //cannot embed
     {youtube:'edV5PJyUzdc',author:'王菲'},
 ]
