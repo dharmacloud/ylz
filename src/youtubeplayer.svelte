@@ -1,5 +1,5 @@
 <script>
-import {player,mediaid,activefolio,folioLines,playing,continueplay} from './store.js'
+import {player,mediaid,activebookid,activefolio,folioLines,playing,continueplay} from './store.js'
 import {mediaurls} from './mediaurls.js';
 
 let plyr;
@@ -19,29 +19,42 @@ setTimeout(()=>{
 },1000);
 
 function onPlayerStateChange(e){
-    playing.set(false);
-    if (e.data==1) { //start play
-        playing.set(true);
+    const {bookid} = mediaurls[$mediaid];
+    if (bookid!==$activebookid) {
+        stopVideo();
+        return;
     }
+    playing.set(e.data==1);   
+}
+const stopVideo=()=>{
+    mediaid.set(0);
+    $player?.stopVideo();
+    playing.set(false);
 }
 function onPlayerReady(e) {
     // 為確保瀏覽器上可以自動播放，要把影片調成靜音
     // console.log('player ready')
     player.set(pylr)
     pylr.playVideo();
-    // setTimeout(async ()=>{
-    //      e.target.pauseVideo();
-    // },1000);
 }
 const loadVideo=(mediaid)=>{
-    const {youtube,start} = mediaurls[mediaid];
+    const {youtube,start,bookid} = mediaurls[mediaid];
+    if (bookid!==$activebookid) {
+        stopVideo();
+    } else {
+        $player?.loadVideoById({'videoId':youtube,suggestedQuality:'low',startSeconds:start});
+    }
     // console.log('load video',youtube);
-    $player?.loadVideoById({'videoId':youtube,suggestedQuality:'low',startSeconds:start});
+    
    //workaround with dash id
 }
 const seekToFolio=(folio,mediaid)=>{
     if (!mediaid || $continueplay) return;
-    const {timestamp} = mediaurls[mediaid];
+    const {timestamp,bookid} = mediaurls[mediaid];
+    if (bookid!==$activebookid) {
+        stopVideo();
+    }
+
     if (!timestamp) return;
     const line=parseInt(folio)*$folioLines;
     const t=timestamp[line];

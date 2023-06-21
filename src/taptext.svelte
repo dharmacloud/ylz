@@ -6,13 +6,13 @@ import About from "./about.svelte"
 import Translations from "./translations.svelte"
 import Variorum from "./variorum.svelte"
 import Toc from "./toc.svelte"
-import {activePtk} from './store.js'
+import {activePtk,activebookid} from './store.js'
 import {guessEntry ,usePtk} from "ptk";
 export let tofind='';
 
 export let address='';
 export let closePopup;
-let thetab='audio';
+let thetab='toc';
 let def='',ptk;
 
 const onDict=async (t)=>{
