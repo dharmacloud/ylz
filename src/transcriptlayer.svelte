@@ -5,7 +5,7 @@ import {mediaurls} from './mediaurls.js'
 import {get} from 'svelte/store'
 import {onDestroy} from 'svelte'
 export let frame={},totalpages;
-console.log(frame)
+
 const strips=new Array($folioLines);
 const timers=[];
 onDestroy(()=>{

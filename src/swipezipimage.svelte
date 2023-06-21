@@ -7,7 +7,7 @@ import {rotatingwheel} from './3rd/rotatingwheel.js';
 export let src;
 import {fetchFolioText,getConreatePos,folio2ChunkLine,extractPuncPos,usePtk} from 'ptk'
 import {ZipStore} from 'ptk/zip';
-import {playing,folioLines,folioChars,activePtk,activebookid,activefolio,maxfolio,mediaid} from './store.js'
+import {folioLines,folioChars,activePtk,activebookid,activefolio,maxfolio,mediaid} from './store.js'
 let ptk=usePtk($activePtk)
 let foliotext='',foliofrom=0,puncs=[],ready,images=[],hidepunc=false;
 export let totalpages=0;
@@ -66,7 +66,10 @@ const swipeChanged=(obj)=>{
 const updateFolioText=async ()=>{
     hidepunc=false;
     [foliotext,foliofrom]=await fetchFolioText(ptk,$activebookid,1+Math.floor($activefolio));
-	puncs=extractPuncPos(foliotext,$folioLines);
+    setTimeout(()=>{
+        puncs=extractPuncPos(foliotext,$folioLines);
+    },200); //wait until swiper stop
+	
 }
 const mousewheel=(e)=>{
 	if (e.ctrlKey ) return;
@@ -103,7 +106,7 @@ const gotofolio=(folio)=>{
     const go=totalpages-folio-1;
     if (go!==defaultIndex) {
         // console.log('goto',folio, go, defaultIndex)
-        swiper.goTo(go)
+        swiper.goTo(go);
     }
 }
 $: loadZip(src);
