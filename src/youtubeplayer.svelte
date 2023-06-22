@@ -16,7 +16,7 @@ setTimeout(()=>{
     }
     });
     // console.log('create youtube player',pylr)
-},1000);
+},1500);
 
 function onPlayerStateChange(e){
     const {bookid} = mediaurls[$mediaid];

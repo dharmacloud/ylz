@@ -12,16 +12,11 @@ registerServiceWorker();
 
 isAndroid.set(!!navigator.userAgent.match(/Android/i));
 
-let loaded=false,playtimer;
+let loaded=false;
 onMount(async ()=>{
     ptk=await openPtk("dc");
     await openPtk("dc_sanskrit");
     loaded=true;
-    playtimer=setInterval(()=>{
-    if ($mediaid &&$player) {
-        const t=$player.getCurrentTime();
-    }
-    },1000)    
 });
 let showdict=false,address='',tofind='';
 const closePopup=()=>{
@@ -36,7 +31,6 @@ const onTapText=(t,_address,ptkname)=>{
     address=_address;
     ptk=usePtk(ptkname);
 }
-onDestroy( clearInterval(playtimer));
 </script>
 
 

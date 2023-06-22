@@ -16,17 +16,17 @@ const getBookTitle=(ptk,nbk)=>{
 }
 const goFolio=(ptk,line)=>{
     const pb=ptk.defines.pb;
-    const bk=ptk.defines.bk;
     const folio=ptk.defines.folio;
     if (!pb) return 
     const pbat=ptk.nearestTag(line+1,'pb')-1;
-    const bkat=ptk.nearestTag(line+1,'bk')-1;
     const folioat=ptk.nearestTag(line+1,'folio')-1;
     const pbid=pb.fields.id.values[pbat];
 
     activebookid.set(folio.fields.id.values[folioat]);
-    activefolio.set( parseInt(pbid)-1);
     activePtk.set(ptk.name);
+    setTimeout(()=>{//wait until the file is loaded, 
+        activefolio.set( parseInt(pbid)-1);
+    },3000);//not working on slow network
     closePopup();
 }
 const hasfolio=(ptk,line)=>{

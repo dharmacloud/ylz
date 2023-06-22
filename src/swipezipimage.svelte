@@ -5,7 +5,7 @@ import Swipe from './3rd/swipe.svelte';
 import SwipeItem from './3rd/swipeitem.svelte';
 import {rotatingwheel} from './3rd/rotatingwheel.js';
 export let src;
-import {fetchFolioText,getConreatePos,folio2ChunkLine,extractPuncPos,usePtk} from 'ptk'
+import {fetchFolioText,getConcreatePos,folio2ChunkLine,extractPuncPos,usePtk} from 'ptk'
 import {ZipStore} from 'ptk/zip';
 import {folioLines,folioChars,activePtk,activebookid,activefolio,maxfolio,mediaid} from './store.js'
 let ptk=usePtk($activePtk)
@@ -86,7 +86,7 @@ const getCharXY=(x,y)=>{
     x-=left;
     y-=top;	
     const cx=$folioLines-Math.floor((x/width)*$folioLines)-1;
-    const cy=Math.floor((y/height)*folioChars);
+    const cy=Math.floor((y/height)*$folioChars);
     return [cx,cy];
 }
 
@@ -95,7 +95,7 @@ const onclick=async (e)=>{
     const {x,y}=e.detail;
     const [cx,cy]=getCharXY(x,y);
     // console.log('click',cx,cy)
-    const [t,pos]=getConreatePos(foliotext[cx],cy,foliotext[cx+1]);
+    const [t,pos]=getConcreatePos(foliotext[cx],cy,foliotext[cx+1]);
 	//get the ck-lineoff 
     const ck=await folio2ChunkLine(ptk,foliotext, foliofrom,cx,pos);;
 	const address= 'bk#'+$activebookid + (ck?('.'+ ck):'') ;
@@ -134,7 +134,7 @@ let seconds=0;
 {#key puncs}
 {#if !hidepunc}
 <PuncLayer frame={ imageFrame()  } folioChars={$folioChars} folioLines={$folioLines} {puncs} />
-<TranscriptLayer frame={ imageFrame()  } {totalpages} folioLines={$folioLines} {swiper}/>
+<TranscriptLayer frame={ imageFrame()  } {totalpages} folioLines={$folioLines} {swiper} {foliotext}/>
 {/if}
 {/key}
 

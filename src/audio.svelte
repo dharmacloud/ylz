@@ -13,7 +13,7 @@ const humanDuration=(t)=>{
 </script>
 <div class="toctext">
 {#if !$player}
-Loading Youtube Player
+Youtube播放器載入中
 {:else}
 選唱頌者，背景播放並自動翻頁，
 點 <a href={"https://www.youtube.com/watch?v="+mediaurls[$mediaid].youtube}>Youtube</a> 觀看原始影片。
