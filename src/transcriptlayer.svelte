@@ -16,6 +16,7 @@ const stripstyle=(i,strip)=>{
     if (i==0) {
         destroyTimer();
     }
+    if (get(continueplay)) return;//save one repaint, prevent redraw first strip
     let fl=get(folioLines)
     let fc=get(folioChars)
     const w=frame.width/fl;
@@ -40,6 +41,18 @@ const stripstyle=(i,strip)=>{
     if (Math.abs(timedelta)>3 ) { //不會差這麼多，是快速滑輪造成。getCurrentTime 未切到
         timedelta=0.02;
     }
+
+    if (i==0) { //翻頁timer
+        timers.push( setTimeout(()=>{
+            if (get(activefolio)<totalpages-1) { 
+                continueplay.set(true); //auto swipe , do not trigger 
+                activefolio.set(get(activefolio)+1);
+                setTimeout(()=>{
+                    continueplay.set(false);// user swipe manually
+                },100);            
+            }
+        }, (timestamp[line+fl] - timestamp[line] -timedelta)*1000));
+    }
     let delay=(timestamp[line+i]  - timestamp[line] - timedelta )*1000 ;
     if (i==0&&delay<30) delay=30;// too small value  cause immediate trigger fire
     // console.log(i,'delay',delay)
@@ -55,22 +68,10 @@ const stripstyle=(i,strip)=>{
     timers.push(setTimeout( fire,  delay)); 
 
     duration=timestamp[line+i+1]-timestamp[line+i];
-    if (duration==0 && i+1 <fl) {//empty line , 
+    if (duration==0 && i+1 <fl) {//empty line , try next line
         duration=timestamp[line+i+2]-timestamp[line+i];
     }
-    out.push('transition:height '+duration+'s  linear');
-
-    if (i==strips.length-1) {
-        timers.push( setTimeout(()=>{
-            if (get(activefolio)<totalpages-1) { 
-                continueplay.set(true); //auto swipe , do not trigger 
-                activefolio.set(get(activefolio)+1);
-                setTimeout(()=>{
-                    continueplay.set(false);// user swipe manually
-                },100);            
-            }
-        }, (timestamp[line+i+1] - timestamp[line] -timedelta)*1000));
-    }
+    out.push('transition:height '+duration+'s  linear'); //
     return out.join(';');
 }
 const destroyTimer=()=>{
