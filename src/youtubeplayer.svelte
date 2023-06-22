@@ -42,6 +42,7 @@ const loadVideo=(mediaid)=>{
     if (bookid!==$activebookid) {
         stopVideo();
     } else {
+        activefolio.set(0)
         $player?.loadVideoById({'videoId':youtube,suggestedQuality:'low',startSeconds:start});
     }
     // console.log('load video',youtube);
