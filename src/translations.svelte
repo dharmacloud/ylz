@@ -39,7 +39,7 @@ const puretext=(_text)=>{
 }
 
 const updateTranslation=async (address)=>{
-    translations=await getParallelLines(ptk,start+lineoff,null,{local:true});//same ptk only
+    translations=await getParallelLines(ptk,start+lineoff,null,{local:true,remote:false});//same ptk only
 }
 $: updateTranslation(address);
 </script>

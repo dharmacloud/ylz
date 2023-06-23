@@ -38,12 +38,14 @@ function onPlayerReady(e) {
     pylr.playVideo();
 }
 const loadVideo=(mediaid)=>{
-    const {youtube,start,bookid} = mediaurls[mediaid];
+    const {youtube,timestamp,bookid} = mediaurls[mediaid];
     if (bookid!==$activebookid) {
         stopVideo();
     } else {
-        activefolio.set(0)
+        activefolio.set(0);
+        const start=(timestamp&&timestamp[0])||0;
         $player?.loadVideoById({'videoId':youtube,suggestedQuality:'low',startSeconds:start});
+
     }
     // console.log('load video',youtube);
     

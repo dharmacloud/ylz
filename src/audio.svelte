@@ -10,6 +10,11 @@ const humanDuration=(t)=>{
     const seconds=t - minutes*60;
     return `${minutes}:${seconds}`;
 }
+const getDuration=id=>{
+    const timestamps=mediaurls[id]?.timestamp;
+    if (!timestamps) return 0;
+    return timestamps[timestamps.length-1]-timestamps[0];
+}
 </script>
 <div class="toctext">
 {#if !$player}
@@ -28,7 +33,7 @@ Youtube播放器載入中
 
 {#if $mediaid}
 <!-- svelte-ignore missing-declaration -->
-<br/>播放時長：{humanDuration(mediaurls[$mediaid].end-mediaurls[$mediaid].start)} 
+<br/>播放時長：{humanDuration(getDuration($mediaid))} 
 {/if}
 {/if}
 </div>
