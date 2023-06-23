@@ -44,6 +44,7 @@ const loadVideo=(mediaid)=>{
     } else {
         activefolio.set(0);
         const start=(timestamp&&timestamp[0])||0;
+        console.log(timestamp[timestamp.length-1],timestamp[0])
         $player?.loadVideoById({'videoId':youtube,suggestedQuality:'low',startSeconds:start});
 
     }
