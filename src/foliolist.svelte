@@ -10,7 +10,7 @@ const getBookList=()=>{
     for (let i=0;i<folio.linepos.length;i++) {
         const id=folio.fields.id.values[i];
         const at=bk.fields.id.values.indexOf(id);
-        if (~at) {
+        if (~at && !bk.fields.hidden?.values[at]) {
             out.push([at, id]);
         }
     }
@@ -27,7 +27,7 @@ const selectbook=nbk=>{
 const getBookName=nbk=>{
     const bk=ptk.defines.bk;
     const bookname=bk.innertext.get(nbk); 
-    return bk.fields.heading.values[nbk]+'-'+bookname;
+    return bk.fields.heading.values[nbk]||bookname;
 }
 </script>
 {#each books as [nbk,bkid]}

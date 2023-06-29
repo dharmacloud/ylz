@@ -1,13 +1,14 @@
 <script>
 import TranscriptLayer from './transcriptlayer.svelte';
 import PuncLayer from './punclayer.svelte';
+import TapMark from './tapmark.svelte';
 import Swipe from './3rd/swipe.svelte';
 import SwipeItem from './3rd/swipeitem.svelte';
 import {rotatingwheel} from './3rd/rotatingwheel.js';
 export let src;
 import {fetchFolioText,getConcreatePos,folio2ChunkLine,extractPuncPos,usePtk} from 'ptk'
 import {ZipStore} from 'ptk/zip';
-import {folioLines,folioChars,activePtk,activebookid,activefolio,maxfolio,mediaid} from './store.js'
+import {folioLines,folioChars,activePtk,activebookid,activefolio,maxfolio,tapmark} from './store.js'
 let ptk=usePtk($activePtk)
 let foliotext='',foliofrom=0,puncs=[],ready,images=[],hidepunc=false;
 export let totalpages=0;
@@ -64,12 +65,12 @@ const swipeChanged=(obj)=>{
     updateFolioText();
 }
 const updateFolioText=async ()=>{
-    hidepunc=false;
+    hidepunc=true;
     [foliotext,foliofrom]=await fetchFolioText(ptk,$activebookid,1+Math.floor($activefolio));
     setTimeout(()=>{
+        hidepunc=false;
         puncs=extractPuncPos(foliotext,$folioLines);
     },200); //wait until swiper stop
-	
 }
 const mousewheel=(e)=>{
 	if (e.ctrlKey ) return;
@@ -94,6 +95,8 @@ const onclick=async (e)=>{
     hidepunc=false;
     const {x,y}=e.detail;
     const [cx,cy]=getCharXY(x,y);
+
+    tapmark.set($folioLines*$folioChars*$activefolio+ cx*$folioChars + cy);
     // console.log('click',cx,cy)
     const [t,pos]=getConcreatePos(foliotext[cx],cy,foliotext[cx+1]);
 	//get the ck-lineoff 
@@ -111,7 +114,7 @@ const gotofolio=(folio)=>{
 }
 $: loadZip(src);
 $: gotofolio($activefolio); //trigger by goto folio in setting.svelte
-let seconds=0;
+
 
 </script>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -131,10 +134,15 @@ let seconds=0;
 {/if}
 <span class="pagenumber">{totalpages-defaultIndex}</span>
 
+{#key $tapmark+$activefolio}
+{#if !hidepunc}
+<TapMark mark={$tapmark} activefolio={$activefolio} folioChars={$folioChars} folioLines={$folioLines} frame={imageFrame()}  />
+{/if}
+{/key}
 {#key puncs}
 {#if !hidepunc}
-<PuncLayer frame={ imageFrame()  } folioChars={$folioChars} folioLines={$folioLines} {puncs} />
-<TranscriptLayer frame={ imageFrame()  } {totalpages} folioLines={$folioLines} {swiper} {foliotext}/>
+<PuncLayer frame={imageFrame()} folioChars={$folioChars} folioLines={$folioLines} {puncs} />
+<TranscriptLayer frame={imageFrame()} {totalpages} folioLines={$folioLines} {swiper} {foliotext}/>
 {/if}
 {/key}
 

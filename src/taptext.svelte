@@ -7,7 +7,7 @@ import SourceText from './sourcetext.svelte'
 import Translations from "./translations.svelte"
 import Variorum from "./variorum.svelte"
 import Toc from "./toc.svelte"
-import {activePtk,activebookid} from './store.js'
+import {activePtk,activebookid,advancemode} from './store.js'
 import {guessEntry ,usePtk} from "ptk";
 export let tofind='';
 
@@ -39,7 +39,8 @@ $: onDict(tofind)
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="toc"} on:click={()=>thetab="toc"}>分</span>
 
-        {#if ~address.indexOf('ck')}
+        
+        {#if ~address.indexOf('ck') && $advancemode=='on'}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="sourcetext"} on:click={()=>thetab="sourcetext"}>原</span>
         <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -47,14 +48,17 @@ $: onDict(tofind)
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="variorum"} on:click={()=>thetab="variorum"}>註</span>
         {/if}
-        {#if def}
+
+        {#if $advancemode!=='on'}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="dict"} on:click={()=>thetab="dict"}>詞</span>
-        {/if}
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="about"} on:click={()=>thetab="about"}>材</span>
+        {#if def} <span class='clickable' class:selected={thetab=="dict"} on:click={()=>thetab="dict"}>詞</span>{/if}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="audio"} on:click={()=>thetab="audio"}>音</span>
+        {/if}   
+
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <span class='clickable' class:selected={thetab=="about"} on:click={()=>thetab="about"}>跋</span>
+        
 
     </div>
     
@@ -69,7 +73,7 @@ $: onDict(tofind)
       {#if def}
       <div class="tab-content" class:visible={thetab=='dict'}><DictPopup {def} {ptk}/></div>
       {/if}
-      <div class="tab-content" class:visible={thetab=='audio'}><Audio/></div>
+      <div class="tab-content" class:visible={thetab=='audio'}><Audio {ptk}/></div>
       <div class="tab-content" class:visible={thetab=='about'}><About/></div>
 
  </div>

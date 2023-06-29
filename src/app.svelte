@@ -4,7 +4,7 @@ import { openPtk,usePtk} from 'ptk'
 import SwipeZipImage from "./swipezipimage.svelte";
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import { onMount , onDestroy} from "svelte";
-import {activebookid,isAndroid,mediaid,player} from './store.js'
+import {activebookid,isAndroid,player} from './store.js'
 import TapText from './taptext.svelte'
 import YoutubePlayer from './youtubeplayer.svelte'
 let ptk;

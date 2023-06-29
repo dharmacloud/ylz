@@ -1,6 +1,6 @@
 <script>
   import { createEventDispatcher } from "svelte";
-  import Thumb from "./thumb.svelte";
+  import Thumb from "./thumb.svelte"; 
 
   const dispatch = createEventDispatcher();
 
@@ -57,31 +57,6 @@
     display: none;
   }
 
-  .track {
-    margin: 2vh 2vh;
-    position: relative;
-    height: 2vh;
-    width: calc(100% - 4vh);
-    border-radius: 100vh;
-    background: var(--track-bg, #ebebeb);
-  }
-
-  .progress {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    border-radius: 100vh;
-    background: var(--progress-bg, #8abdff);
-  }
-
-  .thumb {
-    width: 3vh;
-    height: 3vh;
-    border-radius: 100vh;
-    background: var(--thumb-bg, #5784fd);
-  }
 </style>
 
 <input type="number" value={value[0]} name={name[0]} />

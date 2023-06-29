@@ -17,7 +17,7 @@ const getBookTitle=(ptk,nbk)=>{
 const goFolio=(ptk,line)=>{
     const pb=ptk.defines.pb;
     const folio=ptk.defines.folio;
-    if (!pb) return 
+    if (!pb) return ;
     const pbat=ptk.nearestTag(line+1,'pb')-1;
     const folioat=ptk.nearestTag(line+1,'folio')-1;
     const pbid=pb.fields.id.values[pbat];

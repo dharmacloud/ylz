@@ -1,6 +1,5 @@
 <script>
-import {player,mediaid,activebookid,activefolio,folioLines,playing,continueplay} from './store.js'
-import {mediaurls} from './mediaurls.js';
+import {player,youtubeid,activebookid,activefolio,folioLines,playing,continueplay,findByYoutube} from './store.js'
 
 let plyr;
 setTimeout(()=>{
@@ -16,10 +15,12 @@ setTimeout(()=>{
     }
     });
     // console.log('create youtube player',pylr)
-},1500);
+},2000);
 
 function onPlayerStateChange(e){
-    const {bookid} = mediaurls[$mediaid];
+    const obj=findByYoutube($youtubeid);
+    if (!obj) return;
+    const {bookid}=obj;
     if (bookid!==$activebookid) {
         stopVideo();
         return;
@@ -27,7 +28,7 @@ function onPlayerStateChange(e){
     playing.set(e.data==1);   
 }
 const stopVideo=()=>{
-    mediaid.set(0);
+    // youtubeid.set('');
     $player?.stopVideo();
     playing.set(false);
 }
@@ -37,24 +38,25 @@ function onPlayerReady(e) {
     player.set(pylr)
     pylr.playVideo();
 }
-const loadVideo=(mediaid)=>{
-    const {youtube,timestamp,bookid} = mediaurls[mediaid];
+const loadVideo=()=>{
+    const obj=findByYoutube($youtubeid);
+    if (!obj) return;
+    const {timestamp,bookid} = obj;
     if (bookid!==$activebookid) {
         stopVideo();
     } else {
         activefolio.set(0);
         const start=(timestamp&&timestamp[0])||0;
-        console.log(timestamp[timestamp.length-1],timestamp[0])
-        $player?.loadVideoById({'videoId':youtube,suggestedQuality:'low',startSeconds:start});
+        $player?.loadVideoById({'videoId':$youtubeid,suggestedQuality:'low',startSeconds:start});
 
     }
     // console.log('load video',youtube);
     
    //workaround with dash id
 }
-const seekToFolio=(folio,mediaid)=>{
-    if (!mediaid || $continueplay) return;
-    const {timestamp,bookid} = mediaurls[mediaid];
+const seekToFolio=(folio,youtubeid)=>{
+    if (!youtubeid || $continueplay) return;
+    const {timestamp,bookid} = findByYoutube(youtubeid);
     if (bookid!==$activebookid) {
         stopVideo();
     }
@@ -64,9 +66,9 @@ const seekToFolio=(folio,mediaid)=>{
     const t=timestamp[line];
     $player?.seekTo(t);
 }
-
-$: seekToFolio($activefolio,$mediaid);
-$: if (document.location.protocol!=='file:') loadVideo($mediaid)
+$: console.log('youtubeid',$youtubeid)
+$: seekToFolio($activefolio,$youtubeid);
+$: if (document.location.protocol!=='file:') loadVideo($youtubeid)
 </script>
 
 <div id="player"></div>
