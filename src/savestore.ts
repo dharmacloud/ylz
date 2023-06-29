@@ -1,6 +1,6 @@
 export const AppPrefix='YLZ.'
 export const loadSettings=()=>{
-    const activebookid=localStorage.getItem(AppPrefix+'activebookid')||'pph';  
+    const activebookid=localStorage.getItem(AppPrefix+'activebookid')||'pphs';  
     const advancemode=localStorage.getItem(AppPrefix+'advancemode');  
     return {activebookid,advancemode};
 }
@@ -39,7 +39,6 @@ export const updateSettings=_settings=>{
     }
     
     if (updated) {
-        console.log('save')
         clearTimeout(updateTimer);
         updateTimer=setTimeout(saveSettings,5000); //autosave in 5 seconds
     }

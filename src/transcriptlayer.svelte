@@ -1,17 +1,28 @@
 <script>
 import {stylestring} from './unit.js'
-import {activefolio,youtubeid,folioLines,folioChars,playing, player,continueplay, findByYoutube} from './store.js'
-import {mediaurls} from './mediaurls.js'
+import {activefolio,youtubeid,folioLines,folioChars,playing,
+    stopVideo,remainrollback, player,continueplay, findByYoutube} from './store.js'
 import {get} from 'svelte/store'
 import {onDestroy} from 'svelte'
 import {concreateLength} from 'ptk'
 export let frame={},totalpages;
 export let foliotext=[];
+
 const strips=new Array($folioLines);
 const timers=[];
 onDestroy(()=>{
     destroyTimer();
-})
+});
+const rollback=()=>{
+    continueplay.set(false); 
+    activefolio.set(0);
+    let r=get(remainrollback);
+    if (r>0) {
+        r--;
+        remainrollback.set(r);
+    }
+    if (r==0) stopVideo();
+}
 const stripstyle=(i,strip)=>{
     if (i==0) {
         destroyTimer();
@@ -33,8 +44,7 @@ const stripstyle=(i,strip)=>{
     const line=get(activefolio)*fl;
 
     if (!timestamp[line] && i==0) { //read the end
-        continueplay.set(false); 
-        activefolio.set(0); 
+        rollback();
     }
     const playertime=get(player).getCurrentTime();
     let timedelta=playertime-timestamp[line];//player 跑得比較快。（因換頁動畫時間），需修正
@@ -50,6 +60,8 @@ const stripstyle=(i,strip)=>{
                 setTimeout(()=>{
                     continueplay.set(false);// user swipe manually
                 },100);            
+            } else {
+                rollback();
             }
         }, (timestamp[line+fl] - timestamp[line] -timedelta)*1000));
     }
@@ -74,10 +86,12 @@ const stripstyle=(i,strip)=>{
     out.push('transition:height '+duration+'s  linear'); //
     return out.join(';');
 }
+
 const destroyTimer=()=>{
     timers.forEach( it=>clearTimeout(it));
     timers.length=0;
 }
+
 </script>
 {#if $playing && findByYoutube($youtubeid) }
 {#key $activefolio}

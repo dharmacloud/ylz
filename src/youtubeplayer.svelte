@@ -1,5 +1,5 @@
 <script>
-import {player,youtubeid,activebookid,activefolio,folioLines,playing,continueplay,findByYoutube} from './store.js'
+import {player,youtubeid,activebookid,activefolio,folioLines,playing,continueplay,stopVideo,findByYoutube} from './store.js'
 
 let plyr;
 setTimeout(()=>{
@@ -21,17 +21,15 @@ function onPlayerStateChange(e){
     const obj=findByYoutube($youtubeid);
     if (!obj) return;
     const {bookid}=obj;
+
     if (bookid!==$activebookid) {
+        // activefolio.set(0);
         stopVideo();
         return;
     }
-    playing.set(e.data==1);   
+    playing.set(e.data==1);
 }
-const stopVideo=()=>{
-    // youtubeid.set('');
-    $player?.stopVideo();
-    playing.set(false);
-}
+
 function onPlayerReady(e) {
     // 為確保瀏覽器上可以自動播放，要把影片調成靜音
     // console.log('player ready')
@@ -48,14 +46,13 @@ const loadVideo=()=>{
         activefolio.set(0);
         const start=(timestamp&&timestamp[0])||0;
         $player?.loadVideoById({'videoId':$youtubeid,suggestedQuality:'low',startSeconds:start});
-
     }
     // console.log('load video',youtube);
     
    //workaround with dash id
 }
 const seekToFolio=(folio,youtubeid)=>{
-    if (!youtubeid || $continueplay) return;
+    if (!youtubeid || $continueplay || !$playing) return;
     const {timestamp,bookid} = findByYoutube(youtubeid);
     if (bookid!==$activebookid) {
         stopVideo();
@@ -66,7 +63,6 @@ const seekToFolio=(folio,youtubeid)=>{
     const t=timestamp[line];
     $player?.seekTo(t);
 }
-$: console.log('youtubeid',$youtubeid)
 $: seekToFolio($activefolio,$youtubeid);
 $: if (document.location.protocol!=='file:') loadVideo($youtubeid)
 </script>

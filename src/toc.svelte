@@ -13,7 +13,7 @@ const setFolio=async (e)=>{
     address=  'bk#'+$activebookid +'.ck#'+ chunkOfFolio(ptk,$activebookid,v);
 }
 
-
+//set tapmark
 let tocitems=[],cknow;
 const getTocItems=address=>{
     const out=[];

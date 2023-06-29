@@ -25,7 +25,7 @@ const onDict=async (t)=>{
         showmainmenu=false;
         thetab='dict'
     } else if (~address.indexOf('ck')) {
-        thetab='translations'
+        thetab=$advancemode=='on'?'translations':'audio';
     }
 }
 $: ptk=usePtk($activePtk);
@@ -33,31 +33,31 @@ $: onDict(tofind)
 </script>
 <div class="popup">
     <div class="tabs">    
-        <!-- <span class='clickable' class:selected={thetab=="library"} on:click={()=>maintab.set("library")}>📚</span> -->
+
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="list"} on:click={()=>thetab="list"}>卷</span>
+        <span class='clickable' class:selected={thetab=="about"} on:click={()=>thetab="about"}>⚙️</span>
+
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="toc"} on:click={()=>thetab="toc"}>分</span>
+        <span class='clickable' class:selected={thetab=="list"} on:click={()=>thetab="list"}>📖</span>
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <span class='clickable' class:selected={thetab=="toc"} on:click={()=>thetab="toc"}>📑</span>
 
         
         {#if ~address.indexOf('ck') && $advancemode=='on'}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="sourcetext"} on:click={()=>thetab="sourcetext"}>原</span>
+        <span class='clickable' class:selected={thetab=="sourcetext"} on:click={()=>thetab="sourcetext"}>📜</span>
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="translations"} on:click={()=>thetab="translations"}>迻</span>
+        <span class='clickable' class:selected={thetab=="translations"} on:click={()=>thetab="translations"}>🔀</span>
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="variorum"} on:click={()=>thetab="variorum"}>註</span>
+        <span class='clickable' class:selected={thetab=="variorum"} on:click={()=>thetab="variorum"}>📚</span>
         {/if}
-
         {#if $advancemode!=='on'}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        {#if def} <span class='clickable' class:selected={thetab=="dict"} on:click={()=>thetab="dict"}>詞</span>{/if}
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="audio"} on:click={()=>thetab="audio"}>音</span>
+        <span class='clickable' class:selected={thetab=="audio"} on:click={()=>thetab="audio"}>🔊</span>
         {/if}   
-
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="about"} on:click={()=>thetab="about"}>跋</span>
+        {#if def} <span class='clickable' class:selected={thetab=="dict"} on:click={()=>thetab="dict"}>🔎</span>{/if}
+
         
 
     </div>

@@ -1,6 +1,7 @@
 <script>
 export let ptk;
-import {activebookid, activefolio} from './store.js';
+import {activebookid, activefolio, playing,player,youtubeid, stopVideo} from './store.js';
+import {get} from 'svelte/store'
 export let closePopup=function(){};
 
 const getBookList=()=>{
@@ -19,8 +20,9 @@ const getBookList=()=>{
 const books=getBookList();
 const selectbook=nbk=>{
     const bk=ptk.defines.bk;
+    stopVideo();
     activebookid.set(bk.fields.id.values[nbk]);
-    activefolio.set(0);
+    activefolio.set(0);    
     closePopup();
 }
 

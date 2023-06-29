@@ -8,7 +8,7 @@ import {rotatingwheel} from './3rd/rotatingwheel.js';
 export let src;
 import {fetchFolioText,getConcreatePos,folio2ChunkLine,extractPuncPos,usePtk} from 'ptk'
 import {ZipStore} from 'ptk/zip';
-import {folioLines,folioChars,activePtk,activebookid,activefolio,maxfolio,tapmark} from './store.js'
+import {folioLines,folioChars,activePtk,activebookid,activefolio,maxfolio,tapmark, playing, remainrollback} from './store.js'
 let ptk=usePtk($activePtk)
 let foliotext='',foliofrom=0,puncs=[],ready,images=[],hidepunc=false;
 export let totalpages=0;
@@ -119,7 +119,7 @@ $: gotofolio($activefolio); //trigger by goto folio in setting.svelte
 </script>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 {#if ready}
-{#if defaultIndex==totalpages-1 && !hidepunc}
+{#if defaultIndex==totalpages-1 && !hidepunc && $activebookid=='pphs'}
 <div class="sponsor">中部全國供佛齋僧大會</div>
 {/if}
 <div class="swipe-holder" on:wheel={mousewheel} >
@@ -133,6 +133,9 @@ $: gotofolio($activefolio); //trigger by goto folio in setting.svelte
 <div class="message">{@html rotatingwheel}</div>
 {/if}
 <span class="pagenumber">{totalpages-defaultIndex}</span>
+{#if $playing}
+<span class="remainrollback">{$remainrollback>0?$remainrollback:''}</span>
+{/if}
 
 {#key $tapmark+$activefolio}
 {#if !hidepunc}
@@ -153,7 +156,6 @@ $: gotofolio($activefolio); //trigger by goto folio in setting.svelte
 
 <style>
 img { height:100%}
-.pagenumber {position:absolute ; bottom:1%;font-size: 200%;left:0.1em;z-index: 999;color:brown}
 .message {position:absolute;top:50%;left:50%;transform: translate(-50%,-50%); }
 .swipe-holder{
     height: 100%;

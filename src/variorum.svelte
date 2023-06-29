@@ -1,5 +1,5 @@
 <script>
-import { parseAddress,parseAction, fetchAddress,styledNumber } from "ptk";
+import { parseAddress,parseAction, styledNumber } from "ptk";
 import SentenceNav from "./sentencenav.svelte";
 export let ptk;
 export let address;

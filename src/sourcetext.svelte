@@ -6,7 +6,6 @@ import { parseOfftext } from 'ptk/offtext';
 $: [start,end, _from,_till ,lineoff]=ptk.rangeOfAddress(address);
 let sourcetexts=[];
 
-// export let closePopup=function(){};
 export let address;
 const updateTranslation=async (address)=>{
     sourcetexts=await getParallelLines(ptk,start+lineoff,null,{remote:true,local:false});//different ptk only
