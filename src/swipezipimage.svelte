@@ -95,9 +95,9 @@ const onclick=async (e)=>{
     hidepunc=false;
     const {x,y}=e.detail;
     const [cx,cy]=getCharXY(x,y);
-
-    tapmark.set($folioLines*$folioChars*$activefolio+ cx*$folioChars + cy);
-    // console.log('click',cx,cy)
+    const tappos=$folioLines*$folioChars*$activefolio+ cx*$folioChars + cy;
+    tapmark.set(tappos);
+    // console.log('tappos',tappos,'click',cx,cy)
     const [t,pos]=getConcreatePos(foliotext[cx],cy,foliotext[cx+1]);
 	//get the ck-lineoff 
     const ck=await folio2ChunkLine(ptk,foliotext, foliofrom,cx,pos);;

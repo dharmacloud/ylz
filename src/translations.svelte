@@ -1,7 +1,8 @@
 <script>
 import {getParallelLines} from 'ptk/align/';
-import {activefolio,activebookid,activePtk} from './store.js'
-import { parseOfftext } from 'ptk/offtext';
+import {activefolio,activebookid,activePtk,tapmark,folioChars,folioLines} from './store.js'
+import { parseOfftext,folioPosFromLine} from 'ptk';
+
 import SentenceNav from './sentencenav.svelte'
 export let closePopup=function(){};
 export let address;
@@ -14,19 +15,26 @@ const getBookTitle=(ptk,nbk)=>{
     const heading=bk.fields.heading.values[nbk];
     return heading;
 }
+
+const marktap=async (pb,line)=>{
+    const pos=await folioPosFromLine(ptk,pb,line,$activebookid,$folioLines,$folioChars)
+    tapmark.set(pos);
+}
 const goFolio=(ptk,line)=>{
     const pb=ptk.defines.pb;
     const folio=ptk.defines.folio;
     if (!pb) return ;
-    const pbat=ptk.nearestTag(line+1,'pb')-1;
-    const folioat=ptk.nearestTag(line+1,'folio')-1;
+    const oldbook=$activebookid;
+    const pbat=ptk.nearestTag(line,'pb')-1;
+    const folioat=ptk.nearestTag(line,'folio')-1;
     const pbid=pb.fields.id.values[pbat];
-
-    activebookid.set(folio.fields.id.values[folioat]);
+    const newbook=folio.fields.id.values[folioat];
+    activebookid.set(newbook);
     activePtk.set(ptk.name);
     setTimeout(()=>{//wait until the file is loaded, 
         activefolio.set( parseInt(pbid)-1);
-    },3000);//not working on slow network
+        marktap(pbid,line);
+    }, oldbook==newbook?10:3000);//not working on slow network
     closePopup();
 }
 const hasfolio=(ptk,line)=>{

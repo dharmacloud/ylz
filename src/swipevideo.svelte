@@ -94,13 +94,7 @@ const onclick=async (e,_x,_y)=>{
 	const address=  'bk#'+$activebookid +'.'+ await folio2ChunkLine(ptk,foliotext, foliofrom,cx,pos);
 	await onTapText(t,address,ptk.name);
 }
-// const autoplayfolio=()=>{
-// 	mp4player.currentTime+=1.001;
-// 	if (mp4player.currentTime>=mp4player.duration) {
-// 		mp4player.currentTime=0;
-// 	}
-// 	updateFolioText();
-// }
+
 const ontouchend=async e=>{
 	if (touching!==-1 && direction!==0) {
 		if (direction==1) mp4player.currentTime+=-1.001;

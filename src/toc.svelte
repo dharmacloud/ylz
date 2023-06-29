@@ -1,7 +1,7 @@
 <script>
 import Slider from './3rd/rangeslider.svelte';
-import { bsearchNumber ,styledNumber,chunkOfFolio,debounce} from "ptk";
-import {activefolio,maxfolio,activebookid} from './store.js';
+import { bsearchNumber ,styledNumber,chunkOfFolio,debounce,fetchFolioText,concreateLength} from "ptk";
+import {activefolio,maxfolio,activebookid, folioLines, folioChars, tapmark} from './store.js';
 let folio=[$activefolio];
 export let ptk;
 export let address;
@@ -13,7 +13,6 @@ const setFolio=async (e)=>{
     address=  'bk#'+$activebookid +'.ck#'+ chunkOfFolio(ptk,$activebookid,v);
 }
 
-//set tapmark
 let tocitems=[],cknow;
 const getTocItems=address=>{
     const out=[];
@@ -28,13 +27,25 @@ const getTocItems=address=>{
     }
     return out;
 }
-const gofolio=(at)=>{
+const gofolio=async (at)=>{
     const ck=ptk.defines.ck;
     const pb=ptk.defines.pb;
     const ckline=ck.linepos[at];
     const pbtag=ptk.nearestTag(ckline+1,'pb')-1;
     const pbid=pb.fields.id.values[pbtag];
-    activefolio.set( parseInt(pbid)-1);
+    const newfolio=parseInt(pbid)-1;
+    activefolio.set( newfolio);
+
+    [foliotext,foliofrom]=await fetchFolioText(ptk,$activebookid,newfolio+1);
+
+    for (let i=0;i<foliotext.length;i++) {
+        const at2=foliotext[i].indexOf('^ck'+ck.fields.id.values[at]);
+        if (~at2) {
+            const r=(newfolio*$folioLines*$folioChars)+i*$folioChars+
+                concreateLength(foliotext[i].slice(0,at2));
+            tapmark.set(r);
+        }
+    }
     closePopup();
 }
 const getCk=(address)=>{

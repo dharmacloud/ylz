@@ -1,7 +1,6 @@
 <script>
 export let ptk;
-import {activebookid, activefolio, playing,player,youtubeid, stopVideo} from './store.js';
-import {get} from 'svelte/store'
+import {activebookid, activefolio, stopVideo} from './store.js';
 export let closePopup=function(){};
 
 const getBookList=()=>{
