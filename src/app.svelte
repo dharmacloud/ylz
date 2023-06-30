@@ -1,12 +1,13 @@
 <script>
-import { openPtk,usePtk} from 'ptk'
+import { openPtk,usePtk,loadScript} from 'ptk'
 // import SwipeVideo from "./swipevideo.svelte";
 import SwipeZipImage from "./swipezipimage.svelte";
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import { onMount } from "svelte";
-import {activebookid,isAndroid,player} from './store.js'
+import {activebookid,isAndroid,player,videohost} from './store.js'
 import TapText from './taptext.svelte'
-import YoutubePlayer from './youtubeplayer.svelte'
+import Player from './player.svelte'
+
 let ptk;
 registerServiceWorker();
 
@@ -17,6 +18,11 @@ onMount(async ()=>{
     ptk=await openPtk("dc");
     await openPtk("dc_sanskrit");
     loaded=true;
+    if ($videohost=='youtube') {
+        await loadScript('https://www.youtube.com/iframe_api')
+    } else if ($videohost=='tencent') {
+        await loadScript('http://vm.gtimg.cn/tencentvideo/txp/js/txplayer.js')
+    }
 });
 let showdict=false,address='',tofind='';
 const closePopup=()=>{
@@ -36,7 +42,8 @@ const onTapText=(t,_address,ptkname)=>{
 
 <div class="app" >
 {#if loaded}
-<YoutubePlayer/>
+<Player/>
+
 <!-- <SwipeVideo src={$activebookid+($isAndroid?".webm":".mp4")} {ptk} {onTapText} {onMainmenu}/> -->
 {#key $activebookid}
 <SwipeZipImage  src={$activebookid+".zip"} {ptk} {onTapText} {onMainmenu}/>

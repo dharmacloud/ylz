@@ -1,12 +1,15 @@
 <script>
 import {urlqrcode} from './urlqrcode.js'
-import {advancemode} from './store.js'
+import {advancemode,videohost} from './store.js'
 import Switch from './3rd/switch.svelte';
+
 </script>
 
 <div class="toctext">
 <br/>
-<Switch bind:value={$advancemode} label="進階模式" design="slider" fontSize="4vh"/>
+<Switch bind:value={$advancemode} label="進階模式" design="slider"/>
+<Switch bind:value={$videohost} label="視頻來源" options={["tencent","youtube"]} design="multi"/>
+<br/>
 {#if $advancemode=='on'}
 本數據庫基於以下公開素材：
 永樂北藏(山東省圖書館)、金剛經集註(朱棣)、梵文校勘本(Edward Conze, ancient-buddhist-texts.net)、經文新式標點(CBETA)、

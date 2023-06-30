@@ -8,9 +8,10 @@ export const activefolio=writable(1);  //one base
 export const maxfolio=writable(0);
 export const isAndroid=writable(false)
 export const player=writable(null)
-export const youtubeid=writable('');
+export const videoid=writable('');
 export const folioLines=writable(5);
 export const folioChars=writable(17);
+export const videohost=writable(settings.videohost);
 export const playing=writable(false);
 export const continueplay=writable(false);
 export const tapmark = writable(0);// folio*folioLines*folioChar+offset
@@ -18,8 +19,9 @@ export const remainrollback=writable(-1);//infinite
 
 activebookid.subscribe((activebookid)=>updateSettings({activebookid}));
 advancemode.subscribe((advancemode)=>updateSettings({advancemode}));
+videohost.subscribe((videohost)=>updateSettings({videohost}));
 
-export const findByYoutube=(id,column='timestamp')=>{
+export const findByVideoId=(id,column='timestamp')=>{
     const ptk=usePtk('dc');
     if (!ptk.columns[column]) return null;
     const ts=ptk.columns[column].fieldsByKey(id);
@@ -28,8 +30,11 @@ export const findByYoutube=(id,column='timestamp')=>{
 }
 
 export const stopVideo=()=>{
-    get(player)?.stopVideo();
+    const plyr=get(player);
     playing.set(false);
-    youtubeid.set('')
+    videoid.set('')
     remainrollback.set(-1);
+
+    if (!plyr) return;
+    plyr.stopVideo?plyr.stopVideo():plyr.pause();
 }

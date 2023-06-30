@@ -2,7 +2,8 @@ export const AppPrefix='YLZ.'
 export const loadSettings=()=>{
     const activebookid=localStorage.getItem(AppPrefix+'activebookid')||'pphs';  
     const advancemode=localStorage.getItem(AppPrefix+'advancemode');  
-    return {activebookid,advancemode};
+    const videohost=localStorage.getItem(AppPrefix+'videohost')||'youtube';  
+    return {activebookid,advancemode,videohost};
 }
 
 export const saveSettings=()=>{ //immediate save

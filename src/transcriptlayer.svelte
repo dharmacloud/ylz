@@ -1,7 +1,7 @@
 <script>
 import {stylestring} from './unit.js'
-import {activefolio,youtubeid,folioLines,folioChars,playing,
-    stopVideo,remainrollback, player,continueplay, findByYoutube} from './store.js'
+import {activefolio,videoid,folioLines,folioChars,playing,
+    stopVideo,remainrollback, player,continueplay, findByVideoId} from './store.js'
 import {get} from 'svelte/store'
 import {onDestroy} from 'svelte'
 import {concreateLength} from 'ptk'
@@ -37,7 +37,7 @@ const stripstyle=(i,strip)=>{
     out.push('top:0px');
     out.push('width:'+Math.floor(w)+'px');
     out.push('height:0px');
-    const {timestamp} = findByYoutube($youtubeid);
+    const {timestamp} = findByVideoId($videoid);
     if (!timestamp) {
         return out.join(';'); //cannot play
     }
@@ -93,7 +93,7 @@ const destroyTimer=()=>{
 }
 
 </script>
-{#if $playing && findByYoutube($youtubeid) }
+{#if $playing && findByVideoId($videoid) }
 {#key $activefolio}
 <div class="transcript" style={stylestring(frame)} >
     {#each strips as strip,idx}

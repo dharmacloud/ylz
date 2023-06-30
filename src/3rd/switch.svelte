@@ -33,7 +33,7 @@ function handleClick(event){
     </button>
 </div>
 {:else if design == 'slider'}
-<div class="s s--slider" style="font-size:{fontSize}px">
+<span class="s s--slider" style="font-size:{fontSize}px">
     <span id={`switch-${uniqueID}`}>{label}</span>
     <button
         role="switch"
@@ -41,23 +41,23 @@ function handleClick(event){
         aria-labelledby={`switch-${uniqueID}`}
         on:click={handleClick}>
     </button>
-</div>
+</span>
 {:else}
-<div class="s s--multi">
-    <div role='radiogroup'
+<span class="s s--multi">
+    <span role='radiogroup'
 				 class="group-container"
 				 aria-labelledby={`label-${uniqueID}`}
 				 style="font-size:{fontSize}px" 
 				 id={`group-${uniqueID}`}>
-    <div class='legend' id={`label-${uniqueID}`}>{label}</div>
+    <span class='legend' id={`label-${uniqueID}`}>{label}</span>
         {#each options as option}
             <input type="radio" id={`${option}-${uniqueID}`} value={option} bind:group={value}>
             <label for={`${option}-${uniqueID}`}>
                 {option}
             </label> 
         {/each}
-    </div>
-</div>
+    </span>
+</span>
 {/if}
 <style>
     /* Inner Design Option */
