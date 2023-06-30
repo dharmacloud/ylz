@@ -13,7 +13,7 @@ import Switch from './3rd/switch.svelte';
 。
 <br/>並以<a href="https://creativecommons.org/publicdomain/zero/1.0/deed.zh">Creative Common Zero</a>分享。
 <br/>
-<br/>這是<a href="https://github.com/dharmacloud" target="_new">開源</a>軟件(2023.6.29)，可以不受任何限制，以任何形態散佈本軟件。
+<br/>這是<a href="https://github.com/dharmacloud" target="_new">開源</a>軟件(2023.6.30)，可以不受任何限制，以任何形態散佈本軟件。
 {:else}
 到 LINE 搜尋ID @dharmacloud，以獲得更新訊息，或點擊加入我們的<a href="https://lin.ee/1tmTKXi">LINE官方帳號</a>
 <div class="qrcode">{@html urlqrcode}</div>
