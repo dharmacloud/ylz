@@ -22,6 +22,7 @@ export const newbie=writable(settings.newbie);
 export const idlecount=writable(0);
 export const showpaiji=writable(false);
 
+
 activebookid.subscribe((activebookid)=>updateSettings({activebookid}));
 advancemode.subscribe((advancemode)=>updateSettings({advancemode}));
 videohost.subscribe((videohost)=>updateSettings({videohost}));
@@ -44,3 +45,5 @@ export const stopVideo=()=>{
     if (!plyr) return;
     plyr.stopVideo?plyr.stopVideo():plyr.pause();
 }
+
+export const idletime=60;

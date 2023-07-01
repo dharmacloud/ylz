@@ -9,7 +9,7 @@ export let src;
 import {fetchFolioText,getConcreatePos,folio2ChunkLine,extractPuncPos,usePtk} from 'ptk'
 import {ZipStore} from 'ptk/zip';
 import {folioLines,folioChars,activePtk,activebookid,activefolio,
-    maxfolio,tapmark, playing, remainrollback, idlecount,showpaiji} from './store.js'
+    maxfolio,tapmark, playing, remainrollback, idlecount,showpaiji,idletime} from './store.js'
 let ptk=usePtk($activePtk)
 let foliotext='',foliofrom=0,puncs=[],ready,images=[],hidepunc=false;
 export let totalpages=0;
@@ -128,7 +128,6 @@ const gotofolio=(folio)=>{
 $: loadZip(src);
 $: gotofolio($activefolio); //trigger by goto folio in setting.svelte
 
-
 </script>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 {#if ready}
@@ -145,6 +144,8 @@ $: gotofolio($activefolio); //trigger by goto folio in setting.svelte
 <span class="pagenumber">{totalpages-defaultIndex}</span>
 {#if $playing}
 <span class="remainrollback">{$remainrollback>0?$remainrollback:''}</span>
+{:else if !$showpaiji}
+<span class="idletime">{$idlecount>=idletime-30?idletime-$idlecount:''}</span>
 {/if}
 
 {#key $tapmark+$activefolio}

@@ -3,8 +3,8 @@ import { openPtk,usePtk,loadScript} from 'ptk'
 // import SwipeVideo from "./swipevideo.svelte";
 import SwipeZipImage from "./swipezipimage.svelte";
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
-import { onMount } from "svelte";
-import {activebookid,isAndroid,playing,videohost,advancemode,idlecount,showpaiji,newbie} from './store.js'
+import { onDestroy, onMount } from "svelte";
+import {activebookid,isAndroid,playing,videohost,advancemode,idlecount,showpaiji,newbie,idletime} from './store.js'
 import TapText from './taptext.svelte'
 import Player from './player.svelte'
 import Newbie from './newbie.svelte';
@@ -14,23 +14,26 @@ registerServiceWorker();
 const idleinterval=5;
 isAndroid.set(!!navigator.userAgent.match(/Android/i));
 
-let loaded=false;
+let loaded=false,timer;
+onDestroy(()=>clearInterval(timer))
 onMount(async ()=>{
     ptk=await openPtk("dc");
     await openPtk("dc_sanskrit");
     loaded=true;
-    setInterval(()=>{
-        showpaiji.set($idlecount>60);
-        if (!$advancemode) idlecount.set($idlecount+idleinterval);
+    timer=setInterval(()=>{
+        showpaiji.set($idlecount>=idletime);
+        if ($advancemode!=='on' && !shownewbie && !showdict) {
+            idlecount.set($idlecount+idleinterval);
+        }
     },idleinterval*1000);
 });
 
 const loadPlayer=async ()=>{
     if ($videohost=='youtube') {
-        console.log('load youtube player')
+        // console.log('load youtube player')
         await loadScript('https://www.youtube.com/iframe_api')
     } else if ($videohost=='tencent') {
-        console.log('load tencent player')
+        // console.log('load tencent player')
         await loadScript('http://vm.gtimg.cn/tencentvideo/txp/js/txplayer.js')
     }
 }
