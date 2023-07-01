@@ -1,16 +1,21 @@
 import {updateSettings,settings} from './savestore.ts'
 import {usePtk} from 'ptk'
-import {get,writable } from 'svelte/store';
+import {get,writable,derived } from 'svelte/store';
+export const nanzangbooks=['sdpdrk1'];
+export const vlinesOfBook=(bkid)=>~nanzangbooks.indexOf(bkid)?6:5;
+
 export const activePtk=writable('dc');
 export const activebookid=writable(settings.activebookid);
 export const advancemode=writable(settings.advancemode);
 export const activefolio=writable(1);  //one base
 export const maxfolio=writable(0);
 
+
 export const isAndroid=writable(false)
 export const player=writable(null)
 export const videoid=writable('');
-export const folioLines=writable(5);
+export const folioLines=derived( activebookid,(bid)=>vlinesOfBook(bid));
+
 export const folioChars=writable(17);
 export const videohost=writable(settings.videohost);
 export const playing=writable(false);
@@ -47,3 +52,4 @@ export const stopVideo=()=>{
 }
 
 export const idletime=60;
+

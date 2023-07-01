@@ -1,6 +1,6 @@
 <script>
 export let ptk;
-import {activebookid, activefolio, stopVideo} from './store.js';
+import {activebookid, activefolio, stopVideo,nanzangbooks} from './store.js';
 export let closePopup=function(){};
 
 const getBookList=()=>{
@@ -20,7 +20,8 @@ const books=getBookList();
 const selectbook=nbk=>{
     const bk=ptk.defines.bk;
     stopVideo();
-    activebookid.set(bk.fields.id.values[nbk]);
+    const bkid=bk.fields.id.values[nbk];
+    activebookid.set(bkid);
     activefolio.set(0);    
     closePopup();
 }
