@@ -1,9 +1,7 @@
 <script>
 import { onMount } from 'svelte';
 import {videohost,player,videoid,activebookid,activefolio,folioLines,playing,continueplay,stopVideo,findByVideoId} from './store.js'
-
 let plyr,timer;
-
 const createYoutubePlayer=()=>{
     plyr=new YT.Player('player', {
     height: '1px', // 高度預設值為390，css會調成responsive
@@ -20,9 +18,10 @@ const createYoutubePlayer=()=>{
     // console.log('create youtube player',pylr)
 };
 const createTencentPlayer=()=>{
+    // https://m.v.qq.com/txp/v3/src/jsapi/
     plyr = new Txplayer({
         containerId: 'player',
-        vid: '',//cannot empty',
+        vid: '',//make it invalid, otherwise might play ads,
         width: '1px',
         height: '1px',
         autoplay:false,
@@ -34,16 +33,15 @@ const createTencentPlayer=()=>{
 }
 
 onMount(()=>{
-    timer=setInterval(()=>{        
+    timer=setInterval(()=>{
         if (typeof Txplayer!=='undefined') {
-            clearInterval(timer)
+            clearInterval(timer);
             createTencentPlayer();
         }
         if (typeof YT!=='undefined') {
             clearInterval(timer);
             createYoutubePlayer();
         }
-
     },1500);
 });
 
@@ -84,9 +82,6 @@ const loadVideo=()=>{
             $player?.play({vid:$videoid,autoplay:true,playStartTime:start});
         }
     }
-    // console.log('load video',youtube);
-    
-   //workaround with dash id
 }
 const seekToFolio=(folio,videoid)=>{
     if (!videoid || $continueplay || !$playing) return;
@@ -94,7 +89,6 @@ const seekToFolio=(folio,videoid)=>{
     if (bookid!==$activebookid) {
         stopVideo();
     }
-
     if (!timestamp) return;
     const line=parseInt(folio)*$folioLines;
     const t=timestamp[line];
@@ -108,4 +102,3 @@ $: if (document.location.protocol!=='file:') loadVideo($videoid)
 <style>
     #player { position:absolute;right:-1px;height:1px}
 </style>
-

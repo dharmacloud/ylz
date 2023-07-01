@@ -3,7 +3,8 @@ export const loadSettings=()=>{
     const activebookid=localStorage.getItem(AppPrefix+'activebookid')||'pphs';  
     const advancemode=localStorage.getItem(AppPrefix+'advancemode');  
     const videohost=localStorage.getItem(AppPrefix+'videohost')||'youtube';  
-    return {activebookid,advancemode,videohost};
+    const newbie=localStorage.getItem(AppPrefix+'newbie')||'on';  
+    return {activebookid,advancemode,videohost,newbie};
 }
 
 export const saveSettings=()=>{ //immediate save

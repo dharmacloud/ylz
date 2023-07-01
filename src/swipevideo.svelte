@@ -140,22 +140,7 @@ const videoloaded=()=>{
 	mp4player.autoplay=false;
 	mp4player.pause();
 }
-// let timer;
-// let seconds=0;
-// onMount(()=>{
-// 	timer=setInterval(()=>{
-// 		if ($autoplay && seconds>$autoplay) {
-// 			autoplayfolio();
-// 			seconds=0;
-// 		}
-// 		seconds++;
 
-// 	},1000);
-// })
-
-// onDestroy(()=>{
-// 	clearInterval(timer)
-// })
 const setHandle=node=>{
 	mp4player=node;
 }

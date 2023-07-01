@@ -8,7 +8,8 @@ import {rotatingwheel} from './3rd/rotatingwheel.js';
 export let src;
 import {fetchFolioText,getConcreatePos,folio2ChunkLine,extractPuncPos,usePtk} from 'ptk'
 import {ZipStore} from 'ptk/zip';
-import {folioLines,folioChars,activePtk,activebookid,activefolio,maxfolio,tapmark, playing, remainrollback} from './store.js'
+import {folioLines,folioChars,activePtk,activebookid,activefolio,
+    maxfolio,tapmark, playing, remainrollback, idlecount,showpaiji} from './store.js'
 let ptk=usePtk($activePtk)
 let foliotext='',foliofrom=0,puncs=[],ready,images=[],hidepunc=false;
 export let totalpages=0;
@@ -59,10 +60,11 @@ const swipeStart=(obj)=>{
     hidepunc=true;
 }
 const swipeChanged=(obj)=>{
-    const {swipe_direction,active_item}=obj.detail;
+    const {active_item}=obj.detail;
     defaultIndex=active_item;
     activefolio.set(totalpages- defaultIndex-1);
     updateFolioText();
+    useractive();
 }
 const updateFolioText=async ()=>{
     hidepunc=true;
@@ -72,6 +74,11 @@ const updateFolioText=async ()=>{
         puncs=extractPuncPos(foliotext,$folioLines);
     },200); //wait until swiper stop
 }
+const useractive=()=>{
+    showpaiji.set(false);
+    idlecount.set(0);
+    hidepunc=false;
+}
 const mousewheel=(e)=>{
 	if (e.ctrlKey ) return;
     hidepunc=true;
@@ -80,6 +87,7 @@ const mousewheel=(e)=>{
 	} else {
         swiper.nextItem();
 	}
+    useractive();
 	e.preventDefault();
 }
 const getCharXY=(x,y)=>{
@@ -92,6 +100,10 @@ const getCharXY=(x,y)=>{
 }
 
 const onclick=async (e)=>{
+    if ($showpaiji) {
+        useractive();
+        return;
+    }
     hidepunc=false;
     const {x,y}=e.detail;
     const [cx,cy]=getCharXY(x,y);
@@ -102,7 +114,7 @@ const onclick=async (e)=>{
 	//get the ck-lineoff 
     const ck=await folio2ChunkLine(ptk,foliotext, foliofrom,cx,pos);;
 	const address= 'bk#'+$activebookid + (ck?('.'+ ck):'') ;
-	await onTapText(t,address,ptk.name); 
+    await onTapText(t,address,ptk.name); 
 }
 const gotofolio=(folio)=>{
     if (!totalpages || !swiper)return;//not loaded yet
@@ -111,6 +123,7 @@ const gotofolio=(folio)=>{
         // console.log('goto',folio, go, defaultIndex)
         swiper.goTo(go);
     }
+
 }
 $: loadZip(src);
 $: gotofolio($activefolio); //trigger by goto folio in setting.svelte
@@ -119,9 +132,6 @@ $: gotofolio($activefolio); //trigger by goto folio in setting.svelte
 </script>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 {#if ready}
-{#if defaultIndex==totalpages-1 && !hidepunc && $activebookid=='pphs'}
-<div class="sponsor">中部全國供佛齋僧大會</div>
-{/if}
 <div class="swipe-holder" on:wheel={mousewheel} >
 <Swipe bind:this={swiper} {...swipeConfig} {defaultIndex} on:click={onclick} on:start={swipeStart} on:change={swipeChanged}>
     {#each images as image,idx}
@@ -138,7 +148,7 @@ $: gotofolio($activefolio); //trigger by goto folio in setting.svelte
 {/if}
 
 {#key $tapmark+$activefolio}
-{#if !hidepunc}
+{#if !hidepunc && !$showpaiji}
 <TapMark mark={$tapmark} activefolio={$activefolio} folioChars={$folioChars} folioLines={$folioLines} frame={imageFrame()}  />
 {/if}
 {/key}
@@ -164,6 +174,4 @@ img { height:100%}
 }
 .swipe {position:absolute;top:50%;left:50%;transform: translate(-50%,-50%); }
 
-.sponsor {user-select:none;pointer-events:none;font-size:4vh;font-weight: bold;z-index:10;
-position:absolute; color:red;opacity: 0.75; right:1.1em;top:50vh;writing-mode: vertical-lr}
 </style>

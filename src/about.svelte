@@ -18,15 +18,9 @@ import Switch from './3rd/switch.svelte';
 <br/>
 <br/>這是<a href="https://github.com/dharmacloud" target="_new">開源</a>軟件(2023.6.30)，可以不受任何限制，以任何形態散佈本軟件。
 {:else}
-到 LINE 搜尋ID @dharmacloud，以獲得更新訊息，或點擊加入我們的<a href="https://lin.ee/1tmTKXi">LINE官方帳號</a>
-<div class="qrcode">{@html urlqrcode}</div>
+到 LINE 搜尋ID @dharmacloud，或點擊加入<a href="https://lin.ee/1tmTKXi">官方帳號</a>，以獲得更新訊息
+<div class="center">{@html urlqrcode}</div>
 免費結緣網址<a target="_new" href="https://dharmacloud.github.io/">dharmacloud.github.io</a>
 {/if}
 </div>
-<style>
-.qrcode {width:100%;
-    position: relative;
-    display: flex;
-    justify-content: center;
-}
-</style>
+
