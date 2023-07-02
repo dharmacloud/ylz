@@ -35,10 +35,12 @@ const createTencentPlayer=()=>{
 onMount(()=>{
     timer=setInterval(()=>{
         if (typeof Txplayer!=='undefined') {
+            console.log('load tencent')
             clearInterval(timer);
             createTencentPlayer();
         }
         if (typeof YT!=='undefined') {
+            console.log('load youtube')
             clearInterval(timer);
             createYoutubePlayer();
         }

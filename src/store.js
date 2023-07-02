@@ -48,7 +48,7 @@ export const stopVideo=()=>{
     remainrollback.set(-1);
 
     if (!plyr) return;
-    plyr.stopVideo?plyr.stopVideo():plyr.pause();
+    plyr.stopVideo?plyr.stopVideo(): (plyr.pause?plyr.pause():null);
 }
 
 export const idletime=60;

@@ -11,7 +11,7 @@ import Newbie from './newbie.svelte';
 import Paiji from './paiji.svelte';
 let ptk;
 registerServiceWorker();
-const idleinterval=5;
+const idleinterval=2;
 isAndroid.set(!!navigator.userAgent.match(/Android/i));
 
 let loaded=false,timer;

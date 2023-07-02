@@ -145,7 +145,7 @@ $: gotofolio($activefolio); //trigger by goto folio in setting.svelte
 {#if $playing}
 <span class="remainrollback">{$remainrollback>0?$remainrollback:''}</span>
 {:else if !$showpaiji}
-<span class="idletime">{$idlecount>=idletime-30?idletime-$idlecount:''}</span>
+<span class="idletime">{$idlecount>=idletime-15?idletime-$idlecount:''}</span>
 {/if}
 
 {#key $tapmark+$activefolio}
