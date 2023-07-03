@@ -45,7 +45,9 @@ const updateAudioList=(activeid)=>{
 let timestamp=[];
 onMount(()=>{
     subtitletimer=setInterval(()=>{
-        const playertime=get(player)?.getCurrentTime();
+        const plyr=get(player);
+        if (!plyr)return;
+        const playertime=plyr.getCurrentTime&&plyr.getCurrentTime();
         while (playertime>=timestamp[nsub] && nsub<timestamp.length) {
             subtitle=subtitles[nsub]||subtitle||''; //do not update empty line
             subtitle2=subtitles2[nsub]||subtitle2||''; //do not update empty line

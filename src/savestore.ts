@@ -4,7 +4,15 @@ export const loadSettings=()=>{
     const advancemode=localStorage.getItem(AppPrefix+'advancemode');  
     const videohost=localStorage.getItem(AppPrefix+'videohost')||'youtube';  
     const newbie=localStorage.getItem(AppPrefix+'newbie')||'on';  
-    return {activebookid,advancemode,videohost,newbie};
+    let _favorites=localStorage.getItem(AppPrefix+'favorites')||'{}';
+    let favorites={};
+    try {
+        favorites=JSON.parse(_favorites);
+    } catch (e){
+        console.log(e);
+        favorites={};
+    }
+    return {activebookid,advancemode,videohost,newbie,favorites};
 }
 
 export const saveSettings=()=>{ //immediate save
@@ -25,7 +33,7 @@ export const updateSettings=_settings=>{
                 let val=_settings[key];
                 if (typeof val=='object') {
                     val=JSON.stringify(_settings[key]);
-                    oldval=JSON.stringify(settings[key]);    
+                    oldval=JSON.stringify( localStorage.getItem(key) );
                 }
                 if (val!==oldval) {
                     settingsToBeSave[AppPrefix+key]=val;

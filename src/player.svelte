@@ -64,7 +64,7 @@ function onPlayerReady(e) {
     // 為確保瀏覽器上可以自動播放，要把影片調成靜音
     // console.log('player ready')
     
-    plyr.playVideo?plyr.playVideo():plyr.play();
+    plyr.playVideo?plyr.playVideo():(plyr.play&&plyr.play());
 }
 const loadVideo=()=>{
     const obj=findByVideoId($videoid);

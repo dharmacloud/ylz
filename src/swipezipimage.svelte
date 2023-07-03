@@ -8,8 +8,9 @@ import {rotatingwheel} from './3rd/rotatingwheel.js';
 export let src;
 import {fetchFolioText,getConcreatePos,folio2ChunkLine,extractPuncPos,usePtk} from 'ptk'
 import {ZipStore} from 'ptk/zip';
-import {folioLines,folioChars,activePtk,activebookid,activefolio,
-    maxfolio,tapmark, playing, remainrollback, idlecount,showpaiji,idletime} from './store.js'
+import {folioLines,folioChars,activePtk,activebookid,activefolio,favorites,
+    maxfolio,tapmark, playing, remainrollback, idlecount,showpaiji,idletime,loadingbook} from './store.js'
+
 let ptk=usePtk($activePtk)
 let foliotext='',foliofrom=0,puncs=[],ready,images=[],hidepunc=false;
 export let totalpages=0;
@@ -41,10 +42,10 @@ const swipeConfig = {
 };
 
 const loadZip=async ()=>{
+    loadingbook.set(true);
     const res=await fetch(src);
     const buf=await res.arrayBuffer();
     const zip=new ZipStore(buf);
-
     for (let i=0;i<zip.files.length;i++) {
         const blob=new Blob([zip.files[i].content]);
         images.push(URL.createObjectURL(blob));
@@ -53,6 +54,7 @@ const loadZip=async ()=>{
     totalpages=zip.files.length;
     maxfolio.set(totalpages-1);
     setTimeout(()=>{
+        loadingbook.set(false);
         ready=true;
     },1);   
 }
@@ -123,7 +125,16 @@ const gotofolio=(folio)=>{
         // console.log('goto',folio, go, defaultIndex)
         swiper.goTo(go);
     }
+}
 
+const togglefavoritebtn=()=>{
+    if ($activePtk!=='dc') return;//only support chinese
+    const bookfavor=Object.assign({},$favorites);
+    if (!bookfavor[$activebookid]) {
+        bookfavor[$activebookid]=[];
+    }
+    bookfavor[$activebookid][$activefolio]=1- (bookfavor[$activebookid][$activefolio]?1:0);
+    favorites.set(Object.assign({},bookfavor));
 }
 $: loadZip(src);
 $: gotofolio($activefolio); //trigger by goto folio in setting.svelte
@@ -141,6 +152,9 @@ $: gotofolio($activefolio); //trigger by goto folio in setting.svelte
 {:else}
 <div class="message">{@html rotatingwheel}</div>
 {/if}
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<span class="favoritebtn" on:click={togglefavoritebtn}>{($favorites[$activebookid]?.[$activefolio])?'♥':'♡'}</span>
+
 <span class="pagenumber">{totalpages-defaultIndex}</span>
 {#if $playing}
 <span class="remainrollback">{$remainrollback>0?$remainrollback:''}</span>

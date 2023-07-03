@@ -6,6 +6,7 @@ import About from "./about.svelte"
 import SourceText from './sourcetext.svelte'
 import Translations from "./translations.svelte"
 import Variorum from "./variorum.svelte"
+import Favorite from "./favorite.svelte"
 import Toc from "./toc.svelte"
 import {activePtk,activebookid,advancemode} from './store.js'
 import {guessEntry ,usePtk} from "ptk";
@@ -25,7 +26,7 @@ const onDict=async (t)=>{
         showmainmenu=false;
         thetab='dict'
     } else if (~address.indexOf('ck')) {
-        thetab=$advancemode=='on'?'translations':'audio';
+        thetab=$advancemode=='on'?'translations':'favorite';
     }
 }
 $: ptk=usePtk($activePtk);
@@ -41,6 +42,8 @@ $: onDict(tofind)
         <span class='clickable' class:selected={thetab=="list"} on:click={()=>thetab="list"}>📖</span>
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="toc"} on:click={()=>thetab="toc"}>📑</span>
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <span class='clickable' class:selected={thetab=="favorite"} on:click={()=>thetab="favorite"}>❤️</span>
 
         
         {#if ~address.indexOf('ck') && $advancemode=='on'}
@@ -65,6 +68,7 @@ $: onDict(tofind)
       <div class="tab-content" class:visible={thetab=='list'}><Foliolist {ptk} {closePopup}/></div>
       
       <div class="tab-content" class:visible={thetab=='toc'}><Toc {address} {closePopup} {ptk} /></div>
+      <div class="tab-content" class:visible={thetab=='favorite'}><Favorite {address} {closePopup} {ptk} /></div>
       <div class="tab-content" class:visible={thetab=='sourcetext'}><SourceText {closePopup} bind:address {ptk}/></div>
       <div class="tab-content" class:visible={thetab=='translations'}><Translations {closePopup} bind:address {ptk}/></div>
       <div class="tab-content" class:visible={thetab=='variorum'}><Variorum {closePopup} bind:address {ptk}/></div>

@@ -1,11 +1,14 @@
 <script>
 import Slider from './3rd/rangeslider.svelte';
-import { bsearchNumber ,styledNumber,chunkOfFolio,debounce,fetchFolioText,concreateLength} from "ptk";
-import {activefolio,maxfolio,activebookid, folioLines, folioChars, tapmark} from './store.js';
+import { bsearchNumber ,styledNumber,chunkOfFolio,debounce} from "ptk";
+import {activefolio,maxfolio,activebookid} from './store.js';
+import {gofolioAt} from './nav.js'
 let folio=[$activefolio];
 export let ptk;
 export let address;
 export let closePopup;
+
+let juans=[]; //find out all juan
 
 const setFolio=async (e)=>{
     const v=e.detail[0];
@@ -27,44 +30,29 @@ const getTocItems=address=>{
     }
     return out;
 }
-const gofolio=async (at)=>{
-    const ck=ptk.defines.ck;
-    const pb=ptk.defines.pb;
-    const ckline=ck.linepos[at];
-    const pbtag=ptk.nearestTag(ckline+1,'pb')-1;
-    const pbid=pb.fields.id.values[pbtag];
-    const newfolio=parseInt(pbid)-1;
-    activefolio.set( newfolio);
 
-    [foliotext,foliofrom]=await fetchFolioText(ptk,$activebookid,newfolio+1);
-
-    for (let i=0;i<foliotext.length;i++) {
-        const at2=foliotext[i].indexOf('^ck'+ck.fields.id.values[at]);
-        if (~at2) {
-            const r=(newfolio*$folioLines*$folioChars)+i*$folioChars+
-                concreateLength(foliotext[i].slice(0,at2));
-            tapmark.set(r);
-        }
-    }
-    closePopup();
-}
 const getCk=(address)=>{
     const m=address.match(/ck#?(\d+)/);
     if (m) return m[1];
+}
+const gofolio=(ptk,at)=>{
+    gofolioAt(ptk,at);
+    closePopup();
 }
 $: tocitems=getTocItems(address);
 $: cknow=getCk(address);
 
 </script>
 <div  class="toctext">
-<div class="jumper">
-跳到第{ (folio[0]||0)+1}頁 <Slider bind:value={folio} on:input={debounce(setFolio,500)} max={$maxfolio} min={0} />
-</div>
+{#each juans as juan}{juan}{/each}
+<span class="jumper">跳到第{ (folio[0]||0)+1}頁 
+<Slider bind:value={folio} on:input={debounce(setFolio,500)} max={$maxfolio} min={0} /></span>
+
 
 <div class="toc">
 {#each tocitems as item}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div on:click={()=>gofolio(item.at)} class="tocitem" class:selecteditem={cknow==item.id}>{styledNumber(item.id,'①') + item.caption}</div>
+<div on:click={()=>gofolio(ptk,item.at)} class="tocitem" class:selecteditem={cknow==item.id}>{styledNumber(item.id,'①') + item.caption}</div>
 {/each}
 <div class="endmarker">※※※</div>
 </div>

@@ -20,7 +20,7 @@ const marktap=async (pb,line)=>{
     const pos=await folioPosFromLine(ptk,pb,line,$activebookid,$folioLines,$folioChars)
     tapmark.set(pos);
 }
-const goFolio=(ptk,line)=>{
+const goFolioByLine=(ptk,line)=>{
     const pb=ptk.defines.pb;
     const folio=ptk.defines.folio;
     if (!pb) return ;
@@ -56,7 +56,7 @@ $: updateTranslation(address);
 <div class="hr"/>
 {#each translations as item}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div class:selecteditem={item.heading?.bkid==$activebookid}><span  on:click={()=>goFolio(item.ptk,item.line)} class="clickable author">{getBookTitle(item.ptk,item.heading?.bk?.at)}{hasfolio(item.ptk)?'←':' '}</span>{puretext(item.linetext)}</div>
+<div class:selecteditem={item.heading?.bkid==$activebookid}><span  on:click={()=>goFolioByLine(item.ptk,item.line)} class="clickable author">{getBookTitle(item.ptk,item.heading?.bk?.at)}{hasfolio(item.ptk)?'←':' '}</span>{puretext(item.linetext)}</div>
 <div class="hr"/>
 {/each}
 <SentenceNav {ptk} bind:address/>
