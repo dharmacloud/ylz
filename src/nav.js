@@ -12,14 +12,14 @@ export const gofolioAt=async (ptk,at)=>{
 }
 export const loadBook=(bk,func)=>{
     let timer=0;
-    if (bk==get(activebookid)) func(bk);
+    if (bk==get(activebookid)) func&&func(bk);
     else {
         loadingbook.set(true);
         activebookid.set(bk);
         timer=setInterval(()=>{
             if (!get(loadingbook)) {
                 clearInterval(timer);
-                func(bk);
+                func&&func(bk);
             }
         },500);
     }

@@ -3,12 +3,11 @@ import Slider from './3rd/rangeslider.svelte';
 import { bsearchNumber ,styledNumber,chunkOfFolio,debounce} from "ptk";
 import {activefolio,maxfolio,activebookid} from './store.js';
 import {gofolioAt} from './nav.js'
+import Juan from './juan.svelte'
 let folio=[$activefolio];
 export let ptk;
 export let address;
 export let closePopup;
-
-let juans=[]; //find out all juan
 
 const setFolio=async (e)=>{
     const v=e.detail[0];
@@ -30,7 +29,6 @@ const getTocItems=address=>{
     }
     return out;
 }
-
 const getCk=(address)=>{
     const m=address.match(/ck#?(\d+)/);
     if (m) return m[1];
@@ -44,10 +42,10 @@ $: cknow=getCk(address);
 
 </script>
 <div  class="toctext">
-{#each juans as juan}{juan}{/each}
+
+<Juan {ptk} {closePopup}/>
 <span class="jumper">跳到第{ (folio[0]||0)+1}頁 
 <Slider bind:value={folio} on:input={debounce(setFolio,500)} max={$maxfolio} min={0} /></span>
-
 
 <div class="toc">
 {#each tocitems as item}
