@@ -1,7 +1,7 @@
 <script>
 import {activebookid} from './store.js'
 import InputNumber from './comps/inputnumber.svelte';
-import { loadBook } from './nav.js';
+import { gofolio, loadBook } from './nav.js';
 export let closePopup;
 export let ptk;
 let juans=[]; //find out all juan
@@ -23,8 +23,8 @@ const loadJuan=()=>{
 const gojuan=(juan)=>{
     const bkid=$activebookid;
     const m=bkid.match(/([a-z]+)(\d+$)/);
-    console.log(m[1]+juan)
     loadBook( m[1]+juan,function(){
+        gofolio(ptk,'1');
         closePopup();
     });
 }

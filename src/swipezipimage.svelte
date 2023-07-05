@@ -56,7 +56,7 @@ const loadZip=async ()=>{
     setTimeout(()=>{
         loadingbook.set(false);
         ready=true;
-    },1);   
+    },300);   
 }
 const swipeStart=(obj)=>{
     hidepunc=true;
@@ -112,10 +112,15 @@ const onclick=async (e)=>{
     const tappos=$folioLines*$folioChars*$activefolio+ cx*$folioChars + cy;
     tapmark.set(tappos);
     // console.log('tappos',tappos,'click',cx,cy)
-    const [t,pos]=getConcreatePos(foliotext[cx],cy,foliotext[cx+1]);
+    let [t,pos]=getConcreatePos(foliotext[cx],cy,foliotext[cx+1]);
 	//get the ck-lineoff 
     const ck=await folio2ChunkLine(ptk,foliotext, foliofrom,cx,pos);;
 	const address= 'bk#'+$activebookid + (ck?('.'+ ck):'') ;
+    //remove after punc
+    t=t.replace(/([。！？：、．；，「『（ ])/g,'　');
+    while(t.charAt(0)=='　') t=t.slice(1);
+    t=t.replace(/　.+/,'');
+    
     await onTapText(t,address,ptk.name); 
 }
 const gotofolio=(folio)=>{
@@ -131,7 +136,7 @@ const togglefavoritebtn=()=>{
     if ($activePtk!=='dc') return;//only support chinese
     const bookfavor=Object.assign({},$favorites);
     if (!bookfavor[$activebookid]) {
-        bookfavor[$activebookid]=[];
+        bookfavor[$activebookid]={};
     }
     bookfavor[$activebookid][$activefolio]=1- (bookfavor[$activebookid][$activefolio]?1:0);
     favorites.set(Object.assign({},bookfavor));

@@ -17,7 +17,7 @@ const loadfavorites=()=>{
                 }
             }
         } else {
-            _others[key]=_favorites[key].filter(it=>!!it).length;
+            _others[key]=Object.keys(_favorites[key]).length;
         }
     }
     others=fromObj(_others,(a,b)=>[a,b]);

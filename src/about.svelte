@@ -7,8 +7,8 @@ import Switch from './3rd/switch.svelte';
 
 <div class="toctext">
 <br/>
-<Switch bind:value={$advancemode} label="進階模式" design="slider"/>
-<Switch bind:value={$videohost} label="視頻來源" options={["tencent","youtube"]} design="multi"/>
+<Switch bind:value={$advancemode} label="進階模式" design="slider" />
+<Switch bind:value={$videohost} label="視頻來源" options={["tencent","youtube"]} design="multi" />
 <br/>
 {#if $advancemode=='on'}
 本數據庫基於以下公開素材：

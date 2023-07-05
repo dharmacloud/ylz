@@ -8,7 +8,7 @@
 export let label;
 export let design = 'inner label'
 export let options = [];
-export let fontSize = 16;
+// export let fontSize = 16;
 export let value = 'on';
 let checked = value== 'on'
 const uniqueID = Math.floor(Math.random() * 100)
@@ -33,7 +33,7 @@ function handleClick(event){
     </button>
 </div>
 {:else if design == 'slider'}
-<span class="s s--slider" style="font-size:{fontSize}px">
+<span class="s s--slider">
     <span id={`switch-${uniqueID}`}>{label}</span>
     <button
         role="switch"
@@ -47,7 +47,7 @@ function handleClick(event){
     <span role='radiogroup'
 				 class="group-container"
 				 aria-labelledby={`label-${uniqueID}`}
-				 style="font-size:{fontSize}px" 
+				 
 				 id={`group-${uniqueID}`}>
     <span class='legend' id={`label-${uniqueID}`}>{label}</span>
         {#each options as option}

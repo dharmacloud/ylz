@@ -8,20 +8,19 @@ import Translations from "./translations.svelte"
 import Variorum from "./variorum.svelte"
 import Favorite from "./favorite.svelte"
 import Toc from "./toc.svelte"
-import {activePtk,activebookid,advancemode} from './store.js'
-import {guessEntry ,usePtk} from "ptk";
+import {activePtk,advancemode} from './store.js'
+import { usePtk} from "ptk";
 export let tofind='';
-
 export let address='';
 export let closePopup;
 let thetab='toc';
-let def='',ptk;
+let ptk ,entries=[];
 
 const onDict=async (t)=>{
-    const entry=guessEntry( t,ptk.defines.e.fields.id.values);
-    const defs=await ptk.fetchAddress('e#'+entry);
-    if (defs.length) {
-        def=defs.join('\n')
+    const tap_at=t.indexOf('^');
+    entries=ptk.columns.entries.keys.findMatches( t.replace('^','')).map(it=>[Math.abs(it[0]-tap_at-1),it[1],it[2]]);
+    entries.sort((a,b)=> a[0]-b[0]);// 越接近點擊處的優先
+    if (entries.length) {
         showdict=true;
         showmainmenu=false;
         thetab='dict'
@@ -39,9 +38,9 @@ $: onDict(tofind)
         <span class='clickable' class:selected={thetab=="about"} on:click={()=>thetab="about"}>⚙️</span>
 
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="list"} on:click={()=>thetab="list"}>📖</span>
+        <span class='clickable' class:selected={thetab=="list"} on:click={()=>thetab="list"}>📓</span>
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="toc"} on:click={()=>thetab="toc"}>📑</span>
+        <span class='clickable' class:selected={thetab=="toc"} on:click={()=>thetab="toc"}>🧭</span>
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="favorite"} on:click={()=>thetab="favorite"}>❤️</span>
 
@@ -56,10 +55,10 @@ $: onDict(tofind)
         {/if}
         {#if $advancemode!=='on'}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="audio"} on:click={()=>thetab="audio"}>🔊</span>
+        <span class='clickable' class:selected={thetab=="audio"} on:click={()=>thetab="audio"}>🎵</span>
         {/if}   
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        {#if def} <span class='clickable' class:selected={thetab=="dict"} on:click={()=>thetab="dict"}>🔎</span>{/if}
+        {#if entries.length} <span class='clickable' class:selected={thetab=="dict"} on:click={()=>thetab="dict"}>🔎</span>{/if}
 
         
 
@@ -74,8 +73,8 @@ $: onDict(tofind)
       <div class="tab-content" class:visible={thetab=='variorum'}><Variorum {closePopup} bind:address {ptk}/></div>
 
 
-      {#if def}
-      <div class="tab-content" class:visible={thetab=='dict'}><DictPopup {def} {ptk}/></div>
+      {#if entries.length}
+      <div class="tab-content" class:visible={thetab=='dict'}><DictPopup {entries} {ptk}/></div>
       {/if}
       <div class="tab-content" class:visible={thetab=='audio'}><Audio {ptk}/></div>
       <div class="tab-content" class:visible={thetab=='about'}><About/></div>

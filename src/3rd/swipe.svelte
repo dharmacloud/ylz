@@ -295,7 +295,9 @@ transition-duration: ${touch_end ? transitionDuration : '0'}ms;
   }
 
   const mod = (n, m) => ((n % m) + m) % m;
-
+  export function goLast(){
+    goTo(total_elements-1);
+  }
   export function goTo(step) {
     let item = allow_infinite_swipe ? step : Math.max(0, Math.min(step, indicators.length - 1));
     changeItem(item);

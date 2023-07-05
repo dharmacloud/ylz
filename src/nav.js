@@ -19,7 +19,9 @@ export const loadBook=(bk,func)=>{
         timer=setInterval(()=>{
             if (!get(loadingbook)) {
                 clearInterval(timer);
-                func&&func(bk);
+                setTimeout(()=>{//wait for 
+                    func&&func(bk);
+                },300);
             }
         },500);
     }
@@ -27,7 +29,6 @@ export const loadBook=(bk,func)=>{
 
 export const gofolio=async (ptk,pbid,ck)=>{
     const newfolio=parseInt(pbid)-1;
-    console.log(newfolio)
     activefolio.set(newfolio);
     if (ck) {
         [foliotext,foliofrom]=await fetchFolioText(ptk,get(activebookid),newfolio+1);
