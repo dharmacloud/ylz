@@ -8,7 +8,7 @@ const setWikipedia=()=>{
 }
 const setOneline=()=>{
     const entry=entries[nentry][1];
-    src="http://buddhaspace.org/dict/index.php?keyword="+ entry;
+    src="https://buddhaspace.org/dict/index.php?keyword="+ entry;
 }
 const availableDict=(n)=>{
     const at=entries[n][2];
@@ -27,8 +27,11 @@ $: availableDict(nentry)
 {#if idx==nentry}
 {#if fgdzd||dfb}<button on:click={setOneline}>一行</button>{/if}
 {#if wikipedia}<button on:click={setWikipedia}>Wiki</button>{/if}
-<a target=_new href={"https://www.google.com/search?q="+entry}>Google</a>
+<a target=_new href={"https://www.google.com/search?q="+encodeURI(entry)}>Google</a>
+<a target=_new href={"https://www.baidu.com/s?wd="+encodeURI(entry)}>百度</a>
 {/if}
+
+
 </span>
 {/each}
 </span>

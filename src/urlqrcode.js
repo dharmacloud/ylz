@@ -1,5 +1,5 @@
 export const urlqrcode=`<?xml version="1.0" encoding="utf-8"?>
-<svg xml:space="preserve" width="240" height="240" viewBox="0 0 888 888"><g fill="#000000">
+<svg xml:space="preserve" width="400" height="400" viewBox="0 0 888 888"><g fill="#000000">
 <g transform="translate(264,48) scale(4.12)"><rect width="6" height="6"/></g>
 <g transform="translate(288,48) scale(4.12)"><rect width="6" height="6"/></g>
 <g transform="translate(312,48) scale(4.12)"><rect width="6" height="6"/></g>

@@ -157,7 +157,7 @@ function handleClick(event){
 
     .s--multi label:last-child {
         margin-left: -5em;
-        padding-left: 5em;
+        padding-left: 4em;
     }
 
     .s--multi:focus-within label:first-of-type:after {

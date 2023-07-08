@@ -11,17 +11,15 @@ onDestroy(()=>{
 <div class="popup">
 <div class="toctext">
 <span class="welcome">歡迎</span>
-<br/>安裝到桌面以取得最佳顯示效果
-<br/>Android:使用Chrome瀏覽器，按右上角功能表→「安裝應用程式」
-<br/>iOS:按「分享」→「加到主畫面」
-<br/>點畫面任何一處，調出功能表
-<div style="color:white;background:var(--menubar-color)">⚙️設置📓經卷🧭跳轉
+<br/>安裝到桌面後可以全螢幕顯示，步驟：
+<br/>Android:使用Chrome，右上角功能表→安裝應用程式
+<br/>iOS:使用Safari，分享→加到主畫面
+<br/>左右滑動翻頁，點畫面任何一處，調出功能表。
+<div style="color:white;background:var(--menubar-color)">⚙️設置📓經卷🧭導引
 <br/>❤️書籤🎵誦經🔎詞典
 <br/>進階:📜原文🔀異譯📚集註</div>
-更新程式前，先清除瀏覽器快取
-<br/>無法訪問Youtube，請設定視頻來源為Tencent
-<br/>本軟件不會自動收集個人信息，我們盡量保證程序的正常運作以及內容的準確性。若造成用戶任何損失，既不負責。
-<Switch bind:value label="下次啟動時再度顯示此畫面" design="slider" fontSize="24"/>
+<br/>不會主動收集個人資訊。若造成用戶任何損失，既不負責。
 <br/><button style="font-size:150%" class="center" on:click={closePopup}>同意</button>
+<Switch bind:value label="啟動時顯示此畫面" design="slider" fontSize="24"/>
 </div>
 </div>
