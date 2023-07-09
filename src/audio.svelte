@@ -1,10 +1,11 @@
 <script>
-import {videoid, player,activebookid, findByVideoId, remainrollback,videohost} from './store.js';
+import {videoid, ytplayer,qqplayer,player,activebookid, findByVideoId, remainrollback,mediaurls, stopVideo} from './store.js';
 import Slider from './3rd/rangeslider.svelte';
 import {usePtk,parseOfftext,} from 'ptk'
 import { onDestroy, onMount } from 'svelte';
 import { get } from 'svelte/store';
-
+import {getAudioList} from './mediaurls.js'
+import {youtubeicon,vqqicon} from './icons.js'
 export let ptk;
 let value=[ $remainrollback,0];
 let subtitles=[], subtitles2=[], subtitle='',subtitle2='',subtitletimer, nsub=0;
@@ -13,10 +14,10 @@ onDestroy(()=>{
 });
 const selectmedia=vid=>{
     if (get(remainrollback)==0) remainrollback.set(-1);
+    if (!vid) stopVideo();
     videoid.set(vid||'');
 }
-const silence={vid:'',performer:'-靜默-'};
-let mediaurls=[silence]
+
 const humanDuration=(t)=>{
     if (!t) return ''
     const minutes=Math.floor(t/60);
@@ -28,25 +29,11 @@ const getDuration=id=>{
     if (!timestamps) return 0;
     return timestamps[timestamps.length-1]-timestamps[0];
 }
-const updateAudioList=(activeid)=>{
-    const ts=ptk.columns.timestamp;
-    mediaurls=[silence]
-    const vhost=$videohost;
-    for (let i=0;i<ts.keys.len();i++) {
-        const vid=ts.keys.get(i);
-        const vh=ts.videohost[i];
-        const performer=ts.performer[i];
-        const timestamp=ts.timestamp[i];
-        const bookid=ts.bookid[i]
-        if (vh==vhost) {
-            activeid==bookid&&mediaurls.push( {vid,performer,bookid,timestamp});
-        }
-    }
-};
 let timestamp=[];
 onMount(()=>{
     subtitletimer=setInterval(()=>{
-        const plyr=get(player);
+        if (!$videoid) return;
+        const plyr=player($videoid);
         if (!plyr)return;
         const playertime=plyr.getCurrentTime&&plyr.getCurrentTime();
         while (playertime>=timestamp[nsub] && nsub<timestamp.length) {
@@ -73,7 +60,7 @@ const htmltext=s=>{
     return parseOfftext(s)[0].replace(/[【《〔](.+?)[】》〕]/g,'<span class=bracket>$1 </span>');
 }
 $: loadSubtitle($videoid);
-$: updateAudioList($activebookid)
+
 const setRemain=()=>{
     const v=value[0];
     if ( (v&&get(remainrollback)==value[0]) || 
@@ -88,30 +75,33 @@ const humanStoptime=t=>{
     if (!t) return '';
     return (new Date(Date.now()+t*1000)).toLocaleTimeString()+'停止';
 }
-
+$: mediaurls.set(getAudioList($activebookid));
+$: console.log('change ',$videoid)
 </script>
 <div class="toctext">
-{#if !$player}
-{$videohost} 播放器載入中
+{#if !$qqplayer && !$ytplayer}
+{#if !$qqplayer}QQ播放器載入中{/if}
+{#if !$ytplayer} Youtube播放器載入中{/if}
 {:else}
 
-{#each mediaurls as media}
+{#each $mediaurls as media}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="clickable" on:click={selectmedia(media.vid)} class:selected={media.vid==$videoid}>{media.performer}</span>
 
 {#if $videoid==media.vid&& $videoid}
-{#if videohost=='youtube'}
-<a target=_new href={"https://www.youtube.com/watch?v="+$videoid}>原始影片</a>
-{:else}
-<a target=_new href={"https://v.qq.com/x/page/"+$videoid+".html"}>原始影片</a>
-{/if}
 {humanDuration(getDuration($videoid))}
+{#if media.videohost=='youtube'}
+<a target=_new href={"https://www.youtube.com/watch?v="+$videoid}>{@html youtubeicon}</a>
+{:else if media.videohost=='qq'}
+<a target=_new href={"https://v.qq.com/x/page/"+$videoid+".html"}>{@html vqqicon}</a>
+{/if}
 {/if}
 <br/>
 {/each}
 
 {#if $videoid==''}
-<br/>聲音直接抽取自{$videohost}公開影片，若該影片已下架，或者禁止嵌用則無法於此播放。
+<br/>聲音直接抽取自Youtube/Tencent公開影片，若該影片已下架，或者禁止嵌用則無法在此播放。
+<br/>按演出者的部首＋筆劃排序。
 {:else}
 
 <!-- svelte-ignore missing-declaration -->

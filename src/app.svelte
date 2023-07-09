@@ -4,7 +4,8 @@ import { openPtk,usePtk,loadScript} from 'ptk'
 import SwipeZipImage from "./swipezipimage.svelte";
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import { onDestroy, onMount } from "svelte";
-import {activebookid,isAndroid,playing,videohost,advancemode,idlecount,showpaiji,newbie,idletime} from './store.js'
+import {activebookid,isAndroid,playing,advancemode,idlecount,showpaiji,newbie,idletime} from './store.js'
+import {setTimestampPtk} from './mediaurls.js'
 import TapText from './taptext.svelte'
 import Player from './player.svelte'
 import Newbie from './newbie.svelte';
@@ -18,6 +19,7 @@ let loaded=false,timer;
 onDestroy(()=>clearInterval(timer))
 onMount(async ()=>{
     ptk=await openPtk("dc");
+    setTimestampPtk(ptk);
     await openPtk("dc_sanskrit");
     loaded=true;
     timer=setInterval(()=>{
@@ -28,14 +30,9 @@ onMount(async ()=>{
     },idleinterval*1000);
 });
 
-const loadPlayer=async ()=>{
-    if ($videohost=='youtube') {
-        // console.log('load youtube player')
-        await loadScript('https://www.youtube.com/iframe_api')
-    } else if ($videohost=='tencent') {
-        // console.log('load tencent player')
-        await loadScript('http://vm.gtimg.cn/tencentvideo/txp/js/txplayer.js')
-    }
+const loadPlayer=()=>{
+    loadScript('http://vm.gtimg.cn/tencentvideo/txp/js/txplayer.js')
+    loadScript('https://www.youtube.com/iframe_api')
 }
 
 let showdict=false,shownewbie=$newbie=='on',address='',tofind='';
@@ -53,7 +50,7 @@ const onTapText=(t,_address,ptkname)=>{
     ptk=usePtk(ptkname);
 }
 
-$: loadPlayer($videohost);
+$: loadPlayer();
 </script>
 <div class="app">   
 {#if loaded}

@@ -1,9 +1,11 @@
 <script>
 import { onMount } from 'svelte';
-import {videohost,player,videoid,activebookid,activefolio,folioLines,playing,continueplay,stopVideo,findByVideoId} from './store.js'
-let plyr,timer;
+import {ytplayer,qqplayer,player,videoid,activebookid,
+    activefolio,folioLines,playing,continueplay,stopVideo,findByVideoId} from './store.js'
+import {mediabyid} from './mediaurls.js'
+let timer;
 const createYoutubePlayer=()=>{
-    plyr=new YT.Player('player', {
+    const plyr=new YT.Player('ytplayer', {
     height: '1px', // 高度預設值為390，css會調成responsive
     // width: '640', // 寬度預設值為640，css會調成responsive
     videoId:'',
@@ -14,33 +16,31 @@ const createYoutubePlayer=()=>{
         'onStateChange': onPlayerStateChange
     }
     });
-    player.set(plyr)
-    // console.log('create youtube player',pylr)
+    ytplayer.set(plyr)
 };
 const createTencentPlayer=()=>{
     // https://m.v.qq.com/txp/v3/src/jsapi/
-    plyr = new Txplayer({
-        containerId: 'player',
+    const plyr = new Txplayer({
+        containerId: 'qqplayer',
         vid: '',//make it invalid, otherwise might play ads,
         width: '1px',
         height: '1px',
         autoplay:false,
     });
-
     plyr.on('ready',onPlayerReady);
     plyr.on('playStateChange',onPlayerStateChange);
-    player.set(plyr)
+    qqplayer.set(plyr);
 }
 
 onMount(()=>{
     timer=setInterval(()=>{
         if (typeof Txplayer!=='undefined') {
-            console.log('load tencent')
+            console.log('qq player ok')
             clearInterval(timer);
             createTencentPlayer();
         }
         if (typeof YT!=='undefined') {
-            console.log('load youtube')
+            console.log('youtube player ok')
             clearInterval(timer);
             createYoutubePlayer();
         }
@@ -48,6 +48,8 @@ onMount(()=>{
 });
 
 function onPlayerStateChange(e){
+    console.log('player state change')
+    if (e.data==-1 || e.data==5) return;
     const obj=findByVideoId($videoid);
     if (!obj) return;
     const {bookid}=obj;
@@ -62,26 +64,28 @@ function onPlayerStateChange(e){
 
 function onPlayerReady(e) {
     // 為確保瀏覽器上可以自動播放，要把影片調成靜音
-    // console.log('player ready')
-    
-    plyr.playVideo?plyr.playVideo():(plyr.play&&plyr.play());
+    console.log('player ready')
+    const plyr=player();
+    plyr?.playVideo?plyr.playVideo():(plyr?.play&&plyr.play());
 }
 const loadVideo=()=>{
-    const obj=findByVideoId($videoid);
-    if (!obj) {
-        stopVideo();   
-        return;
-    }
+    const vid=$videoid;
+    const obj=findByVideoId(vid);
+    stopVideo(); 
+    if (!obj || !vid) return;
     const {timestamp,bookid} = obj;
     if (bookid!==$activebookid) {
         stopVideo();
     } else {
+        console.log('load',vid)
         activefolio.set(0);
         const start=(timestamp&&timestamp[0])||0;
-        if ($videohost=='youtube') {
-            $player?.loadVideoById({'videoId':$videoid,suggestedQuality:'low',startSeconds:start});
+        const host=mediabyid(vid)?.videohost;
+        console.log(host, player(vid))
+        if (host=='youtube') {
+            $ytplayer.loadVideoById({'videoId':vid,suggestedQuality:'low',autoplay:true, startSeconds:start});
         } else {
-            $player?.play({vid:$videoid,autoplay:true,playStartTime:start});
+            $qqplayer.play({vid,autoplay:true,playStartTime:start});
         }
     }
 }
@@ -94,13 +98,15 @@ const seekToFolio=(folio,videoid)=>{
     if (!timestamp) return;
     const line=parseInt(folio)*$folioLines;
     const t=timestamp[line];
-    $player?.seekTo(t);
+    player(videoid)?.seekTo(t);
 }
 $: seekToFolio($activefolio,$videoid);
 $: if (document.location.protocol!=='file:') loadVideo($videoid)
 </script>
 
-<div id="player"></div>
+<div id="ytplayer"></div>
+<div id="qqplayer"></div>
 <style>
-    #player { position:absolute;right:-1px;height:1px}
+    #ytplayer { position:absolute;right:-1px;height:1px}
+    #qqplayer { position:absolute;right:-1px;height:1px}
 </style>

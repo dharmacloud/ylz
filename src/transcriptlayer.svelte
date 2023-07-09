@@ -46,7 +46,7 @@ const stripstyle=(i,strip)=>{
     if (!timestamp[line] && i==0) { //read the end
         rollback();
     }
-    const playertime=get(player).getCurrentTime();
+    const playertime=player($videoid)?.getCurrentTime();
     let timedelta=playertime-timestamp[line];//player 跑得比較快。（因換頁動畫時間），需修正
     if (Math.abs(timedelta)>3 ) { //不會差這麼多，是快速滑輪造成。getCurrentTime 未切到
         timedelta=0.02;

@@ -1,6 +1,7 @@
 import {updateSettings,settings} from './savestore.ts'
 import {usePtk} from 'ptk'
 import {get,writable,derived } from 'svelte/store';
+import {silence,mediabyid} from './mediaurls.js'
 export const nanzangbooks=['sdpdrk1','sdpdrk2','sdpdrk3','sdpdrk4','sdpdrk5','sdpdrk6','sdpdrk7'];
 export const vlinesOfBook=(bkid)=>~nanzangbooks.indexOf(bkid)?6:5;
 
@@ -13,12 +14,21 @@ export const maxfolio=writable(0);
 export const favorites=writable(settings.favorites);
 
 export const isAndroid=writable(false)
-export const player=writable(null)
+
+export const mediaurls=writable([silence]);
+export const ytplayer=writable(null)
+export const qqplayer=writable(null)
+export const player=function(vid){
+    return mediabyid(vid||get(videoid))?.videohost=='youtube'?get(ytplayer):get(qqplayer);
+}
+// export const player=derived( videoid, v=>);
+
+
 export const videoid=writable('');
-export const folioLines=derived( activebookid,(bid)=>vlinesOfBook(bid));
+export const folioLines=derived( activebookid,bid=>vlinesOfBook(bid));
 
 export const folioChars=writable(17);
-export const videohost=writable(settings.videohost);
+
 export const playing=writable(false);
 export const continueplay=writable(false);
 export const tapmark = writable(0);// folio*folioLines*folioChar+offset
@@ -31,7 +41,6 @@ export const showpaiji=writable(false);
 
 activebookid.subscribe((activebookid)=>updateSettings({activebookid}));
 advancemode.subscribe((advancemode)=>updateSettings({advancemode}));
-videohost.subscribe((videohost)=>updateSettings({videohost}));
 newbie.subscribe((newbie)=>updateSettings({newbie}));
 favorites.subscribe((favorites)=>updateSettings({favorites}));
 
@@ -40,17 +49,18 @@ export const findByVideoId=(id,column='timestamp')=>{
     if (!ptk.columns[column]) return null;
     const ts=ptk.columns[column].fieldsByKey(id);
     
-    return {youtube:id,...ts};
+    return {id,...ts};
 }
 
 export const stopVideo=()=>{
-    const plyr=get(player);
+    pauseVideo();
     playing.set(false);
-    videoid.set('')
     remainrollback.set(-1);
-
-    if (!plyr) return;
-    plyr.stopVideo?plyr.stopVideo(): (plyr.pause?plyr.pause():null);
+}
+export const pauseVideo=()=>{
+   
+    get(qqplayer)?.pause&&get(qqplayer).pause();
+    get(ytplayer)?.stopVideo&&get(ytplayer).stopVideo();
 }
 
 export const booknameOf=bkid=>{
