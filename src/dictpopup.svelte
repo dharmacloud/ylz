@@ -16,8 +16,10 @@ const availableDict=(n)=>{
     wikipedia=flag&1;
     fgdzd=flag&2;
     dfb=flag&4;
+    if (fgdzd||dfb) setOneline();
+    else if (wikipedia) setWikipedia();
 }
-$: availableDict(nentry)
+$: availableDict(nentry);
 </script>
 <div class="dictpopup toctext">
 <span class="header">
