@@ -76,7 +76,6 @@ const humanStoptime=t=>{
     return (new Date(Date.now()+t*1000)).toLocaleTimeString()+'停止';
 }
 $: mediaurls.set(getAudioList($activebookid));
-$: console.log('change ',$videoid)
 </script>
 <div class="toctext">
 {#if !$qqplayer && !$ytplayer}

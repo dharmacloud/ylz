@@ -8,7 +8,7 @@ import Translations from "./translations.svelte"
 import Variorum from "./variorum.svelte"
 import Favorite from "./favorite.svelte"
 import Toc from "./toc.svelte"
-import {activePtk,advancemode} from './store.js'
+import {activePtk,advancemode,activebookid, hasVariorum} from './store.js'
 import { usePtk} from "ptk";
 export let tofind='';
 export let address='';
@@ -51,7 +51,9 @@ $: onDict(tofind)
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="translations"} on:click={()=>thetab="translations"}>🔀</span>
         <!-- svelte-ignore a11y-click-events-have-key-events -->
+        {#if hasVariorum($activebookid)}
         <span class='clickable' class:selected={thetab=="variorum"} on:click={()=>thetab="variorum"}>📚</span>
+        {/if}
         {/if}
         {#if $advancemode!=='on'}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -70,7 +72,9 @@ $: onDict(tofind)
       <div class="tab-content" class:visible={thetab=='favorite'}><Favorite {address} {closePopup} {ptk} /></div>
       <div class="tab-content" class:visible={thetab=='sourcetext'}><SourceText {closePopup} bind:address {ptk}/></div>
       <div class="tab-content" class:visible={thetab=='translations'}><Translations {closePopup} bind:address {ptk}/></div>
+      
       <div class="tab-content" class:visible={thetab=='variorum'}><Variorum {closePopup} bind:address {ptk}/></div>
+      
 
 
       {#if entries.length}

@@ -13,7 +13,6 @@ const updateVariorum=async (address)=>{
     const id=act[act.length-1][1]+':'+addr.highlightline;
     
     let at=r.fields.id.values.indexOf(id);
-    
     if (~at) {
         const from=r.linepos[at];
         let to=r.linepos[at+1];//need terminator at the end

@@ -72,3 +72,9 @@ export const booknameOf=bkid=>{
 
 export const idletime=60;
 
+export const hasVariorum=bkid=>{
+    const ptk=usePtk('dc');
+    const at=bkid.indexOf('_')
+    if (~at) bkid=bkid.slice(0,at);
+    return ~ptk.defines.bk.fields.id.values.indexOf(bkid+'_variorum');
+}
