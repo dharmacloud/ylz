@@ -1,6 +1,6 @@
 <script>
 import { bsearchNumber, makeAddress, parseAction, parseAddress ,rangeOfAddress,styledNumber} from "ptk";
-import { activefolio } from "./store";
+import { activepb } from "./store";
 export let ptk;
 export let address;
 
@@ -49,13 +49,13 @@ const prevSentence=async ()=>{
     }
     address=makeAddress('',action,0,0,hl);
 }
-const gotofolio=()=>{
+const gotoPb=()=>{
     const {act,hl,range}=actionOfAddress(address);
 
     const pb=ptk.defines.pb;
     const at=bsearchNumber( pb.linepos,range[0]-1+hl )-1;
 
-    activefolio.set(pb.fields.id.values[at]);
+    activepb.set(pb.fields.id.values[at]);
 
     // console.log(at,'pbid', );
 }
@@ -66,7 +66,7 @@ $: getHumanAddress(address)
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span on:click={prevSentence} class="toctext">←</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span on:click={gotofolio}>{humanaddr}</span>
+<span on:click={gotoPb}>{humanaddr}</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="toctext" on:click={nextSentence}>→</span>
 </div>

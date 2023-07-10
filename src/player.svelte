@@ -1,7 +1,7 @@
 <script>
 import { onMount } from 'svelte';
-import {ytplayer,qqplayer,player,videoid,activebookid,
-    activefolio,folioLines,playing,continueplay,stopVideo,findByVideoId} from './store.js'
+import {ytplayer,qqplayer,player,videoid,activefolioid,
+    activepb,folioLines,playing,continueplay,stopVideo,findByVideoId} from './store.js'
 import {mediabyid} from './mediaurls.js'
 let timer;
 const createYoutubePlayer=()=>{
@@ -54,8 +54,8 @@ function onPlayerStateChange(e){
     if (!obj) return;
     const {bookid}=obj;
 
-    if (bookid!==$activebookid) {
-        // activefolio.set(0);
+    if (bookid!==$activefolioid) {
+        // activepb.set(0);
         stopVideo();
         return;
     }
@@ -74,11 +74,11 @@ const loadVideo=()=>{
     stopVideo(); 
     if (!obj || !vid) return;
     const {timestamp,bookid} = obj;
-    if (bookid!==$activebookid) {
+    if (bookid!==$activefolioid) {
         stopVideo();
     } else {
         console.log('load',vid)
-        activefolio.set(0);
+        activepb.set(0);
         const start=(timestamp&&timestamp[0])||0;
         const host=mediabyid(vid)?.videohost;
         console.log(host, player(vid))
@@ -92,15 +92,15 @@ const loadVideo=()=>{
 const seekToFolio=(folio,videoid)=>{
     if (!videoid || $continueplay || !$playing) return;
     const {timestamp,bookid} = findByVideoId(videoid);
-    if (bookid!==$activebookid) {
+    if (bookid!==$activefolioid) {
         stopVideo();
     }
     if (!timestamp) return;
-    const line=parseInt(folio)*$folioLines;
+    const line=parseInt(folio)*folioLines();
     const t=timestamp[line];
     player(videoid)?.seekTo(t);
 }
-$: seekToFolio($activefolio,$videoid);
+$: seekToFolio($activepb,$videoid);
 $: if (document.location.protocol!=='file:') loadVideo($videoid)
 </script>
 

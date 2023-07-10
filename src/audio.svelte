@@ -1,5 +1,5 @@
 <script>
-import {videoid, ytplayer,qqplayer,player,activebookid, findByVideoId, remainrollback,mediaurls, stopVideo} from './store.js';
+import {videoid, ytplayer,qqplayer,player,activefolioid, findByVideoId, remainrollback,mediaurls, stopVideo} from './store.js';
 import Slider from './3rd/rangeslider.svelte';
 import {usePtk,parseOfftext,} from 'ptk'
 import { onDestroy, onMount } from 'svelte';
@@ -52,8 +52,8 @@ const loadSubtitle=async id=>{
     timestamp=findByVideoId(id,'timestamp_sanskrit')?.timestamp||[];
     if (!timestamp?.length) return;
     const skptk=usePtk('dc_sanskrit');   
-    subtitles2=await skptk.fetchAddress('bk#'+$activebookid);
-    subtitles=await ptk.fetchAddress('bk#'+$activebookid);
+    subtitles2=await skptk.fetchAddress('bk#'+$activefolioid);
+    subtitles=await ptk.fetchAddress('bk#'+$activefolioid);
     nsub=0;
 }
 const htmltext=s=>{
@@ -75,7 +75,7 @@ const humanStoptime=t=>{
     if (!t) return '';
     return (new Date(Date.now()+t*1000)).toLocaleTimeString()+'停止';
 }
-$: mediaurls.set(getAudioList($activebookid));
+$: mediaurls.set(getAudioList($activefolioid));
 </script>
 <div class="toctext">
 {#if !$qqplayer && !$ytplayer}

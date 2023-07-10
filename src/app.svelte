@@ -4,7 +4,7 @@ import { openPtk,usePtk,loadScript} from 'ptk'
 import SwipeZipImage from "./swipezipimage.svelte";
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import { onDestroy, onMount } from "svelte";
-import {activebookid,isAndroid,playing,advancemode,idlecount,showpaiji,newbie,idletime} from './store.js'
+import {activefolioid,isAndroid,playing,advancemode,idlecount,showpaiji,newbie,idletime} from './store.js'
 import {setTimestampPtk} from './mediaurls.js'
 import TapText from './taptext.svelte'
 import Player from './player.svelte'
@@ -55,13 +55,13 @@ $: loadPlayer();
 <div class="app">   
 {#if loaded}
 <Player/>
-<!-- <SwipeVideo src={$activebookid+($isAndroid?".webm":".mp4")} {ptk} {onTapText} {onMainmenu}/> -->
-{#key $activebookid}
+<!-- <SwipeVideo src={$activefolioid+($isAndroid?".webm":".mp4")} {ptk} {onTapText} {onMainmenu}/> -->
+{#key $activefolioid}
 
 {#if $showpaiji && !$playing && !showdict && !shownewbie}
 <Paiji/>
 {/if}
-<SwipeZipImage  src={$activebookid+".zip"} {ptk} {onTapText} {onMainmenu}/>
+<SwipeZipImage  src={$activefolioid+".zip"} {ptk} {onTapText} {onMainmenu}/>
 {/key}
 
 {#if shownewbie||showdict}

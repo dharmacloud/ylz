@@ -1,19 +1,19 @@
 <script>
-import {activebookid} from './store.js'
+import {activefolioid} from './store.js'
 import InputNumber from './comps/inputnumber.svelte';
-import { gofolio, loadBook } from './nav.js';
+import { goPb, loadBook } from './nav.js';
 export let closePopup;
 export let ptk;
 let juans=[]; //find out all juan
 let thejuan=[0,0],currentjuan='1';
 const loadJuan=()=>{
-    const bkid=$activebookid;
-    const m=bkid.match(/([a-z]+)(\d+$)/);
+    const folioid=$activefolioid;
+    const m=folioid.match(/([a-z]+)(\d+$)/);
     juans=[];
     if (!m) return;
     currentjuan=m[2];
     thejuan[0]=parseInt(currentjuan);
-    const arrbkid=ptk.defines.bk.fields.id.values;
+    const arrbkid=ptk.defines.folio.fields.id.values;
     for (let i=0;i<arrbkid.length;i++) {
         if (arrbkid[i].startsWith(m[1])) {
             juans.push(arrbkid[i].slice( m[1].length));
@@ -21,10 +21,10 @@ const loadJuan=()=>{
     }
 }
 const gojuan=(juan)=>{
-    const bkid=$activebookid;
+    const bkid=$activefolioid;
     const m=bkid.match(/([a-z]+)(\d+$)/);
     loadBook( m[1]+juan,function(){
-        gofolio(ptk,'1');
+        goPb(ptk,'1');
         closePopup();
     });
 }
@@ -36,7 +36,7 @@ const gojuan2=(juan)=>{
     },1500);
     return juan;
 }
-$: loadJuan($activebookid);
+$: loadJuan($activefolioid);
 </script>
 
 {#if juans.length==0}

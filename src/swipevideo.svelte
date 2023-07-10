@@ -7,7 +7,7 @@ let touching=-1;
 let touchx=0,touchy=0,startx=0,starty=0,direction=0;
 import {up1,up2,turnleft,turnright,swipestart,swipeend,down1,down2} from './swipeshapes.js';
 import {fetchFolioText,getConcreatePos,folio2ChunkLine,extractPuncPos,usePtk} from 'ptk'
-import {folioLines, folioChars,activebookid,activefolio,activePtk, maxfolio} from './store.js'
+import {folioLines, folioChars,activefolioid,activepb,activePtk, maxfolio} from './store.js'
 const swipeshapes=[ down2,down1, swipeend,turnright, , turnleft,swipestart, up1,up2];
 
 export let onTapText=function(){};
@@ -78,8 +78,9 @@ const mousewheel=(e)=>{
 }
 const getCharXY=(div,x,y)=>{
 	const [left,top,right]=videoRect();
-    const cx=$folioLines-Math.floor(((x-left)/(right-left))*$folioLines)-1;
-    const cy=Math.floor((y/(div.clientHeight-div.clientTop))*$folioChars);
+	const fl=folioLines(),fc=get(folioChars);
+    const cx=fl-Math.floor(((x-left)/(right-left))*fl)-1;
+    const cy=Math.floor((y/(div.clientHeight-div.clientTop))*fc);
     return [cx,cy];
 }
 
@@ -91,7 +92,7 @@ const onclick=async (e,_x,_y)=>{
     const [cx,cy]=getCharXY(mp4player, x,y);
     const [t,pos]=getConcreatePos(foliotext[cx],cy,foliotext[cx+1]);
 	//get the ck-lineoff 
-	const address=  'bk#'+$activebookid +'.'+ await folio2ChunkLine(ptk,foliotext, foliofrom,cx,pos);
+	const address=  'bk#'+$activefolioid +'.'+ await folio2ChunkLine(ptk,foliotext, foliofrom,cx,pos);
 	await onTapText(t,address,ptk.name);
 }
 
@@ -113,12 +114,12 @@ const ontouchend=async e=>{
     
 }
 const updateFolioText=async ()=>{
-    [foliotext,foliofrom]=await fetchFolioText(ptk,$activebookid,1+Math.floor(mp4player?.currentTime||0));
-	puncs=extractPuncPos(foliotext,$folioLines);
-	activefolio.set(Math.floor(mp4player.currentTime));
+    [foliotext,foliofrom]=await fetchFolioText(ptk,$activefolioid,1+Math.floor(mp4player?.currentTime||0));
+	puncs=extractPuncPos(foliotext,folioLines());
+	activepb.set(Math.floor(mp4player.currentTime));
 	pauseVideo();
 }
-const gotoFolio=async (t)=>{
+const gotoPb=async (t)=>{
 	pauseVideo();
 	if (Math.floor(t)!==Math.floor(mp4player?.currentTime)) {
 		setTimeout(()=>{
@@ -129,13 +130,13 @@ const gotoFolio=async (t)=>{
 		updateFolioText();
 	}
 }
-$: gotoFolio($activefolio,$activebookid);
+$: gotoPb($activepb,$activefolioid);
 const videoFrame=()=>{
 	const frame=videoRect();
 	return {left:frame[0],top:frame[1],width:frame[2]-frame[0],height:frame[3]-frame[1]};
 }
 const videoloaded=()=>{
-	gotoFolio($activefolio);
+	gotPb($activepb);
 	maxfolio.set(mp4player.duration);
 	mp4player.autoplay=false;
 	mp4player.pause();
@@ -168,7 +169,7 @@ const setHandle=node=>{
 {/key}
 
 {#key puncs}
-<PuncLayer frame={ videoFrame()  } {folioChars} {folioLines} {puncs} />
+<PuncLayer frame={ videoFrame()  } {puncs} />
 {/key}
 
 </div>

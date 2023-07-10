@@ -1,18 +1,18 @@
 <script>
 import Slider from './3rd/rangeslider.svelte';
 import { bsearchNumber ,styledNumber,chunkOfFolio,debounce} from "ptk";
-import {activefolio,maxfolio,activebookid} from './store.js';
-import {gofolioAt} from './nav.js'
+import {activepb,maxfolio,activefolioid} from './store.js';
+import {goPbAt} from './nav.js'
 import Juan from './juan.svelte'
-let folio=[$activefolio];
+let folio=[$activepb];
 export let ptk;
 export let address;
 export let closePopup;
 
 const setFolio=async (e)=>{
     const v=e.detail[0];
-    activefolio.set(parseInt(v));
-    address=  'bk#'+$activebookid +'.ck#'+ chunkOfFolio(ptk,$activebookid,v);
+    activepb.set(parseInt(v));
+    address=  'bk#'+$activefolioid +'.ck#'+ chunkOfFolio(ptk,$activefolioid,v);
 }
 
 let tocitems=[],cknow;
@@ -33,8 +33,8 @@ const getCk=(address)=>{
     const m=address.match(/ck#?(\d+)/);
     if (m) return m[1];
 }
-const gofolio=(ptk,at)=>{
-    gofolioAt(ptk,at);
+const goPb=(ptk,at)=>{
+    goPbAt(ptk,at);
     closePopup();
 }
 $: tocitems=getTocItems(address);
@@ -50,7 +50,7 @@ $: cknow=getCk(address);
 <div class="toc">
 {#each tocitems as item}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div on:click={()=>gofolio(ptk,item.at)} class="tocitem" class:selecteditem={cknow==item.id}>{styledNumber(item.id,'①') + item.caption}</div>
+<div on:click={()=>goPb(ptk,item.at)} class="tocitem" class:selecteditem={cknow==item.id}>{styledNumber(item.id,'①') + item.caption}</div>
 {/each}
 <div class="endmarker">※※※</div>
 </div>

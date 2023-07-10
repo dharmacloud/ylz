@@ -1,21 +1,21 @@
 import {fetchFolioText,concreateLength} from 'ptk';
-import { folioChars,folioLines,activebookid ,tapmark,activefolio,loadingbook} from "./store.js";
+import { folioChars,folioLines,activefolioid ,tapmark,activepb,loadingbook} from "./store.js";
 import {get} from 'svelte/store'
 
-export const gofolioAt=async (ptk,at)=>{
+export const goPbAt=async (ptk,at)=>{
     const ck=ptk.defines.ck;
     const pb=ptk.defines.pb;
     const ckline=ck.linepos[at];
     const pbtag=ptk.nearestTag(ckline+1,'pb')-1;
     const pbid=pb.fields.id.values[pbtag];
-    await gofolio(ptk,pbid,ck.fields.id.values[at]);
+    await goPb(ptk,pbid,ck.fields.id.values[at]);
 }
 export const loadBook=(bk,func)=>{
     let timer=0;
-    if (bk==get(activebookid)) func&&func(bk);
+    if (bk==get(activefolioid)) func&&func(bk);
     else {
         loadingbook.set(true);
-        activebookid.set(bk);
+        activefolioid.set(bk);
         timer=setInterval(()=>{
             if (!get(loadingbook)) {
                 clearInterval(timer);
@@ -27,13 +27,13 @@ export const loadBook=(bk,func)=>{
     }
 }
 
-export const gofolio=async (ptk,pbid,ck)=>{
-    const newfolio=parseInt(pbid)-1;
-    activefolio.set(newfolio);
+export const goPb=async (ptk,pbid,ck)=>{
+    const newpb=parseInt(pbid)-1;
+    activepb.set(newpb);
     if (ck) {
-        [foliotext,foliofrom]=await fetchFolioText(ptk,get(activebookid),newfolio+1);
+        [foliotext,foliofrom]=await fetchFolioText(ptk,get(activefolioid),newfolio+1);
         const fc=get(folioChars);
-        const fl=get(folioLines);
+        const fl=folioLines();
         for (let i=0;i<foliotext.length;i++) {
             const at2=foliotext[i].indexOf('^ck'+ck);
             if (~at2) {

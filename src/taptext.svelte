@@ -8,7 +8,7 @@ import Translations from "./translations.svelte"
 import Variorum from "./variorum.svelte"
 import Favorite from "./favorite.svelte"
 import Toc from "./toc.svelte"
-import {activePtk,advancemode,activebookid, hasVariorum} from './store.js'
+import {activePtk,advancemode,activefolioid, hasVariorum,hasSanskrit,bookByFolio} from './store.js'
 import { usePtk} from "ptk";
 export let tofind='';
 export let address='';
@@ -46,12 +46,14 @@ $: onDict(tofind)
 
         
         {#if ~address.indexOf('ck') && $advancemode=='on'}
+        {#if hasSanskrit(bookByFolio($activefolioid))}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="sourcetext"} on:click={()=>thetab="sourcetext"}>📜</span>
+        {/if}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="translations"} on:click={()=>thetab="translations"}>🔀</span>
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        {#if hasVariorum($activebookid)}
+        {#if hasVariorum(bookByFolio($activefolioid))}
         <span class='clickable' class:selected={thetab=="variorum"} on:click={()=>thetab="variorum"}>📚</span>
         {/if}
         {/if}

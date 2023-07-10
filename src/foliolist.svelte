@@ -1,61 +1,47 @@
 <script>
 export let ptk;
-import {activebookid, activefolio, stopVideo,nanzangbooks} from './store.js';
+import {activefolioid, parallelFolios,activepb, stopVideo} from './store.js';
 export let closePopup=function(){};
 
-const parallelBooks=(bkid)=>{
-    const bk=ptk.defines.bk;
-    const at=bkid.indexOf('_');
-    const prefix=~at?bkid.slice(0,at ):bkid;
-    const out=[],idarr=bk.fields.id.values;
-    for (let i=0;i<idarr.length;i++) {
-        if (idarr[i].startsWith(prefix+'_') && idarr[i]!==bkid) {
-            out.push(i)
-        }
-    }
-    return out;
-}
-const getBookList=()=>{
+const getFolioList=()=>{
     const folio=ptk.defines.folio;
-    const bk=ptk.defines.bk;
     const out=[];
     for (let i=0;i<folio.linepos.length;i++) {
         const id=folio.fields.id.values[i];
-        const at=bk.fields.id.values.indexOf(id);
-        if (~at && !bk.fields.hidden?.values[at]) {
-            out.push([at, id, parallelBooks(id)]);
+        if (!~id.indexOf('_') && !id.match(/[23456789]$/)) {//only show book without _ and not ends with >2
+            out.push([i, id, parallelFolios(id)]);
         }
     }
     return out;
 }
-const books=getBookList();
-const selectbook=nbk=>{
-    const bk=ptk.defines.bk;
+
+const folios=getFolioList();
+const selectfolio=nfolio=>{
+    const folio=ptk.defines.folio;
     stopVideo();
-    const bkid=bk.fields.id.values[nbk];
-    activebookid.set(bkid);
-    activefolio.set(0);    
+    const folioid=folio.fields.id.values[nfolio];
+    activefolioid.set(folioid);
+    activepb.set(0);    
     closePopup();
 }
 
-const getBookName=nbk=>{
-    const bk=ptk.defines.bk;
-    const bookname=bk.innertext.get(nbk); 
-    return bk.fields.heading.values[nbk]||bookname;
+const getFolioName=nfolio=>{
+    const folio=ptk.defines.folio;
+    return folio.innertext.get(nfolio); 
 }
-const getBookId=nbk=>{
-    const bk=ptk.defines.bk;
-    return bk.fields.id.values[nbk]
+const getFolioId=nfolio=>{
+    const folio=ptk.defines.folio;
+    return folio.fields.id.values[nfolio]
 }
 </script>
-{#each books as [nbk,bkid,pars]}
+{#each folios as [nfolio,folioid,pars]}
 <div class="book">
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span on:click={()=>selectbook(nbk)} class:selecteditem={$activebookid==bkid} >{getBookName(nbk)}</span>
+<span on:click={()=>selectfolio(nfolio)} class:selecteditem={$activefolioid==folioid} >{getFolioName(nfolio)}</span>
 {#each pars as par}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class="parallelbook" on:click={()=>selectbook(par)} class:selecteditem={$activebookid==getBookId(par)} >
-{getBookName(par)}
+<span class="parallelfolio" on:click={()=>selectfolio(par)} class:selecteditem={$activefolioid==getFolioId(par)} >
+{getFolioName(par)}
 </span>
 {/each}
 </div>

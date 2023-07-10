@@ -1,15 +1,15 @@
 <script>
-export let mark=0,frame,activefolio=0;
+export let mark=0,frame,pb=0;
 export let folioChars=17,folioLines=5;
 const unitw=frame.width/folioLines , unith= frame.height/folioChars;
 
 const styleString=()=>{
     if (!mark)return;
     const charperpage=(folioChars*folioLines);
-    const folio=Math.floor( mark/ charperpage);
-    if (folio!==activefolio) return '';
-    const line=Math.floor( (mark-folio*charperpage) / folioChars)
-    const ch= 1+(mark-folio*charperpage-line*folioChars);
+    const _pb=Math.floor( mark/ charperpage);
+    if (_pb!==pb) return '';
+    const line=Math.floor( (mark-pb*charperpage) / folioChars)
+    const ch= 1+(mark-pb*charperpage-line*folioChars);
     
 
     return 'left:'+Math.floor(frame.left+unitw*(folioLines-line-1) )+'px; top:'+

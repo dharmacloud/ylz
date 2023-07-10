@@ -2,9 +2,10 @@
 /* TODO Galaxy Fold ratio smaller than 450/1000, causing punc miss place */
 export let frame={};
 export let puncs=[];
-export let folioChars=17,folioLines=5;
+import {folioChars,folioLines} from './store.js'
 import {stylestring} from './unit.js'
-const unitw=frame.width/folioLines , unith= frame.height/folioChars;
+const fl=folioLines(),fc=$folioChars;
+const unitw=frame.width/fl , unith= frame.height/folioChars;
 import {isPunc} from 'ptk'
 const puncStyle=(line,ch,text)=>{
     let fontsize=unith*0.9 ,yinc=unith*0.2,xinc=-unitw*0.1;      
@@ -22,7 +23,7 @@ const puncStyle=(line,ch,text)=>{
         yinc+=unith;
         fontsize=fontsize/1.5;
     }
-    const style='left:'+Math.floor(xinc+unitw*(folioLines-line) - unitw*0.25 )+'px; top:'
+    const style='left:'+Math.floor(xinc+unitw*(fl-line) - unitw*0.25 )+'px; top:'
     +Math.floor(yinc+unith*(ch-1)- unith*0.2)+'px;font-size:'+fontsize+'px';
     return style;
 }

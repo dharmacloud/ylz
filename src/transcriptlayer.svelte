@@ -1,6 +1,6 @@
 <script>
 import {stylestring} from './unit.js'
-import {activefolio,videoid,folioLines,folioChars,playing,
+import {activepb,videoid,folioLines,folioChars,playing,
     stopVideo,remainrollback, player,continueplay, findByVideoId} from './store.js'
 import {get} from 'svelte/store'
 import {onDestroy} from 'svelte'
@@ -8,14 +8,14 @@ import {concreateLength} from 'ptk'
 export let frame={},totalpages;
 export let foliotext=[];
 
-const strips=new Array($folioLines);
+const strips=new Array(folioLines());
 const timers=[];
 onDestroy(()=>{
     destroyTimer();
 });
 const rollback=()=>{
     continueplay.set(false); 
-    activefolio.set(0);
+    activepb.set(0);
     let r=get(remainrollback);
     if (r>0) {
         r--;
@@ -41,7 +41,7 @@ const stripstyle=(i,strip)=>{
     if (!timestamp) {
         return out.join(';'); //cannot play
     }
-    const line=get(activefolio)*fl;
+    const line=get(activepb)*fl;
 
     if (!timestamp[line] && i==0) { //read the end
         rollback();
@@ -54,9 +54,9 @@ const stripstyle=(i,strip)=>{
 
     if (i==0) { //翻頁timer
         timers.push( setTimeout(()=>{
-            if (get(activefolio)<totalpages-1) { 
+            if (get(activepb)<totalpages-1) { 
                 continueplay.set(true); //auto swipe , do not trigger 
-                activefolio.set(get(activefolio)+1);
+                activepb.set(get(activepb)+1);
                 setTimeout(()=>{
                     continueplay.set(false);// user swipe manually
                 },100);            
@@ -69,13 +69,13 @@ const stripstyle=(i,strip)=>{
     if (i==0&&delay<30) delay=30;// too small value  cause immediate trigger fire
     // console.log(i,'delay',delay)
     const fire=(function(){
-        if (this.folio!==get(activefolio)) return;
-        // console.log('fire',this.idx, 'folio',this.folio, 'activefolio',get(activefolio))
+        if (this.folio!==get(activepb)) return;
+        // console.log('fire',this.idx, 'folio',this.folio, 'activepb',get(activepb))
         const ele=document.getElementById('strip'+this.idx);
         if (!ele) return;
         const chcount=concreateLength(foliotext[i]||'')
         ele.style.height=Math.floor( chcount*(frame.height/fc))+'px';
-    }).bind({idx:i,folio:get(activefolio)});
+    }).bind({idx:i,folio:get(activepb)});
     
     timers.push(setTimeout( fire,  delay)); 
 
@@ -94,7 +94,7 @@ const destroyTimer=()=>{
 
 </script>
 {#if $playing && findByVideoId($videoid) }
-{#key $activefolio}
+{#key $activepb}
 <div class="transcript" style={stylestring(frame)} >
     {#each strips as strip,idx}
         <div class="strip" id={'strip'+idx} style={stripstyle(idx,strip)}/>

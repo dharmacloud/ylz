@@ -6,9 +6,10 @@ import Swipe from './3rd/swipe.svelte';
 import SwipeItem from './3rd/swipeitem.svelte';
 import {rotatingwheel} from './3rd/rotatingwheel.js';
 export let src;
+
 import {fetchFolioText,getConcreatePos,folio2ChunkLine,extractPuncPos,usePtk} from 'ptk'
 import {ZipStore} from 'ptk/zip';
-import {folioLines,folioChars,activePtk,activebookid,activefolio,favorites,
+import {folioLines,folioChars,activePtk,activefolioid,activepb,favorites,
     maxfolio,tapmark, playing, remainrollback, idlecount,showpaiji,idletime,loadingbook} from './store.js'
 
 let ptk=usePtk($activePtk)
@@ -43,7 +44,7 @@ const swipeConfig = {
 
 const loadZip=async ()=>{
     loadingbook.set(true);
-    const res=await fetch(src);
+    const res=await fetch('folio/'+src);
     const buf=await res.arrayBuffer();
     const zip=new ZipStore(buf);
     for (let i=0;i<zip.files.length;i++) {
@@ -64,16 +65,17 @@ const swipeStart=(obj)=>{
 const swipeChanged=(obj)=>{
     const {active_item}=obj.detail;
     defaultIndex=active_item;
-    activefolio.set(totalpages- defaultIndex-1);
+    activepb.set(totalpages- defaultIndex-1);
     updateFolioText();
     useractive();
 }
 const updateFolioText=async ()=>{
     hidepunc=true;
-    [foliotext,foliofrom]=await fetchFolioText(ptk,$activebookid,1+Math.floor($activefolio));
+    const fl=folioLines();
+    [foliotext,foliofrom]=await fetchFolioText(ptk,$activefolioid,1+Math.floor($activepb));
     setTimeout(()=>{
         hidepunc=false;
-        puncs=extractPuncPos(foliotext,$folioLines);
+        puncs=extractPuncPos(foliotext,fl);
     },200); //wait until swiper stop
 }
 const useractive=()=>{
@@ -96,7 +98,7 @@ const getCharXY=(x,y)=>{
 	const {left,top,width,height}=imageFrame();
     x-=left;
     y-=top;	
-    const cx=$folioLines-Math.floor((x/width)*$folioLines)-1;
+    const cx=folioLines()-Math.floor((x/width)*folioLines())-1;
     const cy=Math.floor((y/height)*$folioChars);
     return [cx,cy];
 }
@@ -109,13 +111,13 @@ const onclick=async (e)=>{
     hidepunc=false;
     const {x,y}=e.detail;
     const [cx,cy]=getCharXY(x,y);
-    const tappos=$folioLines*$folioChars*$activefolio+ cx*$folioChars + cy;
+    const tappos=folioLines()*$folioChars*$activepb+ cx*$folioChars + cy;
     tapmark.set(tappos);
     // console.log('tappos',tappos,'click',cx,cy)
     let [t,pos]=getConcreatePos(foliotext[cx],cy,foliotext[cx+1]);
 	//get the ck-lineoff 
     const ck=await folio2ChunkLine(ptk,foliotext, foliofrom,cx,pos);;
-	const address= 'bk#'+$activebookid + (ck?('.'+ ck):'') ;
+	const address= 'bk#'+$activefolioid + (ck?('.'+ ck):'') ;
     //remove after punc
     t=t.replace(/([。！？：、．；，「『（ ])/g,'　');
     while(t.charAt(0)=='　') t=t.slice(1);
@@ -123,11 +125,11 @@ const onclick=async (e)=>{
     
     await onTapText(t,address,ptk.name); 
 }
-const gotofolio=(folio)=>{
+const gotoPb=(pb)=>{
     if (!totalpages || !swiper)return;//not loaded yet
-    const go=totalpages-folio-1;
+    const go=totalpages-pb-1;
     if (go!==defaultIndex) {
-        // console.log('goto',folio, go, defaultIndex)
+        // console.log('goto',pb, go, defaultIndex)
         swiper.goTo(go);
     }
 }
@@ -135,14 +137,14 @@ const gotofolio=(folio)=>{
 const togglefavoritebtn=()=>{
     if ($activePtk!=='dc') return;//only support chinese
     const bookfavor=Object.assign({},$favorites);
-    if (!bookfavor[$activebookid]) {
-        bookfavor[$activebookid]={};
+    if (!bookfavor[$activefolioid]) {
+        bookfavor[$activefolioid]={};
     }
-    bookfavor[$activebookid][$activefolio]=1- (bookfavor[$activebookid][$activefolio]?1:0);
+    bookfavor[$activefolioid][$activepb]=1- (bookfavor[$activefolioid][$activepb]?1:0);
     favorites.set(Object.assign({},bookfavor));
 }
 $: loadZip(src);
-$: gotofolio($activefolio); //trigger by goto folio in setting.svelte
+$: gotoPb($activepb); //trigger by goto folio in setting.svelte
 
 </script>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -158,7 +160,7 @@ $: gotofolio($activefolio); //trigger by goto folio in setting.svelte
 <div class="message">{@html rotatingwheel}</div>
 {/if}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class="favoritebtn" on:click={togglefavoritebtn}>{($favorites[$activebookid]?.[$activefolio])?'♥':'♡'}</span>
+<span class="favoritebtn" on:click={togglefavoritebtn}>{($favorites[$activefolioid]?.[$activepb])?'♥':'♡'}</span>
 
 <span class="pagenumber">{totalpages-defaultIndex}</span>
 {#if $playing}
@@ -167,15 +169,15 @@ $: gotofolio($activefolio); //trigger by goto folio in setting.svelte
 <span class="idletime">{$idlecount>=idletime-15?idletime-$idlecount:''}</span>
 {/if}
 
-{#key $tapmark+$activefolio}
+{#key $tapmark+$activepb}
 {#if !hidepunc && !$showpaiji}
-<TapMark mark={$tapmark} activefolio={$activefolio} folioChars={$folioChars} folioLines={$folioLines} frame={imageFrame()}  />
+<TapMark mark={$tapmark} pb={$activepb} folioChars={$folioChars} folioLines={folioLines()} frame={imageFrame()}  />
 {/if}
 {/key}
 {#key puncs}
 {#if !hidepunc}
-<PuncLayer frame={imageFrame()} folioChars={$folioChars} folioLines={$folioLines} {puncs} />
-<TranscriptLayer frame={imageFrame()} {totalpages} folioLines={$folioLines} {swiper} {foliotext}/>
+<PuncLayer frame={imageFrame()} folioChars={$folioChars} folioLines={folioLines()} {puncs} />
+<TranscriptLayer frame={imageFrame()} {totalpages} folioLines={folioLines()} {swiper} {foliotext}/>
 {/if}
 {/key}
 

@@ -1,7 +1,7 @@
 <script>
 import { fromObj } from 'ptk';
-import {favorites,activebookid,booknameOf, activefolio} from './store.js'
-import {gofolio,loadBook} from './nav.js'
+import {favorites,activefolioid,booknameOf} from './store.js'
+import {goPb,loadBook} from './nav.js'
 let items=[],others=[];
 export let ptk;
 export let closePopup;
@@ -9,8 +9,8 @@ const loadfavorites=()=>{
     const _favorites=$favorites;
     const _others={};
     for (let key in _favorites) {
-        if (key==$activebookid) {
-            const arr=_favorites[$activebookid];
+        if (key==$activefolioid) {
+            const arr=_favorites[$activefolioid];
             for (let i=0;i<arr.length;i++) {
                 if (arr[i]) {
                     items.push(i);
@@ -23,7 +23,7 @@ const loadfavorites=()=>{
     others=fromObj(_others,(a,b)=>[a,b]);
 }
 const gofavorite=(pb)=>{
-    gofolio(ptk,pb);
+    goPb(ptk,pb);
     closePopup();
 }
 const firstfavorite=(bk)=>{
@@ -36,7 +36,7 @@ const gootherfavorite=(bk)=>{
     closePopup();
     loadBook(bk,()=>{
         const first=firstfavorite(bk);
-        gofolio(ptk,first+1);
+        goPb(ptk,first+1);
     });    
 }
 

@@ -5,7 +5,7 @@ import Switch from './3rd/switch.svelte';
 </script>
 
 <div class="toctext">
-版本：2023.7.9 <Switch bind:value={$advancemode} label="進階模式" design="slider" />
+版本：2023.7.10 <Switch bind:value={$advancemode} label="進階模式" design="slider" />
 {#if $advancemode=='on'}
 本數據庫基於以下公開素材：
 永樂南北藏(山東省圖書館)、金剛經集註(朱棣)、梵文校勘本(Edward Conze, <a target=_new href="https://ancient-buddhist-texts.net">Ancient Buddhist Texts</a>)、

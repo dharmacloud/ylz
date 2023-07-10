@@ -1,6 +1,6 @@
 export const AppPrefix='YLZ.'
 export const loadSettings=()=>{
-    const activebookid=localStorage.getItem(AppPrefix+'activebookid')||'pphs';  
+    const activefolioid=localStorage.getItem(AppPrefix+'activefolioid')||'pphs';  
     const advancemode=localStorage.getItem(AppPrefix+'advancemode');  
     const videohost=localStorage.getItem(AppPrefix+'videohost')||'youtube';  
     const newbie=localStorage.getItem(AppPrefix+'newbie')||'on';  
@@ -12,7 +12,7 @@ export const loadSettings=()=>{
         console.log(e);
         favorites={};
     }
-    return {activebookid,advancemode,videohost,newbie,favorites};
+    return {activefolioid,advancemode,videohost,newbie,favorites};
 }
 
 export const saveSettings=()=>{ //immediate save
