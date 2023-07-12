@@ -1,5 +1,5 @@
 <script>
-import {videoid, ytplayer,qqplayer,player,activefolioid, findByVideoId, remainrollback,mediaurls, stopVideo} from './store.js';
+import {videoid, ytplayer,qqplayer,player,activefolioid, findByVideoId, remainrollback,selectmedia,mediaurls} from './store.js';
 import Slider from './3rd/rangeslider.svelte';
 import {usePtk,parseOfftext,} from 'ptk'
 import { onDestroy, onMount } from 'svelte';
@@ -12,11 +12,6 @@ let subtitles=[], subtitles2=[], subtitle='',subtitle2='',subtitletimer, nsub=0;
 onDestroy(()=>{
     clearInterval(subtitletimer);
 });
-const selectmedia=vid=>{
-    if (get(remainrollback)==0) remainrollback.set(-1);
-    if (!vid) stopVideo();
-    videoid.set(vid||'');
-}
 
 const humanDuration=(t)=>{
     if (!t) return ''

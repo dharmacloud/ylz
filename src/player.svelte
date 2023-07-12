@@ -66,7 +66,9 @@ function onPlayerReady(e) {
     // 為確保瀏覽器上可以自動播放，要把影片調成靜音
     console.log('player ready')
     const plyr=player();
-    plyr?.playVideo?plyr.playVideo():(plyr?.play&&plyr.play());
+    if ($videoid) {
+        plyr?.playVideo?plyr.playVideo():(plyr?.play&&plyr.play());
+    }
 }
 const loadVideo=()=>{
     const vid=$videoid;
@@ -107,6 +109,6 @@ $: if (document.location.protocol!=='file:') loadVideo($videoid)
 <div id="ytplayer"></div>
 <div id="qqplayer"></div>
 <style>
-    #ytplayer { position:absolute;right:-1px;height:1px}
-    #qqplayer { position:absolute;right:-1px;height:1px}
+    #ytplayer { position:absolute;bottom:-1px;height:1px}
+    #qqplayer { position:absolute;bottom:-1px;height:1px}
 </style>

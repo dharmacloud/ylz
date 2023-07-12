@@ -1,6 +1,6 @@
 import {updateSettings,settings} from './savestore.ts'
 import {bsearchNumber, usePtk} from 'ptk'
-import {get,writable,derived } from 'svelte/store';
+import {get,writable } from 'svelte/store';
 import {silence,mediabyid} from './mediaurls.js'
 
 export const activePtk=writable('dc');
@@ -112,6 +112,11 @@ export const parallelFolios=(folioid)=>{
             out.push(i)
         }
     }
-    console.log(out)
     return out;
+}
+
+export const selectmedia=vid=>{
+    if (get(remainrollback)==0) remainrollback.set(-1);
+    if (!vid) stopVideo();
+    videoid.set(vid||'');
 }

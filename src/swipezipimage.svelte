@@ -5,12 +5,15 @@ import TapMark from './tapmark.svelte';
 import Swipe from './3rd/swipe.svelte';
 import SwipeItem from './3rd/swipeitem.svelte';
 import {rotatingwheel} from './3rd/rotatingwheel.js';
+import {getAudioList} from './mediaurls.js'
 export let src;
 
 import {fetchFolioText,getConcreatePos,folio2ChunkLine,extractPuncPos,usePtk} from 'ptk'
 import {ZipStore} from 'ptk/zip';
-import {folioLines,folioChars,activePtk,activefolioid,activepb,favorites,
-    maxfolio,tapmark, playing, remainrollback, idlecount,showpaiji,idletime,loadingbook} from './store.js'
+import {folioLines,folioChars,activePtk,activefolioid,activepb,favorites,videoid,ytplayer,qqplayer,
+    maxfolio,tapmark, playing, remainrollback, idlecount,showpaiji,idletime,loadingbook, selectmedia} from './store.js'
+    import { get } from 'svelte/store';
+    import Audio from './audio.svelte';
 
 let ptk=usePtk($activePtk)
 let foliotext='',foliofrom=0,puncs=[],ready,images=[],hidepunc=false;
@@ -73,6 +76,7 @@ const updateFolioText=async ()=>{
     hidepunc=true;
     const fl=folioLines();
     [foliotext,foliofrom]=await fetchFolioText(ptk,$activefolioid,1+Math.floor($activepb));
+    console.log(foliotext)
     setTimeout(()=>{
         hidepunc=false;
         puncs=extractPuncPos(foliotext,fl);
@@ -143,9 +147,18 @@ const togglefavoritebtn=()=>{
     bookfavor[$activefolioid][$activepb]=1- (bookfavor[$activefolioid][$activepb]?1:0);
     favorites.set(Object.assign({},bookfavor));
 }
+const toggleplaybtn=()=>{
+    if (!get(videoid)) {
+        if (audiolist.length<2) return;
+        const pick=Math.floor(Math.random()*(audiolist.length-1))+1;
+        selectmedia(audiolist[pick]?.vid);
+    } else {
+        selectmedia('');
+    }
+}
 $: loadZip(src);
 $: gotoPb($activepb); //trigger by goto folio in setting.svelte
-
+$: audiolist=getAudioList($activefolioid);
 </script>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 {#if ready}
@@ -161,6 +174,10 @@ $: gotoPb($activepb); //trigger by goto folio in setting.svelte
 {/if}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="favoritebtn" on:click={togglefavoritebtn}>{($favorites[$activefolioid]?.[$activepb])?'♥':'♡'}</span>
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+{#if $ytplayer && audiolist.length>1}
+<span class="playbtn" on:click={toggleplaybtn}>{$videoid?'⏹':'⏵'}</span>
+{/if}
 
 <span class="pagenumber">{totalpages-defaultIndex}</span>
 {#if $playing}

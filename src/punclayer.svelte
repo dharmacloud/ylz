@@ -5,7 +5,8 @@ export let puncs=[];
 import {folioChars,folioLines} from './store.js'
 import {stylestring} from './unit.js'
 const fl=folioLines(),fc=$folioChars;
-const unitw=frame.width/fl , unith= frame.height/folioChars;
+
+const unitw=frame.width/fl , unith= frame.height/fc;
 import {isPunc} from 'ptk'
 const puncStyle=(line,ch,text)=>{
     let fontsize=unith*0.9 ,yinc=unith*0.2,xinc=-unitw*0.1;      

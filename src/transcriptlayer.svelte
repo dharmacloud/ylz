@@ -28,7 +28,7 @@ const stripstyle=(i,strip)=>{
         destroyTimer();
     }
     if (get(continueplay)) return;//save one repaint, prevent redraw first strip
-    let fl=get(folioLines)
+    let fl=folioLines();
     let fc=get(folioChars)
     const w=frame.width/fl;
     let out=[];
