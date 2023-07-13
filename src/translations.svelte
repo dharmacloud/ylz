@@ -14,8 +14,13 @@ const getBookTitle=(ptk,nbk)=>{
     const bk=ptk.defines.bk;
     const line=bk.linepos[nbk]; //assuming folio tag at bk
     const folio=ptk.defines.folio;
+    
     const at=bsearchNumber(folio.linepos, line+1)-1;
-    return ~at?folio.innertext.get(at):bk.innertext.get(nbk);
+    if (folio.linepos[at]!==line) {
+        return bk.innertext.get(nbk);
+    } else {
+        return ~at?folio.innertext.get(at):bk.innertext.get(nbk);
+    }
 }
 
 const marktap=async (pb,line)=>{

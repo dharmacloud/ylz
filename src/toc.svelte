@@ -19,7 +19,7 @@ let tocitems=[],cknow;
 const getTocItems=address=>{
     const out=[];
     if (!address) return out;
-    const m=address.match(/(bk#?[a-z_\d]+)/);
+    const m=address.match(/(folio#?[a-z_\d]+)/);
     const [from,to]=ptk.rangeOfAddress(m[1]);
     const ck=ptk.defines.ck;
     const at=bsearchNumber (ck.linepos, from);
@@ -42,7 +42,6 @@ $: cknow=getCk(address);
 
 </script>
 <div  class="toctext">
-
 <Juan {ptk} {closePopup}/>
 <span class="jumper">跳到第{ (folio[0]||0)+1}頁 
 <Slider bind:value={folio} on:input={debounce(setFolio,500)} max={$maxfolio} min={0} /></span>

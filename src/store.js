@@ -25,7 +25,7 @@ export const bookByFolio=(fid)=>{
     const folio=dc.defines.folio;
     const bk=dc.defines.bk;
     const at=folio.fields.id.values.indexOf(fid);
-    if (~at) return '';
+    if (!~at) return '';
     const line=folio.linepos[at]+1;
     const at2=bsearchNumber(bk.linepos, line)-1;//closest bk
     return bk.fields.id.values[at2];
@@ -96,7 +96,8 @@ export const hasSanskrit=bkid=>{
     const ptk=usePtk('dc_sanskrit');
     const at=bkid.indexOf('_')
     if (~at) bkid=bkid.slice(0,at);
-    return ~ptk.defines.bk.fields.id.values.indexOf(bkid);
+    const at2=ptk.defines.bk.fields.id.values.indexOf(bkid);
+    return ~at2;
 }
 
 export const parallelFolios=(folioid)=>{

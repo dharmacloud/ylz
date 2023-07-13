@@ -64,14 +64,10 @@ $: getHumanAddress(address)
 {#key humanaddr}
 <div class="nav">
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span on:click={prevSentence} class="toctext">←</span>
+<span class="navbutton" on:click={prevSentence}>←</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span on:click={gotoPb}>{humanaddr}</span>
+<span class="navbutton"on:click={gotoPb}>{humanaddr}</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class="toctext" on:click={nextSentence}>→</span>
+<span class="navbutton" on:click={nextSentence}>→</span>
 </div>
 {/key}
-
-<style>
-.nav {width:100%;text-align: center;}
-</style>

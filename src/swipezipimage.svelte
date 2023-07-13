@@ -76,7 +76,6 @@ const updateFolioText=async ()=>{
     hidepunc=true;
     const fl=folioLines();
     [foliotext,foliofrom]=await fetchFolioText(ptk,$activefolioid,1+Math.floor($activepb));
-    console.log(foliotext)
     setTimeout(()=>{
         hidepunc=false;
         puncs=extractPuncPos(foliotext,fl);
@@ -121,7 +120,7 @@ const onclick=async (e)=>{
     let [t,pos]=getConcreatePos(foliotext[cx],cy,foliotext[cx+1]);
 	//get the ck-lineoff 
     const ck=await folio2ChunkLine(ptk,foliotext, foliofrom,cx,pos);;
-	const address= 'bk#'+$activefolioid + (ck?('.'+ ck):'') ;
+	const address= 'folio#'+$activefolioid + (ck?('.'+ ck):'') ;
     //remove after punc
     t=t.replace(/([。！？：、．；，「『（ ])/g,'　');
     while(t.charAt(0)=='　') t=t.slice(1);
@@ -176,7 +175,7 @@ $: audiolist=getAudioList($activefolioid);
 <span class="favoritebtn" on:click={togglefavoritebtn}>{($favorites[$activefolioid]?.[$activepb])?'♥':'♡'}</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 {#if $ytplayer && audiolist.length>1}
-<span class="playbtn" on:click={toggleplaybtn}>{$videoid?'⏹':'⏵'}</span>
+<span class="playbtn" on:click={toggleplaybtn}>{$videoid?'⏹':'🎵'}</span>
 {/if}
 
 <span class="pagenumber">{totalpages-defaultIndex}</span>
