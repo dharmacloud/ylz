@@ -19,8 +19,16 @@ let tocitems=[],cknow;
 const getTocItems=address=>{
     const out=[];
     if (!address) return out;
-    const m=address.match(/(folio#?[a-z_\d]+)/);
-    const [from,to]=ptk.rangeOfAddress(m[1]);
+    const m=address.match(/folio#([a-z_]+)(\d*)/);
+
+    if (!m) return [];
+    const bk=m[1]
+    const juan=m[2]||'';
+
+    //folio must within bk
+    const addr='bk#'+bk+'.folio#'+bk+juan;
+    const [from,to]=ptk.rangeOfAddress(addr);
+    
     const ck=ptk.defines.ck;
     const at=bsearchNumber (ck.linepos, from);
     const at2=bsearchNumber (ck.linepos, to);

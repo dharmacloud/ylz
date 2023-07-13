@@ -16,7 +16,8 @@ const loadJuan=()=>{
     const arrbkid=ptk.defines.folio.fields.id.values;
     for (let i=0;i<arrbkid.length;i++) {
         if (arrbkid[i].startsWith(m[1])) {
-            juans.push(arrbkid[i].slice( m[1].length));
+            const j=arrbkid[i].slice( m[1].length);
+            if (parseInt(j)) juans.push(j);
         }
     }
 }
