@@ -2,7 +2,7 @@
 import Slider from './3rd/rangeslider.svelte';
 import { bsearchNumber ,styledNumber,chunkOfFolio,debounce} from "ptk";
 import {activepb,maxfolio,activefolioid} from './store.js';
-import {goPbAt} from './nav.js'
+import {goPbAt, loadFolio} from './nav.js'
 import Juan from './juan.svelte'
 let folio=[$activepb];
 export let ptk;
@@ -12,7 +12,7 @@ export let closePopup;
 const setFolio=async (e)=>{
     const v=e.detail[0];
     activepb.set(parseInt(v));
-    address=  'bk#'+$activefolioid +'.ck#'+ chunkOfFolio(ptk,$activefolioid,v);
+    address=  'folio#'+$activefolioid +'.ck#'+ chunkOfFolio(ptk,$activefolioid,v);
 }
 
 let tocitems=[],cknow;
@@ -23,11 +23,9 @@ const getTocItems=address=>{
 
     if (!m) return [];
     const bk=m[1]
-    const juan=m[2]||'';
 
-    //folio must within bk
-    const addr='bk#'+bk+'.folio#'+bk+juan;
-    const [from,to]=ptk.rangeOfAddress(addr);
+    const bookaddr='bk#'+bk;
+    const [from,to]=ptk.rangeOfAddress(bookaddr);
     
     const ck=ptk.defines.ck;
     const at=bsearchNumber (ck.linepos, from);
@@ -41,8 +39,17 @@ const getCk=(address)=>{
     const m=address.match(/ck#?(\d+)/);
     if (m) return m[1];
 }
-const goPb=(ptk,at)=>{
-    goPbAt(ptk,at);
+const goBookPb=(ptk,at)=>{
+    const ck=ptk.defines.ck;
+    const folioid=ptk.nearestTag(ck.linepos[at]+1,'folio','id');
+    if (folioid!==$activefolioid) {
+        loadFolio(folioid,()=>{
+            goPbAt(ptk,at);
+        })
+    } else {
+        goPbAt(ptk,at);
+    }
+    
     closePopup();
 }
 $: tocitems=getTocItems(address);
@@ -57,7 +64,7 @@ $: cknow=getCk(address);
 <div class="toc">
 {#each tocitems as item}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div on:click={()=>goPb(ptk,item.at)} class="tocitem" class:selecteditem={cknow==item.id}>{styledNumber(item.id,'①') + item.caption}</div>
+<div on:click={()=>goBookPb(ptk,item.at)} class="tocitem" class:selecteditem={cknow==item.id}>{styledNumber(item.id,'①') + item.caption}</div>
 {/each}
 <div class="endmarker">※※※</div>
 </div>

@@ -10,17 +10,17 @@ export const goPbAt=async (ptk,at)=>{
     const pbid=pb.fields.id.values[pbtag];
     await goPb(ptk,pbid,ck.fields.id.values[at]);
 }
-export const loadBook=(bk,func)=>{
+export const loadFolio=(folioid,func)=>{
     let timer=0;
-    if (bk==get(activefolioid)) func&&func(bk);
+    if (folioid==get(activefolioid)) func&&func(folioid);
     else {
         loadingbook.set(true);
-        activefolioid.set(bk);
+        activefolioid.set(folioid);
         timer=setInterval(()=>{
             if (!get(loadingbook)) {
                 clearInterval(timer);
                 setTimeout(()=>{//wait for 
-                    func&&func(bk);
+                    func&&func(folioid);
                 },300);
             }
         },500);
@@ -30,14 +30,15 @@ export const loadBook=(bk,func)=>{
 export const goPb=async (ptk,pbid,ck)=>{
     const newpb=parseInt(pbid)-1;
     activepb.set(newpb);
-    if (ck) {
-        [foliotext,foliofrom]=await fetchFolioText(ptk,get(activefolioid),newfolio+1);
+    if (ck) { //mark the starting of chunk
+        console.log('gopb',ck)
+        const [foliotext]=await fetchFolioText(ptk,get(activefolioid),newpb+1);
         const fc=get(folioChars);
         const fl=folioLines();
         for (let i=0;i<foliotext.length;i++) {
             const at2=foliotext[i].indexOf('^ck'+ck);
             if (~at2) {
-                const r=(newfolio*fl*fc)+i*fc+
+                const r=(newpb*fl*fc)+i*fc+
                     concreateLength(foliotext[i].slice(0,at2));
                 tapmark.set(r);
                 break;

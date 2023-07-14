@@ -14,7 +14,7 @@ onDestroy(()=>{
 <br/>安裝到桌面後可以全螢幕顯示，步驟：
 <br/>Android:使用Chrome，右上角功能表→安裝應用程式
 <br/>iOS:使用Safari，分享→加到主畫面
-<br/>左右滑動翻頁，點畫面任何一處，調出功能表。
+<br/>左右滑動翻頁，點畫面任何一處，彈出功能表。
 <div style="color:white;background:var(--menubar-color)">⚙️設置📓經卷🧭導引
 <br/>❤️書籤🎵誦經🔎詞典
 <br/>進階:📜原文🔀異譯📚集註</div>
