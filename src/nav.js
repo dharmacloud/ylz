@@ -1,5 +1,5 @@
 import {fetchFolioText,concreateLength} from 'ptk';
-import { folioChars,folioLines,activefolioid ,tapmark,activepb,loadingbook} from "./store.js";
+import { folioChars,folioLines,activefolioid ,videoid,tapmark,activepb,loadingbook, stopVideo} from "./store.js";
 import {get} from 'svelte/store'
 
 export const goPbAt=async (ptk,at)=>{
@@ -14,6 +14,9 @@ export const loadFolio=(folioid,func)=>{
     let timer=0;
     if (folioid==get(activefolioid)) func&&func(folioid);
     else {
+        stopVideo();
+        videoid.set('')
+        activepb.set(0);
         loadingbook.set(true);
         activefolioid.set(folioid);
         timer=setInterval(()=>{
@@ -45,4 +48,19 @@ export const goPb=async (ptk,pbid,ck)=>{
             }
         }
     }
+}
+
+export const allJuan=(ptk,folioid)=>{
+    folioid=folioid||get(activefolioid);
+    const arrfolioid=ptk.defines.folio.fields.id.values;
+    const m=folioid.match(/([a-z]+)(\d+$)/);
+    const juans=[]
+    if (!m) return [];
+    for (let i=0;i<arrfolioid.length;i++) {
+        if (arrfolioid[i].startsWith(m[1])) {
+            const j=arrfolioid[i].slice( m[1].length);
+            if (parseInt(j)) juans.push(j);
+        }
+    }
+    return juans;
 }

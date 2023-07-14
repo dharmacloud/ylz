@@ -1,11 +1,14 @@
 <script>
-import {videoid, ytplayer,qqplayer,player,activefolioid, findByVideoId, remainrollback,selectmedia,mediaurls} from './store.js';
+import {videoid, ytplayer,qqplayer,player,activefolioid, playnextjuan,
+    findByVideoId, remainrollback,selectmedia,mediaurls} from './store.js';
 import Slider from './3rd/rangeslider.svelte';
+import Switch from './3rd/switch.svelte';
 import {usePtk,parseOfftext,} from 'ptk'
 import { onDestroy, onMount } from 'svelte';
 import { get } from 'svelte/store';
 import {getAudioList} from './mediaurls.js'
 import {youtubeicon,vqqicon} from './icons.js'
+import {allJuan} from './nav.js'
 export let ptk;
 let value=[ $remainrollback,0];
 let subtitles=[], subtitles2=[], subtitle='',subtitle2='',subtitletimer, nsub=0;
@@ -67,7 +70,7 @@ const setRemain=()=>{
     }
 }
 const humanStoptime=t=>{
-    if (!t) return '';
+    if (!t || ($playnextjuan=='on'&&allJuan(ptk).length>1 ) ) return '';
     return (new Date(Date.now()+t*1000)).toLocaleTimeString()+'停止';
 }
 $: mediaurls.set(getAudioList($activefolioid));
@@ -102,6 +105,10 @@ $: mediaurls.set(getAudioList($activefolioid));
 <br/>重播次數：{value[0]||'無限'}
 {#if value[0]>0} { humanStoptime(value[0]*getDuration($videoid))}{/if}
 <Slider on:input={setRemain} bind:value min=0 max=10/>
+{#if ptk&&allJuan(ptk).length>1}
+<Switch label='自動播放下一卷' design="slider" fontSize="24" bind:value={$playnextjuan}></Switch>
+{/if}
+
 <hr/>
 <div class="subtitle">{@html htmltext(subtitle2)}</div>
 <div class="subtitle">{@html htmltext(subtitle)}</div>

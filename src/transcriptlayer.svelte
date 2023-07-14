@@ -1,18 +1,21 @@
 <script>
 import {stylestring} from './unit.js'
-import {activepb,videoid,folioLines,folioChars,playing,
-    stopVideo,remainrollback, player,continueplay, findByVideoId} from './store.js'
+import {activepb,videoid,folioLines,folioChars,playing,selectmedia,
+    stopVideo,remainrollback, player,continueplay, findByVideoId, playnextjuan, activefolioid} from './store.js'
 import {get} from 'svelte/store'
+import {getAudioList} from './mediaurls.js'
 import {onDestroy} from 'svelte'
 import {concreateLength} from 'ptk'
+    import { allJuan, loadFolio } from './nav.js';
 export let frame={},totalpages;
 export let foliotext=[];
-
+export let ptk;
 const strips=new Array(folioLines());
 const timers=[];
 onDestroy(()=>{
     destroyTimer();
 });
+
 const rollback=()=>{
     continueplay.set(false); 
     activepb.set(0);
@@ -22,6 +25,38 @@ const rollback=()=>{
         remainrollback.set(r);
     }
     if (r==0) stopVideo();
+}
+const playnext=()=>{
+    const juans=allJuan(ptk);
+    const folioid=$activefolioid;
+    const vid=$videoid;
+    //get the media index in this juan
+    const thisaudiolist=getAudioList(folioid);
+    let performer='';
+    for (let i=0;i<thisaudiolist.length;i++) {
+        if (thisaudiolist[i].vid==vid) performer=thisaudiolist[i].performer;
+    }
+    if ( $playnextjuan=='on' && juans.length>1 ) {
+        const juannow=folioid.match(/(\d+)$/)[1];
+        if (parseInt(juannow)==juans.length) {
+            rollback();
+        } else {        
+            const nextfolioid=folioid.replace(juannow,parseInt(juannow)+1);
+            console.log('loading next juan',nextfolioid)
+            loadFolio(nextfolioid,function(){
+                const audiolist=getAudioList(nextfolioid);
+                console.log('audiolist',audiolist,nextfolioid)
+                if (audiolist) {
+
+                    const sameperformer=audiolist.filter(it=>it.performer==performer);
+                    const vid=sameperformer.length?sameperformer[0].vid:audiolist[0].vid;
+                    selectmedia(vid);
+                }
+            });
+        }
+    } else {
+        rollback();
+    }
 }
 const stripstyle=(i,strip)=>{
     if (i==0) {
@@ -44,7 +79,7 @@ const stripstyle=(i,strip)=>{
     const line=get(activepb)*fl;
 
     if (!timestamp[line] && i==0) { //read the end
-        rollback();
+        playnext();
     }
     const playertime=player($videoid)?.getCurrentTime();
     let timedelta=playertime-timestamp[line];//player 跑得比較快。（因換頁動畫時間），需修正
@@ -61,7 +96,7 @@ const stripstyle=(i,strip)=>{
                     continueplay.set(false);// user swipe manually
                 },100);            
             } else {
-                rollback();
+                playnext();
             }
         }, (timestamp[line+fl] - timestamp[line] -timedelta)*1000));
     }

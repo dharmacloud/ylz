@@ -4,6 +4,7 @@ export const loadSettings=()=>{
     const advancemode=localStorage.getItem(AppPrefix+'advancemode');  
     const videohost=localStorage.getItem(AppPrefix+'videohost')||'youtube';  
     const newbie=localStorage.getItem(AppPrefix+'newbie')||'on';  
+    const playnextjuan=localStorage.getItem(AppPrefix+'playnextjuan')||'on';  
     let _favorites=localStorage.getItem(AppPrefix+'favorites')||'{}';
     let favorites={};
     try {
@@ -12,7 +13,7 @@ export const loadSettings=()=>{
         console.log(e);
         favorites={};
     }
-    return {activefolioid,advancemode,videohost,newbie,favorites};
+    return {activefolioid,advancemode,videohost,newbie,favorites,playnextjuan};
 }
 
 export const saveSettings=()=>{ //immediate save

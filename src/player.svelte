@@ -75,19 +75,22 @@ const loadVideo=()=>{
     const obj=findByVideoId(vid);
     stopVideo(); 
     if (!obj || !vid) return;
+
+    //不同的卷共享一影片，id 必須後綴  ^ 。
+    const validvid=vid.replace(/\^\d*$/,'')
     const {timestamp,bookid} = obj;
     if (bookid!==$activefolioid) {
         stopVideo();
     } else {
-        console.log('load',vid)
+        // console.log('load',vid)
         activepb.set(0);
         const start=(timestamp&&timestamp[0])||0;
         const host=mediabyid(vid)?.videohost;
         console.log(host, player(vid))
         if (host=='youtube') {
-            $ytplayer.loadVideoById({'videoId':vid,suggestedQuality:'low',autoplay:true, startSeconds:start});
+            $ytplayer.loadVideoById({'videoId':validvid,suggestedQuality:'low',autoplay:true, startSeconds:start});
         } else {
-            $qqplayer.play({vid,autoplay:true,playStartTime:start});
+            $qqplayer.play({vid:validvid,autoplay:true,playStartTime:start});
         }
     }
 }

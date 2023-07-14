@@ -4,6 +4,7 @@ import {activepb,activefolioid,activePtk,tapmark,folioChars,folioLines} from './
 import { parseOfftext,folioPosFromLine, bsearchNumber} from 'ptk';
 
 import SentenceNav from './sentencenav.svelte'
+    import { loadFolio } from './nav.js';
 export let closePopup=function(){};
 export let address;
 export let ptk;
@@ -31,17 +32,15 @@ const goFolioByLine=(ptk,line)=>{
     const pb=ptk.defines.pb;
     const folio=ptk.defines.folio;
     if (!pb) return ;
-    const oldbook=$activefolioid;
     const pbat=ptk.nearestTag(line,'pb')-1;
     const folioat=ptk.nearestTag(line,'folio')-1;
     const pbid=pb.fields.id.values[pbat];
-    const newbook=folio.fields.id.values[folioat];
-    activefolioid.set(newbook);
-    activePtk.set(ptk.name);
-    setTimeout(()=>{//wait until the file is loaded, 
+    const newfolio=folio.fields.id.values[folioat];
+    loadFolio(newfolio,()=>{
+        activePtk.set(ptk.name);
         activepb.set( parseInt(pbid)-1);
         marktap(pbid,line);
-    }, oldbook==newbook?10:3000);//not working on slow network
+    }) 
     closePopup();
 }
 const hasfolio=(ptk,line)=>{

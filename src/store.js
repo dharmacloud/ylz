@@ -45,6 +45,7 @@ export const folioChars=writable(17);
 
 export const playing=writable(false);
 export const continueplay=writable(false);
+export const playnextjuan=writable(settings.playnextjuan);//自動播放下一卷
 export const tapmark = writable(0);// folio*folioLines*folioChar+offset
 export const remainrollback=writable(-1);//infinite
 

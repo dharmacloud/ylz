@@ -1,4 +1,5 @@
 <script>
+    import { loadFolio } from './nav.js';
 export let ptk;
 import {activefolioid, parallelFolios,activepb, stopVideo} from './store.js';
 export let closePopup=function(){};
@@ -20,8 +21,7 @@ const selectfolio=nfolio=>{
     const folio=ptk.defines.folio;
     stopVideo();
     const folioid=folio.fields.id.values[nfolio];
-    activefolioid.set(folioid);
-    activepb.set(0);    
+    loadFolio(folioid);
     closePopup();
 }
 

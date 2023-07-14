@@ -1,26 +1,12 @@
 <script>
 import {activefolioid} from './store.js'
 import InputNumber from './comps/inputnumber.svelte';
-import { goPb, loadFolio } from './nav.js';
+import { goPb, loadFolio,allJuan } from './nav.js';
 export let closePopup;
 export let ptk;
 let juans=[]; //find out all juan
 let thejuan=[0,0],currentjuan='1';
-const loadJuan=()=>{
-    const folioid=$activefolioid;
-    const m=folioid.match(/([a-z]+)(\d+$)/);
-    juans=[];
-    if (!m) return;
-    currentjuan=m[2];
-    thejuan[0]=parseInt(currentjuan);
-    const arrbkid=ptk.defines.folio.fields.id.values;
-    for (let i=0;i<arrbkid.length;i++) {
-        if (arrbkid[i].startsWith(m[1])) {
-            const j=arrbkid[i].slice( m[1].length);
-            if (parseInt(j)) juans.push(j);
-        }
-    }
-}
+
 const gojuan=(juan)=>{
     const bkid=$activefolioid;
     const m=bkid.match(/([a-z]+)(\d+$)/);
@@ -36,6 +22,14 @@ const gojuan2=(juan)=>{
         gojuan(juan)
     },1500);
     return juan;
+}
+const loadJuan=(folioid)=>{
+    if (!ptk) return;
+    const m=folioid.match(/([a-z]+)(\d+$)/);
+    if (!m) return [];
+    currentjuan=m[2];
+    thejuan[0]=parseInt(currentjuan);
+    juans=allJuan(ptk,folioid);
 }
 $: loadJuan($activefolioid);
 </script>

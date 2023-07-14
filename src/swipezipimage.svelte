@@ -13,7 +13,6 @@ import {ZipStore} from 'ptk/zip';
 import {folioLines,folioChars,activePtk,activefolioid,activepb,favorites,videoid,ytplayer,qqplayer,
     maxfolio,tapmark, playing, remainrollback, idlecount,showpaiji,idletime,loadingbook, selectmedia} from './store.js'
     import { get } from 'svelte/store';
-    import Audio from './audio.svelte';
 
 let ptk=usePtk($activePtk)
 let foliotext='',foliofrom=0,puncs=[],ready,images=[],hidepunc=false;
@@ -193,7 +192,7 @@ $: audiolist=getAudioList($activefolioid);
 {#key puncs}
 {#if !hidepunc}
 <PuncLayer frame={imageFrame()} folioChars={$folioChars} folioLines={folioLines()} {puncs} />
-<TranscriptLayer frame={imageFrame()} {totalpages} folioLines={folioLines()} {swiper} {foliotext}/>
+<TranscriptLayer frame={imageFrame()} {totalpages} folioLines={folioLines()} {swiper} {ptk} {foliotext}/>
 {/if}
 {/key}
 
