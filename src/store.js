@@ -63,7 +63,6 @@ export const findByVideoId=(id,column='timestamp')=>{
     const ptk=usePtk('dc');
     if (!ptk.columns[column]) return null;
     const ts=ptk.columns[column].fieldsByKey(id);
-    
     return {id,...ts};
 }
 
@@ -78,7 +77,8 @@ export const pauseVideo=()=>{
     get(ytplayer)?.stopVideo&&get(ytplayer).stopVideo();
 }
 
-export const booknameOf=bkid=>{
+export const booknameOf=folioid=>{
+    const bkid=bookByFolio(folioid)
     const ptk=usePtk('dc');//assuming sanskrit text always has chinese correspond
     const bk=ptk.defines.bk;
     const at=bk.fields.id.values.indexOf(bkid);

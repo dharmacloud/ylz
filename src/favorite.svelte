@@ -10,16 +10,15 @@ const loadfavorites=()=>{
     const _others={};
     for (let key in _favorites) {
         if (key==$activefolioid) {
-            const arr=_favorites[$activefolioid];
-            for (let i=0;i<arr.length;i++) {
-                if (arr[i]) {
-                    items.push(i);
-                }
+            const obj=_favorites[$activefolioid];
+            for (let i in obj) {               
+                if (obj[i]) items.push(parseInt(i));
             }
         } else {
             _others[key]=Object.keys(_favorites[key]).length;
+            
         }
-    }
+    }   
     others=fromObj(_others,(a,b)=>[a,b]);
 }
 const gofavorite=(pb)=>{
@@ -28,21 +27,24 @@ const gofavorite=(pb)=>{
 }
 const firstfavorite=(folioid)=>{
     const favors=$favorites[folioid]
-    for (let i=0;i<favors.length;i++) {
-        if (favors[i]) return i;
+    let first=-1;
+    for (let i in favors) {
+        if (parseInt(i)>first) first=parseInt(i);
     }
+    return first;
 }
 const gootherfavorite=(folioid)=>{
     closePopup();
     loadFolio(folioid,()=>{
         const first=firstfavorite(folioid);
-        goPb(ptk,first+1);
+        goPb(ptk,(first||0)+1);
     });    
 }
 
 $: loadfavorites($favorites);
 </script>
 
+{#if items.length}
 <div class="toctext">本卷♥第
 {#each items as item}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -50,12 +52,17 @@ $: loadfavorites($favorites);
 {/each}
 折
 </div>
-
-<div class="toctext">他卷
+{:else}
+本卷無書籤。點右上角 ♡ 加入書籤
+{/if}
+<hr/>
+{#if others.length}
+<div class="toctext">
 {#each others as [folioid,count]}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span on:click={()=>gootherfavorite(folioid)}>{booknameOf(folioid)}♥{count}個　</span>
 {/each}
-
-
 </div>
+{/if}
+
+

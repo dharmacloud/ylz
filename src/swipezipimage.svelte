@@ -142,7 +142,13 @@ const togglefavoritebtn=()=>{
     if (!bookfavor[$activefolioid]) {
         bookfavor[$activefolioid]={};
     }
-    bookfavor[$activefolioid][$activepb]=1- (bookfavor[$activefolioid][$activepb]?1:0);
+    const onoff=bookfavor[$activefolioid][$activepb];
+    if (!onoff) {
+        bookfavor[$activefolioid][$activepb]=1;
+    } else {
+        delete bookfavor[$activefolioid][$activepb];
+    }
+
     favorites.set(Object.assign({},bookfavor));
 }
 const toggleplaybtn=()=>{
