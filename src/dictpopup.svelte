@@ -2,15 +2,19 @@
 export let entries=[],ptk,wikipedia,fgdzd,dfb;
 let nentry=0;
 let src='',showing='';
+const wikilink=entry=>"https://zh.wikipedia.org/w/index.php?action=render&title="+encodeURIComponent(entry);
+const onelinelink=entry=>"https://buddhaspace.org/dict/index.php?keyword="+encodeURIComponent(entry);
+const googlelink=entry=>"https://www.google.com/search?q="+encodeURIComponent(entry);
+const baidulink=entry=>"https://www.baidu.com/s?wd="+encodeURIComponent(entry);
 const setWikipedia=()=>{
     const entry=entries[nentry][1];
     showing='wikipedia';
-    src="https://zh.wikipedia.org/w/index.php?action=render&title="+ entry;
+    src=wikilink(entry);
 }
 const setOneline=()=>{
     const entry=entries[nentry][1];
     showing='oneline';
-    src="https://buddhaspace.org/dict/index.php?keyword="+ entry;
+    src=onelinelink(entry);
 }
 const availableDict=(n)=>{
     const at=entries[n][2];
@@ -31,7 +35,7 @@ $: availableDict(nentry);
 {#if idx==nentry}
 {#if fgdzd||dfb}
 {#if showing=='oneline'}
-<a target=_new href={"https://buddhaspace.org/dict/index.php?keyword="+ entry}>一行</a>
+<a target=_new href={onelinelink(entry)}>一行</a>
 {:else}
 <button on:click={setOneline}>一行</button>
 {/if}
@@ -39,13 +43,13 @@ $: availableDict(nentry);
 {/if}
 {#if wikipedia}
 {#if showing=='wikipedia'}
-<a target=_new href={"https://zh.wikipedia.org/w/index.php?action=render&title="+ entry}>Wiki</a>
+<a target=_new href={wikilink(entry)}>Wiki</a>
 {:else}
 <button on:click={setWikipedia}>Wiki</button>
 {/if}
 {/if}
-<a target=_new href={"https://www.google.com/search?q="+encodeURI(entry)}>Google</a>
-<a target=_new href={"https://www.baidu.com/s?wd="+encodeURI(entry)}>百度</a>
+<a target=_new href={googlelink(entry)}>Google</a>
+<a target=_new href={baidulink(entry)}>百度</a>
 {/if}
 
 
