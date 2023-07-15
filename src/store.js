@@ -11,6 +11,8 @@ export const activepb=writable(1);  //zero base
 export const activefolioid=writable(settings.activefolioid);
 export const maxfolio=writable(0);
 export const favorites=writable(settings.favorites);
+export const prefervideo=writable(settings.prefervideo);
+
 
 export const isAndroid=writable(false)
 
@@ -58,6 +60,7 @@ activefolioid.subscribe((activefolioid)=>updateSettings({activefolioid}));
 advancemode.subscribe((advancemode)=>updateSettings({advancemode}));
 newbie.subscribe((newbie)=>updateSettings({newbie}));
 favorites.subscribe((favorites)=>updateSettings({favorites}));
+prefervideo.subscribe((prefervideo)=>updateSettings({prefervideo}));
 
 export const findByVideoId=(id,column='timestamp')=>{
     const ptk=usePtk('dc');
@@ -120,5 +123,10 @@ export const parallelFolios=(folioid)=>{
 export const selectmedia=vid=>{
     if (get(remainrollback)==0) remainrollback.set(-1);
     if (!vid) stopVideo();
+    else {
+        const prefer=get(prefervideo)
+        prefer[get(activefolioid)]=vid;
+        prefervideo.set(Object.assign({},prefer));
+    }
     videoid.set(vid||'');
 }
