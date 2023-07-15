@@ -4,7 +4,7 @@ let nentry=0;
 let src='';
 const setWikipedia=()=>{
     const entry=entries[nentry][1];
-    src="https://zh.wikipedia.org/wiki/"+ entry;
+    src="https://zh.wikipedia.org/w/index.php?action=render&title="+ entry;
 }
 const setOneline=()=>{
     const entry=entries[nentry][1];
@@ -39,7 +39,7 @@ $: availableDict(nentry);
 </span>
 
 {#if src}
-<iframe class="iframe" title="wiki" {src}></iframe>
+<iframe style="border:none" class="iframe" title="wiki" {src}></iframe>
 {/if}
 </div>
 <style>
