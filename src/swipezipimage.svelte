@@ -10,7 +10,7 @@ export let src;
 
 import {fetchFolioText,getConcreatePos,folio2ChunkLine,extractPuncPos,usePtk} from 'ptk'
 import {ZipStore} from 'ptk/zip';
-import {folioLines,folioChars,activePtk,activefolioid,activepb,favorites,videoid,ytplayer,qqplayer,
+import {folioLines,folioChars,activePtk,activefolioid,activepb,favorites,videoid,ytplayer,showpunc,
     maxfolio,tapmark, playing, remainrollback, idlecount,showpaiji,idletime,loadingbook, selectmedia, prefervideo} from './store.js'
     import { get } from 'svelte/store';
 
@@ -156,7 +156,6 @@ const toggleplaybtn=()=>{
         if (audiolist.length<2) return;
         const pick=  Math.floor(Math.random()*(audiolist.length-1))+1;
         const vid= $prefervideo[$activefolioid] || audiolist[pick]?.vid;
-        console.log(vid)
         selectmedia(vid);
     } else {
         selectmedia('');
@@ -199,7 +198,9 @@ $: audiolist=getAudioList($activefolioid);
 {/key}
 {#key puncs}
 {#if !hidepunc}
+{#if $showpunc=='on'}
 <PuncLayer frame={imageFrame()} folioChars={$folioChars} folioLines={folioLines()} {puncs} />
+{/if}
 <TranscriptLayer frame={imageFrame()} {totalpages} folioLines={folioLines()} {swiper} {ptk} {foliotext}/>
 {/if}
 {/key}

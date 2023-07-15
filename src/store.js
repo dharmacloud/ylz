@@ -12,7 +12,7 @@ export const activefolioid=writable(settings.activefolioid);
 export const maxfolio=writable(0);
 export const favorites=writable(settings.favorites);
 export const prefervideo=writable(settings.prefervideo);
-
+export const showpunc=writable(settings.showpunc);
 
 export const isAndroid=writable(false)
 
@@ -59,6 +59,7 @@ export const showpaiji=writable(false);
 activefolioid.subscribe((activefolioid)=>updateSettings({activefolioid}));
 advancemode.subscribe((advancemode)=>updateSettings({advancemode}));
 newbie.subscribe((newbie)=>updateSettings({newbie}));
+showpunc.subscribe((showpunc)=>updateSettings({showpunc}));
 favorites.subscribe((favorites)=>updateSettings({favorites}));
 prefervideo.subscribe((prefervideo)=>updateSettings({prefervideo}));
 
