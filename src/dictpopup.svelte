@@ -1,13 +1,15 @@
 <script>
 export let entries=[],ptk,wikipedia,fgdzd,dfb;
 let nentry=0;
-let src='';
+let src='',showing='';
 const setWikipedia=()=>{
     const entry=entries[nentry][1];
+    showing='wikipedia';
     src="https://zh.wikipedia.org/w/index.php?action=render&title="+ entry;
 }
 const setOneline=()=>{
     const entry=entries[nentry][1];
+    showing='oneline';
     src="https://buddhaspace.org/dict/index.php?keyword="+ entry;
 }
 const availableDict=(n)=>{
@@ -27,8 +29,21 @@ $: availableDict(nentry);
 <span class:dictgroup={idx==nentry}>
 <label><input  type='radio' bind:group={nentry} name='dict' value={idx}/>{entry}</label>
 {#if idx==nentry}
-{#if fgdzd||dfb}<button on:click={setOneline}>一行</button>{/if}
-{#if wikipedia}<button on:click={setWikipedia}>Wiki</button>{/if}
+{#if fgdzd||dfb}
+{#if showing=='oneline'}
+<a target=_new href={"https://buddhaspace.org/dict/index.php?keyword="+ entry}>一行</a>
+{:else}
+<button on:click={setOneline}>一行</button>
+{/if}
+
+{/if}
+{#if wikipedia}
+{#if showing=='wikipedia'}
+<a target=_new href={"https://zh.wikipedia.org/w/index.php?action=render&title="+ entry}>Wiki</a>
+{:else}
+<button on:click={setWikipedia}>Wiki</button>
+{/if}
+{/if}
 <a target=_new href={"https://www.google.com/search?q="+encodeURI(entry)}>Google</a>
 <a target=_new href={"https://www.baidu.com/s?wd="+encodeURI(entry)}>百度</a>
 {/if}

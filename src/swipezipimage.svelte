@@ -180,7 +180,7 @@ $: audiolist=getAudioList($activefolioid);
 <span class="favoritebtn" on:click={togglefavoritebtn}>{($favorites[$activefolioid]?.[$activepb])?'♥':'♡'}</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 {#if $ytplayer && audiolist.length>1}
-<span class="playbtn" on:click={toggleplaybtn}>{$videoid?'⏹':'🎵'}</span>
+<span class="playbtn" on:click={toggleplaybtn}>{$videoid?'◼':'♪'}</span>
 {/if}
 
 <span class="pagenumber">{totalpages-defaultIndex}</span>
