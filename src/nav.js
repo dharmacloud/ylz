@@ -34,7 +34,7 @@ export const goPb=async (ptk,pbid,ck)=>{
     const newpb=parseInt(pbid)-1;
     activepb.set(newpb);
     if (ck) { //mark the starting of chunk
-        console.log('gopb',ck)
+        //console.log('gopb',ck)
         const [foliotext]=await fetchFolioText(ptk,get(activefolioid),newpb+1);
         const fc=get(folioChars);
         const fl=folioLines();

@@ -62,7 +62,7 @@ $: updateTranslation(address);
 <div class="hr"/>
 {#each translations as item}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-{#if !~item.heading.bkid.indexOf('_variorum')}
+{#if !~item.heading?.bkid?.indexOf('_variorum')}
 <div class:selecteditem={item.heading?.bkid==$activefolioid}>
 <span  on:click={()=>goFolioByLine(item.ptk,item.line)} class="clickable author">{getBookTitle(item.ptk,item.heading?.bk?.at)}{hasfolio(item.ptk)?'←':' '}</span>{puretext(item.linetext)}</div>
 {/if}

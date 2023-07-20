@@ -121,7 +121,7 @@ export const parallelFolios=(folioid)=>{
     return out;
 }
 
-export const selectmedia=vid=>{
+export const selectmedia=(vid,restart)=>{
     if (get(remainrollback)==0) remainrollback.set(-1);
     if (!vid) stopVideo();
     else {
@@ -130,4 +130,5 @@ export const selectmedia=vid=>{
         prefervideo.set(Object.assign({},prefer));
     }
     videoid.set(vid||'');
+    if (restart) activepb.set(0);
 }

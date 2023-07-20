@@ -77,7 +77,8 @@ $: loadPlayer();
 {/if}
 
 {:else}
-<span class="loading">如果停在此畫面，表示手機瀏覽器太舊，不支持 ES2015 。</span>
+<span class="loading">如果停在此畫面，表示瀏覽器不直持 Emcascript 2015，無法運行本軟件 。</span>
+<a href=_new>官方網站</a>
 {/if}
 </div>
 

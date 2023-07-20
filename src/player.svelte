@@ -3,6 +3,7 @@ import { onMount } from 'svelte';
 import {ytplayer,qqplayer,player,videoid,activefolioid,
     activepb,folioLines,playing,continueplay,stopVideo,findByVideoId} from './store.js'
 import {mediabyid} from './mediaurls.js'
+import {get} from 'svelte/store'
 let timer;
 const createYoutubePlayer=()=>{
     const plyr=new YT.Player('ytplayer', {
@@ -82,9 +83,8 @@ const loadVideo=()=>{
     if (bookid!==$activefolioid) {
         stopVideo();
     } else {
-        // console.log('load',vid)
-        activepb.set(0);
-        const start=(timestamp&&timestamp[0])||0;
+        const t=get(activepb)*folioLines();
+        const start=(timestamp&&timestamp[t])||0;
         const host=mediabyid(vid)?.videohost;
         console.log(host, player(vid))
         if (host=='youtube') {
@@ -106,7 +106,7 @@ const seekToFolio=(folio,videoid)=>{
     player(videoid)?.seekTo(t);
 }
 $: seekToFolio($activepb,$videoid);
-$: if (document.location.protocol!=='file:') loadVideo($videoid)
+$: if (document.location.protocol!=='file:') loadVideo(false,$videoid)
 </script>
 
 <div id="ytplayer"></div>

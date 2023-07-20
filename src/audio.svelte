@@ -83,7 +83,7 @@ $: mediaurls.set(getAudioList($activefolioid));
 
 {#each $mediaurls as media}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class="clickable" on:click={selectmedia(media.vid)} class:selected={media.vid==$videoid}>{media.performer}</span>
+<span class="clickable" on:click={selectmedia(media.vid,true)} class:selected={media.vid==$videoid}>{media.performer}</span>
 
 {#if $videoid==media.vid&& $videoid}
 {humanDuration(getDuration($videoid))}

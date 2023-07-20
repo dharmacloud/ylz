@@ -75,6 +75,7 @@ const updateFolioText=async ()=>{
     hidepunc=true;
     const fl=folioLines();
     [foliotext,foliofrom]=await fetchFolioText(ptk,$activefolioid,1+Math.floor($activepb));
+    foliotext=foliotext.join('\n').replace(/【[^】]+】/,'').split('\n')
     setTimeout(()=>{
         hidepunc=false;
         puncs=extractPuncPos(foliotext,fl);
