@@ -33,7 +33,7 @@ const loadJuan=(folioid)=>{
 }
 $: loadJuan($activefolioid);
 </script>
-
+<span class="toctext">
 {#if juans.length==0}
 <span></span>
 {:else if juans.length>9}
@@ -44,4 +44,6 @@ $: loadJuan($activefolioid);
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span on:click={()=>gojuan(juan)} class="favoriteitem" class:selected={currentjuan==juan}>{juan}</span>
 {/each}
+
 {/if}
+</span>

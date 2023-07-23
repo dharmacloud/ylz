@@ -4,7 +4,7 @@ import {activepb,activefolioid,activePtk,tapmark,folioChars,folioLines} from './
 import { parseOfftext,folioPosFromLine, bsearchNumber} from 'ptk';
 
 import SentenceNav from './sentencenav.svelte'
-    import { loadFolio } from './nav.js';
+import { loadFolio } from './nav.js';
 export let closePopup=function(){};
 export let address;
 export let ptk;

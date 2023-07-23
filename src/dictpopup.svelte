@@ -1,4 +1,6 @@
 <script>
+import {toChineseNumber} from 'ptk'
+import {activepb,autodict} from './store.js'
 export let entries=[],ptk,wikipedia,fgdzd,dfb;
 let nentry=0;
 let src='',showing='';
@@ -25,10 +27,13 @@ const availableDict=(n)=>{
     if (fgdzd||dfb) setOneline();
     else if (wikipedia) setWikipedia();
 }
+
 $: availableDict(nentry);
+
 </script>
 <div class="dictpopup toctext">
 <span class="header">
+
 {#each entries as [distance,entry],idx}
 <span class:dictgroup={idx==nentry}>
 <label><input  type='radio' bind:group={nentry} name='dict' value={idx}/>{entry}</label>
@@ -51,7 +56,6 @@ $: availableDict(nentry);
 <a target=_new href={googlelink(entry)}>Google</a>
 <a target=_new href={baidulink(entry)}>百度</a>
 {/if}
-
 
 </span>
 {/each}

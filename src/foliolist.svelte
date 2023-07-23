@@ -1,5 +1,6 @@
 <script>
-    import { loadFolio } from './nav.js';
+import Favoritebuttons from './favoritebuttons.svelte';
+import { loadFolio } from './nav.js';
 export let ptk;
 import {activefolioid, parallelFolios,activepb, stopVideo} from './store.js';
 export let closePopup=function(){};
@@ -9,7 +10,8 @@ const getFolioList=()=>{
     const out=[];
     for (let i=0;i<folio.linepos.length;i++) {
         const id=folio.fields.id.values[i];
-        if (!~id.indexOf('_') && !id.match(/[23456789]$/)) {//only show book without _ and not ends with >2
+        const endingnumber=id.match(/(\d+)$/);
+        if (!~id.indexOf('_') && (!endingnumber||endingnumber[1]=='1') ) {//only show book without _ and not ends with >2
             out.push([i, id, parallelFolios(id)]);
         }
     }
@@ -38,11 +40,12 @@ const getFolioId=nfolio=>{
 <div class="book">
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span on:click={()=>selectfolio(nfolio)} class:selecteditem={$activefolioid==folioid} >{getFolioName(nfolio)}</span>
+<Favoritebuttons {folioid} {closePopup}/>
 {#each pars as par}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="parallelfolio" on:click={()=>selectfolio(par)} class:selecteditem={$activefolioid==getFolioId(par)} >
-{getFolioName(par)}
-</span>
+{getFolioName(par)}</span>
+<Favoritebuttons folioid={par} {closePopup} />
 {/each}
 </div>
 {/each}

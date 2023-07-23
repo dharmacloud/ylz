@@ -93,6 +93,7 @@ const onclick=async (e,_x,_y)=>{
     const [t,pos]=getConcreatePos(foliotext[cx],cy,foliotext[cx+1]);
 	//get the ck-lineoff 
 	const address=  'bk#'+$activefolioid +'.'+ await folio2ChunkLine(ptk,foliotext, foliofrom,cx,pos);
+
 	await onTapText(t,address,ptk.name);
 }
 

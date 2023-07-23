@@ -20,7 +20,7 @@ const getHumanAddress=async (address)=>{
     const at=bsearchNumber( ck.linepos,ckrange[1] )-1;
     maxchunk=parseInt(ck.fields.id.values[at]);
     ckid=parseInt(act[act.length-1][1]); //should be ck
-    humanaddr= styledNumber(ckid)+(hl?hl:'');
+    humanaddr= styledNumber(ckid)+(hl?'#'+hl:'');
     chunklines=await ptk.fetchAddress(action);
 }
 const nextSentence=()=>{

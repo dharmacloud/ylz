@@ -7,7 +7,8 @@ body {
 :root{
   --pinmark : rgba(247, 4, 4, 0.4);
   --selected-color:rgb(255, 173, 42);
-  --menubar-color:rgb(143, 81, 0)
+  --menubar-color:rgb(143, 81, 0);
+  --n:rgba(233, 233, 233, 0.7);
 }
 .popup { position:absolute;top:2vh;left:2vw;width:96vw;height:95vh;
   border-radius: 5px;
@@ -33,6 +34,22 @@ select {font-size:4vh}
   /* overflow:hidden; */
   overflow-y:auto;
 }
+
+.subtab-content {
+  position: absolute;
+  height:100%;
+  width:100%;
+  opacity: 0;
+  pointer-events: none;
+  /* overflow:hidden; */
+  overflow-y:none;
+}
+.subtab-content.visible {/* can't use visibility due to a weird painting bug in Chrome */
+  opacity: 1;
+  pointer-events: all;
+  position:relative
+}
+
 .tab-content.visible {/* can't use visibility due to a weird painting bug in Chrome */
   opacity: 1;
   pointer-events: all;
@@ -41,7 +58,7 @@ select {font-size:4vh}
 
 .book {font-size:4vh;cursor:pointer}
 .refer {text-decoration: underline;}
-.clickable {border-bottom: rgb(255, 230, 0) solid 1px;cursor:pointer;}
+.clickable {cursor:pointer;}
 
 .author {border:gray solid 1px ;border-radius: 0.25em;}
 .selecteditem {background:rgb(255, 173, 42)}
@@ -55,7 +72,7 @@ select {font-size:4vh}
 .endmarker {width:100%;text-align: center;height: 3em;}
 .sourcetext{font-weight: bold;color:brown}
 
-
+.activeline {background:rgb(255, 173, 42)}
 @keyframes fadeIn {
   0% { opacity: 0; }
   100% { opacity: 1; }
@@ -129,11 +146,12 @@ select {font-size:4vh}
 
 .welcome {font-size:6vh}
 
-.center{
+.qrcode{
     width:100%;
     position: relative;
     display: flex;
     justify-content: center;
+    flex-direction:column
 }
 @keyframes paijiblinker {
   50% {
@@ -141,6 +159,15 @@ select {font-size:4vh}
   }
 }
 
+@keyframes favorblinker {
+  50% {
+    opacity: 0;
+  }
+}
+
+.blinkfavorbtn {
+  animation: favorblinker 1s linear infinite;
+}
 .paiji {
   pointer-events: none;
   animation: paijiblinker 8s linear infinite;

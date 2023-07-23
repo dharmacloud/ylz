@@ -1,12 +1,11 @@
 <script>
-export let start,ptk;
-import {getParallelLines} from 'ptk/align/';
 import SentenceNav from './sentencenav.svelte'
-import { parseOfftext } from 'ptk/offtext';
-$: [start,end, _from,_till ,lineoff]=ptk.rangeOfAddress(address);
-let sourcetexts=[];
+export let address,start,lineoff;
+export let ptk
+import {getParallelLines} from 'ptk/align/';
 
-export let address;
+import { parseOfftext } from 'ptk/offtext';
+let sourcetexts=[];
 const updateTranslation=async (address)=>{
     sourcetexts=await getParallelLines(ptk,start+lineoff,null,{remote:true,local:false});//different ptk only
 }

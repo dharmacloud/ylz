@@ -1,12 +1,12 @@
 import {updateSettings,settings} from './savestore.ts'
-import {bsearchNumber, usePtk} from 'ptk'
+import {bsearchNumber, usePtk,parallelWithDiff} from 'ptk'
 import {get,writable } from 'svelte/store';
 import {silence,mediabyid} from './mediaurls.js'
 
 export const activePtk=writable('dc');
 
 export const loadingbook=writable(false);
-export const advancemode=writable(settings.advancemode);
+export const autodict=writable(settings.autodict);
 export const activepb=writable(1);  //zero base
 export const activefolioid=writable(settings.activefolioid);
 export const maxfolio=writable(0);
@@ -57,7 +57,7 @@ export const showpaiji=writable(false);
 
 
 activefolioid.subscribe((activefolioid)=>updateSettings({activefolioid}));
-advancemode.subscribe((advancemode)=>updateSettings({advancemode}));
+autodict.subscribe((autodict)=>updateSettings({autodict}));
 newbie.subscribe((newbie)=>updateSettings({newbie}));
 showpunc.subscribe((showpunc)=>updateSettings({showpunc}));
 favorites.subscribe((favorites)=>updateSettings({favorites}));
@@ -91,8 +91,7 @@ export const booknameOf=folioid=>{
 
 export const idletime=60;
 
-export const hasVariorum=bkid=>{
-    const ptk=usePtk('dc');
+export const hasVariorum=(ptk,bkid)=>{
     const at=bkid.indexOf('_')
     if (~at) bkid=bkid.slice(0,at);
     return ~ptk.defines.bk.fields.id.values.indexOf(bkid+'_variorum');
@@ -104,7 +103,10 @@ export const hasSanskrit=bkid=>{
     const at2=ptk.defines.bk.fields.id.values.indexOf(bkid);
     return ~at2;
 }
-
+export const hasTranslation=(ptk,line)=>{
+    const lines=parallelWithDiff(ptk,line,false,true);
+    return lines.length>1;
+}
 export const parallelFolios=(folioid)=>{
     const ptk=usePtk('dc');
     folioid=folioid||get(activefolioid);
@@ -132,3 +134,5 @@ export const selectmedia=(vid,restart)=>{
     videoid.set(vid||'');
     if (restart) activepb.set(0);
 }
+
+export const favortypes=['♡','🤍','❤️', '💚', '💙','💜','🖤'];

@@ -6,13 +6,14 @@ import Swipe from './3rd/swipe.svelte';
 import SwipeItem from './3rd/swipeitem.svelte';
 import {rotatingwheel} from './3rd/rotatingwheel.js';
 import {getAudioList} from './mediaurls.js'
+import {favortypes} from './store.js'
 export let src;
 
 import {fetchFolioText,getConcreatePos,folio2ChunkLine,extractPuncPos,usePtk} from 'ptk'
 import {ZipStore} from 'ptk/zip';
 import {folioLines,folioChars,activePtk,activefolioid,activepb,favorites,videoid,ytplayer,showpunc,
     maxfolio,tapmark, playing, remainrollback, idlecount,showpaiji,idletime,loadingbook, selectmedia, prefervideo} from './store.js'
-    import { get } from 'svelte/store';
+import { get } from 'svelte/store';
 
 let ptk=usePtk($activePtk)
 let foliotext='',foliofrom=0,puncs=[],ready,images=[],hidepunc=false;
@@ -21,6 +22,7 @@ export let onTapText=function(){};
 let swiper;
 let defaultIndex=0;
 let stableleft=0;
+let favoritetimer=0;
 const imageFrame=()=>{
     const img=document.getElementsByClassName('swipe')[defaultIndex];
 	if (!img || !img.clientHeight) return [0,0,0,0];
@@ -46,7 +48,11 @@ const swipeConfig = {
 
 const loadZip=async ()=>{
     loadingbook.set(true);
-    const res=await fetch('folio/'+src);
+    let host='folio/';
+    if (document.location.host.startsWith('yonglezang.github.io')) {
+        host='https://dharmacloud.github.io/swipegallery/folio/';
+    } 
+    const res=await fetch(host+src);
     const buf=await res.arrayBuffer();
     const zip=new ZipStore(buf);
     for (let i=0;i<zip.files.length;i++) {
@@ -70,6 +76,7 @@ const swipeChanged=(obj)=>{
     activepb.set(totalpages- defaultIndex-1);
     updateFolioText();
     useractive();
+    confirmfavorite();
 }
 const updateFolioText=async ()=>{
     hidepunc=true;
@@ -125,7 +132,7 @@ const onclick=async (e)=>{
     t=t.replace(/([。！？：、．；，「『（ ])/g,'　');
     while(t.charAt(0)=='　') t=t.slice(1);
     t=t.replace(/　.+/,'');
-    
+    console.log(address)
     await onTapText(t,address,ptk.name); 
 }
 const gotoPb=(pb)=>{
@@ -136,22 +143,58 @@ const gotoPb=(pb)=>{
         swiper.goTo(go);
     }
 }
-
-const togglefavoritebtn=()=>{
-    if ($activePtk!=='dc') return;//only support chinese
-    const bookfavor=Object.assign({},$favorites);
-    if (!bookfavor[$activefolioid]) {
-        bookfavor[$activefolioid]={};
+const confirmfavorite=()=>{
+    if (favoritetimer) {
+        clearTimeout(favoritetimer);
+        favoritetimer=0;
     }
-    const onoff=bookfavor[$activefolioid][$activepb];
-    if (!onoff) {
+    cancellable=true;
+    const pb=$activepb;
+    const f=$favorites[$activefolioid]?.[pb];
+    if (f) { //remove all other same favorite type in this folio
+        const bookfavor=Object.assign({},$favorites);
+        for (let i in $favorites[$activefolioid]) {
+            const f2=$favorites[$activefolioid][i]
+            if (f2==f && pb !==parseInt(i)) {
+                delete $favorites[$activefolioid][i];
+            }
+        }
+        favorites.set(Object.assign({},bookfavor));
+    }
+}
+let cancellable=true;
+const favoritebtn=()=>{
+    if ($activePtk!=='dc') return;//only support chinese
+
+    clearTimeout(favoritetimer);
+    favoritetimer=setTimeout(()=>{
+        confirmfavorite();
+    },5000)
+    const bookfavor=Object.assign({},$favorites);
+
+    if (!bookfavor[$activefolioid]) {
+       bookfavor[$activefolioid]={};
+    }
+    const type=bookfavor[$activefolioid][$activepb];
+
+    if (!type) {
+        cancellable=false;
         bookfavor[$activefolioid][$activepb]=1;
     } else {
-        delete bookfavor[$activefolioid][$activepb];
+        if (cancellable) {
+            delete bookfavor[$activefolioid][$activepb];
+            clearTimeout(favoritetimer);
+            favoritetimer=0;
+        } else {
+            let i=bookfavor[$activefolioid][$activepb]+1;
+            if (i>=favortypes.length) i=1;
+            bookfavor[$activefolioid][$activepb]=i;
+            cancellable=false;
+        }
     }
-
     favorites.set(Object.assign({},bookfavor));
 }
+
 const toggleplaybtn=()=>{
     if (!get(videoid)) {
         if (audiolist.length<2) return;
@@ -169,7 +212,8 @@ $: audiolist=getAudioList($activefolioid);
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 {#if ready}
 <div class="swipe-holder" on:wheel={mousewheel} >
-<Swipe bind:this={swiper} {...swipeConfig} {defaultIndex} on:click={onclick} on:start={swipeStart} on:change={swipeChanged}>
+<Swipe bind:this={swiper} {...swipeConfig} {defaultIndex}
+ on:click={onclick} on:start={swipeStart} on:change={swipeChanged}>
     {#each images as image,idx}
     <SwipeItem><img alt='no' class="swipe" src={images[images.length-idx-1]}/></SwipeItem>
     {/each}    
@@ -179,10 +223,12 @@ $: audiolist=getAudioList($activefolioid);
 <div class="message">{@html rotatingwheel}</div>
 {/if}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class="favoritebtn" on:click={togglefavoritebtn}>{($favorites[$activefolioid]?.[$activepb])?'♥':'♡'}</span>
+{#key favoritetimer}
+<span class:blinkfavorbtn={!!favoritetimer} class="favoritebtn" on:click={favoritebtn}>{ favortypes[$favorites[$activefolioid]?.[$activepb]||0]}</span>
+{/key}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 {#if $ytplayer && audiolist.length>1}
-<span class="playbtn" on:click={toggleplaybtn}>{$videoid?'◼':'♪'}</span>
+<span class="playbtn" on:click={toggleplaybtn}>{$videoid?'◼':'♫'}</span>
 {/if}
 
 <span class="pagenumber">{totalpages-defaultIndex}</span>

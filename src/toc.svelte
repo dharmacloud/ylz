@@ -12,7 +12,7 @@ export let closePopup;
 const setFolio=async (e)=>{
     const v=e.detail[0];
     activepb.set(parseInt(v));
-    address=  'folio#'+$activefolioid +'.ck#'+ chunkOfFolio(ptk,$activefolioid,v);
+    address=  'folio#'+$activefolioid +'.ck#'+ chunkOfFolio(ptk,$activefolioid,v)[0];
 }
 
 let tocitems=[],cknow;
@@ -72,5 +72,5 @@ $: cknow=getCk(address);
 
 <style>
 .jumper {height:10vh}
-.toc {overflow-y: auto;height:80vh}
+.toc {overflow-y: auto;height:78vh}
 </style>

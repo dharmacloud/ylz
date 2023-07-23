@@ -35,11 +35,11 @@ const createTencentPlayer=()=>{
 
 onMount(()=>{
     timer=setInterval(()=>{
-        if (typeof Txplayer!=='undefined') {
-            console.log('qq player ok')
-            clearInterval(timer);
-            createTencentPlayer();
-        }
+        //  if (typeof Txplayer!=='undefined') {
+        //      console.log('qq player ok')
+        //      clearInterval(timer);
+        //      createTencentPlayer();
+        //  }
         if (typeof YT!=='undefined') {
             console.log('youtube player ok')
             clearInterval(timer);

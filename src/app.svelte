@@ -4,7 +4,7 @@ import { openPtk,usePtk,loadScript} from 'ptk'
 import SwipeZipImage from "./swipezipimage.svelte";
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import { onDestroy, onMount } from "svelte";
-import {activefolioid,isAndroid,playing,advancemode,idlecount,showpaiji,newbie,idletime} from './store.js'
+import {activefolioid,isAndroid,playing,idlecount,showpaiji,newbie,idletime} from './store.js'
 import {setTimestampPtk} from './mediaurls.js'
 import TapText from './taptext.svelte'
 import Player from './player.svelte'
@@ -24,7 +24,7 @@ onMount(async ()=>{
     loaded=true;
     timer=setInterval(()=>{
         showpaiji.set($idlecount>=idletime);
-        if ($advancemode!=='on' && !shownewbie && !showdict) {
+        if (!shownewbie && !showdict) {
             idlecount.set($idlecount+idleinterval);
         }
     },idleinterval*1000);
@@ -77,8 +77,8 @@ $: loadPlayer();
 {/if}
 
 {:else}
-<span class="loading">如果停在此畫面，表示瀏覽器不直持 Emcascript 2015，無法運行本軟件 。</span>
-<a href=_new>官方網站</a>
+<span class="loading">如果停在此畫面，表示瀏覽器不直持 Emcascript 2015，無法運行本軟件。</span>
+<a class="toctext" href=_new>官方網站</a>
 {/if}
 </div>
 
