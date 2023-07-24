@@ -7,13 +7,13 @@ export const activePtk=writable('dc');
 
 export const loadingbook=writable(false);
 export const autodict=writable(settings.autodict);
-export const activepb=writable(1);  //zero base
+export const activepb=writable(0);  //zero base
 export const activefolioid=writable(settings.activefolioid);
 export const maxfolio=writable(0);
 export const favorites=writable(settings.favorites);
 export const prefervideo=writable(settings.prefervideo);
 export const showpunc=writable(settings.showpunc);
-
+export const landscape=writable(false)
 export const isAndroid=writable(false)
 
 export const mediaurls=writable([silence]);
@@ -107,8 +107,7 @@ export const hasTranslation=(ptk,line)=>{
     const lines=parallelWithDiff(ptk,line,false,true);
     return lines.length>1;
 }
-export const parallelFolios=(folioid)=>{
-    const ptk=usePtk('dc');
+export const parallelFolios=(ptk,folioid)=>{
     folioid=folioid||get(activefolioid);
     const folio=ptk.defines.folio;
     const at=folioid.indexOf('_');

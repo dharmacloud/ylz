@@ -4,10 +4,10 @@ import Foliolist from "./foliolist.svelte"
 import Audio from "./audio.svelte"
 import About from "./about.svelte"
 import Textual from './textual.svelte'
-
+import { get } from 'svelte/store';
 //import Favorite from "./favorite.svelte"
 import Toc from "./toc.svelte"
-import {activePtk,autodict} from './store.js'
+import {activePtk,autodict, landscape} from './store.js'
 import { usePtk} from "ptk";
 export let tofind='';
 export let address='';
@@ -27,12 +27,18 @@ const onDict=async (t)=>{
         thetab='textual';
     }
 }
+const textWidth=(ls)=>{
+    if (ls) {
+        const w=(screen.height *0.45);
+        return 'left:'+w+'px;width:'+(screen.width-w)+'px';
+    }
+    return '';
+}
 $: ptk=usePtk($activePtk);
 $: onDict(tofind)
 </script>
-<div class="popup">
+<div class="popup" style={textWidth(get(landscape))}>
     <div class="tabs">    
-
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="about"} on:click={()=>thetab="about"}>⚙️</span>
 

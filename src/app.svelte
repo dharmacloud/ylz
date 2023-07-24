@@ -4,12 +4,13 @@ import { openPtk,usePtk,loadScript} from 'ptk'
 import SwipeZipImage from "./swipezipimage.svelte";
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import { onDestroy, onMount } from "svelte";
-import {activefolioid,isAndroid,playing,idlecount,showpaiji,newbie,idletime} from './store.js'
+import {activefolioid,isAndroid,playing,idlecount,showpaiji,newbie,idletime,landscape} from './store.js'
 import {setTimestampPtk} from './mediaurls.js'
 import TapText from './taptext.svelte'
 import Player from './player.svelte'
 import Newbie from './newbie.svelte';
 import Paiji from './paiji.svelte';
+import { get } from 'svelte/store';
 let ptk;
 registerServiceWorker();
 const idleinterval=2;
@@ -49,29 +50,39 @@ const onTapText=(t,_address,ptkname)=>{
     address=_address;
     ptk=usePtk(ptkname);
 }
-
+const folioWidth=(ls)=>{
+    if (ls) {
+        return 'width:'+(screen.height *0.45)+'px;';
+    }
+    return '';
+}
+$: console.log($landscape,'landscape')
 $: loadPlayer();
 </script>
-<div class="app">   
+
+
+<div class="app">
 {#if loaded}
 <Player/>
-<!-- <SwipeVideo src={$activefolioid+($isAndroid?".webm":".mp4")} {ptk} {onTapText} {onMainmenu}/> -->
 {#key $activefolioid}
 
 {#if $showpaiji && !$playing && !showdict && !shownewbie}
 <Paiji/>
 {/if}
 <SwipeZipImage  src={$activefolioid+".zip"} {ptk} {onTapText} {onMainmenu}/>
+
+
 {/key}
 
-{#if shownewbie||showdict}
+{#if (shownewbie||showdict) && !get(landscape)}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="closepopup" on:click={closePopup}>✖️</span> <!--╳-->
 {/if}
 
-{#if showdict}
+{#if showdict || get(landscape)}
 <TapText {address} {tofind}  {closePopup}/>
 {/if}
+
 {#if shownewbie}
 <Newbie {closePopup}/>
 {/if}

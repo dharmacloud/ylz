@@ -55,7 +55,7 @@ const gotoPb=()=>{
     const pb=ptk.defines.pb;
     const at=bsearchNumber( pb.linepos,range[0]-1+hl )-1;
 
-    activepb.set(pb.fields.id.values[at]);
+    activepb.set(pb.fields.id.values[at]||0);
 
     // console.log(at,'pbid', );
 }

@@ -6,7 +6,8 @@ import Swipe from './3rd/swipe.svelte';
 import SwipeItem from './3rd/swipeitem.svelte';
 import {rotatingwheel} from './3rd/rotatingwheel.js';
 import {getAudioList} from './mediaurls.js'
-import {favortypes} from './store.js'
+import {favortypes, landscape} from './store.js'
+
 export let src;
 
 import {fetchFolioText,getConcreatePos,folio2ChunkLine,extractPuncPos,usePtk} from 'ptk'
@@ -142,6 +143,7 @@ const gotoPb=(pb)=>{
         // console.log('goto',pb, go, defaultIndex)
         swiper.goTo(go);
     }
+    console.log('pb',pb,go)
 }
 const confirmfavorite=()=>{
     if (favoritetimer) {
@@ -205,17 +207,33 @@ const toggleplaybtn=()=>{
         selectmedia('');
     }
 }
+const holderWidth=ls=>{
+    if (ls) {
+        return 'width:'+(screen.height*0.5)+'px';
+    } else {
+        return 'width:100%'
+    }
+    
+}
+const swipeStyle=(ls)=>{
+    if (ls) {
+        return 'left:0%;transform: translate(0%,-50%);'
+    } else {
+        return 'left:50%;transform: translate(-50%,-50%);'
+    }
+    
+}
 $: loadZip(src);
 $: gotoPb($activepb); //trigger by goto folio in setting.svelte
 $: audiolist=getAudioList($activefolioid);
 </script>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 {#if ready}
-<div class="swipe-holder" on:wheel={mousewheel} >
+<div class="swipe-holder" on:wheel={mousewheel} style={holderWidth(get(landscape))}>
 <Swipe bind:this={swiper} {...swipeConfig} {defaultIndex}
  on:click={onclick} on:start={swipeStart} on:change={swipeChanged}>
     {#each images as image,idx}
-    <SwipeItem><img alt='no' class="swipe" src={images[images.length-idx-1]}/></SwipeItem>
+    <SwipeItem><img alt='no' class="swipe" style={swipeStyle(get(landscape))} src={images[images.length-idx-1]}/></SwipeItem>
     {/each}    
 </Swipe>
 </div>
@@ -227,7 +245,7 @@ $: audiolist=getAudioList($activefolioid);
 <span class:blinkfavorbtn={!!favoritetimer} class="favoritebtn" on:click={favoritebtn}>{ favortypes[$favorites[$activefolioid]?.[$activepb]||0]}</span>
 {/key}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-{#if $ytplayer && audiolist.length>1}
+{#if !$landscape && $ytplayer && audiolist.length>1}
 <span class="playbtn" on:click={toggleplaybtn}>{$videoid?'◼':'♫'}</span>
 {/if}
 
@@ -262,9 +280,8 @@ img { height:100%}
 .message {position:absolute;top:50%;left:50%;transform: translate(-50%,-50%); }
 .swipe-holder{
     height: 100%;
-    width: 100%; 
-    
+    /* width:100%; */
 }
-.swipe {position:absolute;top:50%;left:50%;transform: translate(-50%,-50%); }
+.swipe {position:absolute;top:50%; }
 
 </style>

@@ -12,7 +12,7 @@ const getFolioList=()=>{
         const id=folio.fields.id.values[i];
         const endingnumber=id.match(/(\d+)$/);
         if (!~id.indexOf('_') && (!endingnumber||endingnumber[1]=='1') ) {//only show book without _ and not ends with >2
-            out.push([i, id, parallelFolios(id)]);
+            out.push([i, id, parallelFolios(ptk,id)]);
         }
     }
     return out;

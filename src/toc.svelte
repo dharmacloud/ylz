@@ -4,6 +4,7 @@ import { bsearchNumber ,styledNumber,chunkOfFolio,debounce} from "ptk";
 import {activepb,maxfolio,activefolioid} from './store.js';
 import {goPbAt, loadFolio} from './nav.js'
 import Juan from './juan.svelte'
+import {get} from 'svelte/store'
 let folio=[$activepb];
 export let ptk;
 export let address;
@@ -11,7 +12,7 @@ export let closePopup;
 
 const setFolio=async (e)=>{
     const v=e.detail[0];
-    activepb.set(parseInt(v));
+    activepb.set(parseInt(v)||0);
     address=  'folio#'+$activefolioid +'.ck#'+ chunkOfFolio(ptk,$activefolioid,v)[0];
 }
 
@@ -45,12 +46,13 @@ const goBookPb=(ptk,at)=>{
     if (folioid!==$activefolioid) {
         loadFolio(folioid,()=>{
             goPbAt(ptk,at);
+            address=  'folio#'+folioid+'.ck#'+ chunkOfFolio(ptk,folioid,get(activepb))[0];
         })
     } else {
         goPbAt(ptk,at);
+        address=  'folio#'+folioid+'.ck#'+ chunkOfFolio(ptk,folioid,get(activepb))[0];
     }
     
-    closePopup();
 }
 $: tocitems=getTocItems(address);
 $: cknow=getCk(address);

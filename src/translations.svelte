@@ -38,7 +38,7 @@ const goFolioByLine=(ptk,line)=>{
     const newfolio=folio.fields.id.values[folioat];
     loadFolio(newfolio,()=>{
         activePtk.set(ptk.name);
-        activepb.set( parseInt(pbid)-1);
+        activepb.set( (parseInt(pbid)||1)-1);
         marktap(pbid,line);
     }) 
     closePopup();
