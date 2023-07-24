@@ -29,14 +29,15 @@ const onDict=async (t)=>{
 }
 const textWidth=(ls)=>{
     if (ls) {
-        const w=(screen.height *0.45);
-        return 'left:'+w+'px;width:'+(screen.width-w)+'px';
+        const w=(screen.height *0.5);
+        return 'left:'+w+'pt;width:'+(screen.width-w/2)+'pt';
     }
     return '';
 }
 $: ptk=usePtk($activePtk);
 $: onDict(tofind)
 </script>
+{#key $landscape}
 <div class="popup" style={textWidth(get(landscape))}>
     <div class="tabs">    
         <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -75,6 +76,7 @@ $: onDict(tofind)
       <div class="tab-content" class:visible={thetab=='about'}><About/></div>
 
  </div>
+ {/key}
 <style>
 
 </style>

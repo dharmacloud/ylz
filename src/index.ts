@@ -1,5 +1,12 @@
 import App from './app.svelte';
 import {landscape} from './store.js'
+
+let portrait = window.matchMedia("(orientation: portrait)");
+portrait.addEventListener("change", function(e) {
+    // console.log(e.matches)
+    landscape.set(!e.matches)
+})
+
 window.addEventListener("deviceorientation", ()=>{
     landscape.set(screen.availWidth>screen.availHeight)
 }, true);

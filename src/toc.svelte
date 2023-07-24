@@ -74,5 +74,5 @@ $: cknow=getCk(address);
 
 <style>
 .jumper {height:10vh}
-.toc {overflow-y: auto;height:78vh}
+.toc {overflow-y: auto;height:85vh}
 </style>

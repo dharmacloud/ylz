@@ -12,7 +12,10 @@ const setAddress=(lo)=>{
     if (newaddress) address=newaddress
 }
 </script>
+<div class="toctext">
 {#each lines as line,idx}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div on:click={()=>setAddress(idx)} class:activeline={lineoff==idx}>{line}</div>
 {/each}
+
+</div>

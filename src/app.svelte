@@ -38,8 +38,9 @@ const loadPlayer=()=>{
 
 let showdict=false,shownewbie=$newbie=='on',address='',tofind='';
 const closePopup=()=>{
-    showdict=false;
     shownewbie=false;
+    if (get(landscape)) return;
+    showdict=false;
 }
 const onMainmenu=()=>{
     showdict=false;
@@ -50,12 +51,7 @@ const onTapText=(t,_address,ptkname)=>{
     address=_address;
     ptk=usePtk(ptkname);
 }
-const folioWidth=(ls)=>{
-    if (ls) {
-        return 'width:'+(screen.height *0.45)+'px;';
-    }
-    return '';
-}
+
 $: console.log($landscape,'landscape')
 $: loadPlayer();
 </script>
@@ -63,23 +59,19 @@ $: loadPlayer();
 
 <div class="app">
 {#if loaded}
-<Player/>
 {#key $activefolioid}
-
 {#if $showpaiji && !$playing && !showdict && !shownewbie}
 <Paiji/>
 {/if}
 <SwipeZipImage  src={$activefolioid+".zip"} {ptk} {onTapText} {onMainmenu}/>
-
-
 {/key}
 
-{#if (shownewbie||showdict) && !get(landscape)}
+{#if (shownewbie||showdict)}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="closepopup" on:click={closePopup}>✖️</span> <!--╳-->
 {/if}
 
-{#if showdict || get(landscape)}
+{#if showdict || $landscape}
 <TapText {address} {tofind}  {closePopup}/>
 {/if}
 
@@ -87,9 +79,12 @@ $: loadPlayer();
 <Newbie {closePopup}/>
 {/if}
 
+<Player/>
+
 {:else}
 <span class="loading">如果停在此畫面，表示瀏覽器不直持 Emcascript 2015，無法運行本軟件。</span>
 <a class="toctext" href=_new>官方網站</a>
 {/if}
+
 </div>
 

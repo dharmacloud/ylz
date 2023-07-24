@@ -209,7 +209,7 @@ const toggleplaybtn=()=>{
 }
 const holderWidth=ls=>{
     if (ls) {
-        return 'width:'+(screen.height*0.5)+'px';
+        return 'width:'+(screen.height*0.5)+'pt';
     } else {
         return 'width:100%'
     }
@@ -229,6 +229,7 @@ $: audiolist=getAudioList($activefolioid);
 </script>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 {#if ready}
+{#key $landscape}
 <div class="swipe-holder" on:wheel={mousewheel} style={holderWidth(get(landscape))}>
 <Swipe bind:this={swiper} {...swipeConfig} {defaultIndex}
  on:click={onclick} on:start={swipeStart} on:change={swipeChanged}>
@@ -237,6 +238,7 @@ $: audiolist=getAudioList($activefolioid);
     {/each}    
 </Swipe>
 </div>
+{/key}
 {:else}
 <div class="message">{@html rotatingwheel}</div>
 {/if}
