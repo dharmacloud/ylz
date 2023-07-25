@@ -59,7 +59,7 @@ $: loadPlayer();
 <div class="app">
 {#if loaded}
 {#key $activefolioid}
-{#if $showpaiji && !$playing && !showdict && !shownewbie}
+{#if $showpaiji && !$playing && !showdict && !shownewbie && !landscape}
 <Paiji/>
 {/if}
 <SwipeZipImage  src={$activefolioid+".zip"} {ptk} {onTapText} {onMainmenu} bind:address/>

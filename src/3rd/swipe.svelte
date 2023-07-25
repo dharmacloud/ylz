@@ -48,7 +48,7 @@
     update();
   }
 
-  function update() {
+  export function update() {
     let { offsetWidth, offsetHeight } = swipeWrapper.querySelector('.swipeable-total_elements');
     availableSpace = is_vertical ? offsetHeight : offsetWidth;
 
@@ -141,7 +141,7 @@ transition-duration: ${touch_end ? transitionDuration : '0'}ms;
   onMount(() => {
     init();
     if (typeof window !== 'undefined') {
-      window.addEventListener('resize', update);
+      //window.addEventListener('resize', update);
     }
   });
 

@@ -56,6 +56,9 @@ export const idlecount=writable(0);
 export const showpaiji=writable(false);
 
 
+
+
+
 activefolioid.subscribe((activefolioid)=>updateSettings({activefolioid}));
 autodict.subscribe((autodict)=>updateSettings({autodict}));
 newbie.subscribe((newbie)=>updateSettings({newbie}));

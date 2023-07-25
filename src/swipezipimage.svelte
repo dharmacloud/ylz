@@ -202,15 +202,16 @@ const toggleplaybtn=()=>{
     }
 }
 const holderWidth=ls=>{
+    let style='width:100vw'
     if (ls) {
         const w=(screen.height *0.45);
         const r=Math.floor(w*100/screen.width)+1;
-
-        return 'width:'+r+'vw';
-    } else {
-        return 'width:100%'
+        style='width:'+r+'vw';
     }
-    
+    setTimeout(()=>{
+        swiper.update();
+    },10)
+    return style;
 }
 
 $: loadZip(src);
