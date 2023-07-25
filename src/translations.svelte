@@ -1,7 +1,7 @@
 <script>
 import {getParallelLines} from 'ptk/align/';
 import {activepb,activefolioid,activePtk,tapmark,folioChars,folioLines} from './store.js'
-import { parseOfftext,folioPosFromLine, bsearchNumber} from 'ptk';
+import { parseOfftext,folioPosFromChunkLine, bsearchNumber} from 'ptk';
 
 import SentenceNav from './sentencenav.svelte'
 import { loadFolio } from './nav.js';
@@ -24,9 +24,9 @@ const getBookTitle=(ptk,nbk)=>{
     }
 }
 
-const marktap=async (pb,line)=>{
-    const pos=await folioPosFromLine(ptk,pb,line,$activefolioid,folioLines(),$folioChars)
-    tapmark.set(pos);
+const marktap=(pb,line)=>{
+    // const pos=folioPosFromChunkLine(,pb,line)
+    // tapmark.set(pos);
 }
 const goFolioByLine=(ptk,line)=>{
     const pb=ptk.defines.pb;

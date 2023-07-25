@@ -6,7 +6,7 @@ let mp4player;
 let touching=-1;
 let touchx=0,touchy=0,startx=0,starty=0,direction=0;
 import {up1,up2,turnleft,turnright,swipestart,swipeend,down1,down2} from './swipeshapes.js';
-import {fetchFolioText,getConcreatePos,folio2ChunkLine,extractPuncPos,usePtk} from 'ptk'
+import {getFolioPageText,getConcreatePos,folioPos2ChunkLine,extractPuncPos,usePtk} from 'ptk'
 import {folioLines, folioChars,activefolioid,activepb,activePtk, maxfolio} from './store.js'
 const swipeshapes=[ down2,down1, swipeend,turnright, , turnleft,swipestart, up1,up2];
 
@@ -85,19 +85,20 @@ const getCharXY=(div,x,y)=>{
 }
 
 
-const onclick=async (e,_x,_y)=>{
+const onclick=(e,_x,_y)=>{
     const x=_x||e.clientX;
     const y=_y||e.clientY;
 	if (!inVideoRect(x)) return;
     const [cx,cy]=getCharXY(mp4player, x,y);
     const [t,pos]=getConcreatePos(foliotext[cx],cy,foliotext[cx+1]);
 	//get the ck-lineoff 
-	const address=  'bk#'+$activefolioid +'.'+ await folio2ChunkLine(ptk,foliotext, foliofrom,cx,pos);
+	const [ckid,lineoff]=folioPos2ChunkLine(ptk,foliotext, foliofrom,cx,pos);
+	const address=  'folio#'+$activefolioid +'.ck#'+  (ckid+ lineoff?':'+lineoff:'')
 
-	await onTapText(t,address,ptk.name);
+	onTapText(t,address,ptk.name);
 }
 
-const ontouchend=async e=>{
+const ontouchend=e=>{
 	if (touching!==-1 && direction!==0) {
 		if (direction==1) mp4player.currentTime+=-1.001;
 		else if (direction==2) mp4player.currentTime=0;
@@ -114,8 +115,8 @@ const ontouchend=async e=>{
 	direction=0;
     
 }
-const updateFolioText=async ()=>{
-    [foliotext,foliofrom]=await fetchFolioText(ptk,$activefolioid,1+Math.floor(mp4player?.currentTime||0));
+const updateFolioText=()=>{
+    [foliotext]=getFolioPageText(get(foliorawtexts),1+Math.floor(mp4player?.currentTime||0));
 	puncs=extractPuncPos(foliotext,folioLines());
 	activepb.set(Math.floor(mp4player.currentTime));
 	pauseVideo();

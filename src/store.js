@@ -16,6 +16,10 @@ export const showpunc=writable(settings.showpunc);
 export const landscape=writable(false)
 export const isAndroid=writable(false)
 
+export const foliotexts=writable([]);
+export const foliorawtexts=writable([]);
+export const foliostartfrom=writable(0)
+
 export const mediaurls=writable([silence]);
 export const ytplayer=writable(null)
 export const qqplayer=writable(null)

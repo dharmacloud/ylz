@@ -1,7 +1,8 @@
 <script>
 export let ptk,start,lineoff ,address;
 import {goPb} from './nav.js'
-import {bsearchNumber} from 'ptk'
+import {tapmark,foliorawtexts} from  './store.js'
+import {bsearchNumber, folioPosFromChunkLine} from 'ptk'
 import ChunkNav from './chunknav.svelte'
 let ck,lines=[];
 
@@ -20,12 +21,15 @@ const setAddress=(lo)=>{
         address=newaddress;
         const pb=ptk.defines.pb;
         const at=bsearchNumber (pb.linepos,start+lo)-1 ;
-        goPb(ptk,pb.fields.id.values[at])
+        const pbid=pb.fields.id.values[at];
+        goPb(ptk,pbid,ck.id,lo);
+        const foliopos=folioPosFromChunkLine( $foliorawtexts, ck.id ,lo);
+        tapmark.set(foliopos);
     }
 }
 </script>
 <div class="toctext">
-<ChunkNav {ptk} bind:address/>
+<ChunkNav {ptk} bind:address {ck}/>
 {#each lines as line,idx}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div on:click={()=>setAddress(idx)} class:activeline={lineoff==idx}>{@html renderLine(line)}</div>

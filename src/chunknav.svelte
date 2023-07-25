@@ -2,18 +2,17 @@
 import {parseAddress,parseAction} from 'ptk'
 export let ptk;
 export let address;
-let ck
+export let ck
 
 const getMaxChunk=()=>{
     const addr=parseAddress(address);
     const act=parseAction(addr.action);
-    console.log(addr,act)
 }
 const prevChunk=()=>{
 
 }
 const nextChunk=()=>{
-
+    
 }
 
 $: maxchunk=getMaxChunk(address);

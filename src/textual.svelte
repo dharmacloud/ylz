@@ -8,8 +8,10 @@ import {toChineseNumber} from 'ptk'
 import {activefolioid,activepb, hasVariorum,hasTranslation,hasSanskrit,bookByFolio} from './store.js'
 export let start,ptk;
 export let closePopup;
-
+export let address;
 $: [start,end, _from,_till ,lineoff]=ptk.rangeOfAddress(address);
+
+
 const getExternalLinks=folioid=>{
     //todo 更精準地定位 經 ，目前是以頁首，有時是上一經
     const [from,to]=ptk.rangeOfAddress('folio#'+folioid+'.pb#'+($activepb+1));
@@ -29,7 +31,7 @@ const getExternalLinks=folioid=>{
 }
 let thetab='chunktext';
 $: externallinks=getExternalLinks($activefolioid,$activepb)
-export let address;
+
 </script>
 <div class="tabs">    
 

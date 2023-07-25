@@ -36,7 +36,7 @@ const loadPlayer=()=>{
     loadScript('https://www.youtube.com/iframe_api')
 }
 
-let showdict=false,shownewbie=$newbie=='on',address='',tofind='';
+let showdict=false,shownewbie=$newbie=='on',address='folio#'+$activefolioid,tofind='';
 const closePopup=()=>{
     shownewbie=false;
     if (get(landscape)) return;
@@ -62,7 +62,7 @@ $: loadPlayer();
 {#if $showpaiji && !$playing && !showdict && !shownewbie && !landscape}
 <Paiji/>
 {/if}
-<SwipeZipImage  src={$activefolioid+".zip"} {ptk} {onTapText} {onMainmenu} bind:address/>
+<SwipeZipImage src={$activefolioid+".zip"} {ptk} {onTapText} {onMainmenu} bind:address/>
 {/key}
 
 {#if (shownewbie||showdict)}

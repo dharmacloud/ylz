@@ -10,7 +10,7 @@ let thejuan=[0,0],currentjuan='1';
 const gojuan=(juan)=>{
     const bkid=$activefolioid;
     const m=bkid.match(/([a-z]+)(\d+$)/);
-    loadFolio( m[1]+juan,function(){
+    loadFolio( ptk,m[1]+juan,function(){
         goPb(ptk,'1');
         closePopup();
     });

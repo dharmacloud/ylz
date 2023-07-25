@@ -1,5 +1,5 @@
-import {fetchFolioText,concreateLength} from 'ptk';
-import { folioChars,folioLines,activefolioid ,videoid,tapmark,activepb,loadingbook, stopVideo} from "./store.js";
+import {getFolioPageText,concreateLength, MAXFOLIOCHAR, MAXFOLIOLINE} from 'ptk';
+import {foliorawtexts,activefolioid ,videoid,tapmark,activepb,loadingbook, stopVideo} from "./store.js";
 import {get} from 'svelte/store'
 
 export const goPbAt=async (ptk,at)=>{
@@ -25,24 +25,23 @@ export const loadFolio=(folioid,func)=>{
                 clearInterval(timer);
                 setTimeout(()=>{//wait for 
                     func&&func(folioid);
-                },300);
+                },200);
             }
-        },500);
+        },300);
     }
 }
+
 
 export const goPb=async (ptk,pbid,ck)=>{
     const newpb=parseInt(pbid)-1;
     activepb.set(newpb);
     if (ck) { //mark the starting of chunk
         //console.log('gopb',ck)
-        const [foliotext]=await fetchFolioText(ptk,get(activefolioid),newpb+1);
-        const fc=get(folioChars);
-        const fl=folioLines();
+        const [foliotext]=getFolioPageText(get(foliorawtexts),newpb+1);
         for (let i=0;i<foliotext.length;i++) {
             const at2=foliotext[i].indexOf('^ck'+ck);
             if (~at2) {
-                const r=(newpb*fl*fc)+i*fc+
+                const r=(newpb*MAXFOLIOLINE*MAXFOLIOCHAR)+i*MAXFOLIOCHAR+
                     concreateLength(foliotext[i].slice(0,at2));
                 tapmark.set(r);
                 break;

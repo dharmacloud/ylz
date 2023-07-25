@@ -10,9 +10,9 @@ import {favortypes, landscape} from './store.js'
 
 export let src;
 
-import {fetchFolioText,getConcreatePos,folio2ChunkLine,extractPuncPos,usePtk} from 'ptk'
+import {getConcreatePos,fetchFolioText,folioPos2ChunkLine,extractPuncPos,usePtk,MAXFOLIOCHAR,MAXFOLIOLINE, getFolioPageText} from 'ptk'
 import {ZipStore} from 'ptk/zip';
-import {folioLines,folioChars,activePtk,activefolioid,activepb,favorites,videoid,ytplayer,showpunc,
+import {foliotexts,foliorawtexts,foliostartfrom,folioLines,folioChars,activePtk,activefolioid,activepb,favorites,videoid,ytplayer,showpunc,
     maxfolio,tapmark, playing, remainrollback, idlecount,showpaiji,idletime,loadingbook, selectmedia, prefervideo} from './store.js'
 import { get } from 'svelte/store';
 
@@ -52,7 +52,13 @@ const loadZip=async ()=>{
     let host='folio/';
     if (document.location.host.startsWith('yonglezang.github.io')) {
         host='https://dharmacloud.github.io/swipegallery/folio/';
-    } 
+    }
+    const [text1,from1,to,offtexts]=await fetchFolioText(ptk,$activefolioid);
+    foliotexts.set(text1);
+    console.log('foliotextfrom',from1)
+    foliorawtexts.set(offtexts);
+    foliostartfrom.set(from1);
+
     const res=await fetch(host+src);
     const buf=await res.arrayBuffer();
     const zip=new ZipStore(buf);
@@ -66,7 +72,7 @@ const loadZip=async ()=>{
     setTimeout(()=>{
         loadingbook.set(false);
         ready=true;
-    },300);   
+    },200);   
 }
 const swipeStart=(obj)=>{
     hidepunc=true;
@@ -79,10 +85,10 @@ const swipeChanged=(obj)=>{
     useractive();
     confirmfavorite();
 }
-const updateFolioText=async ()=>{
+const updateFolioText=()=>{
     hidepunc=true;
     const fl=folioLines();
-    [foliotext,foliofrom]=await fetchFolioText(ptk,$activefolioid,1+Math.floor($activepb));
+    [foliotext]=getFolioPageText(get(foliorawtexts),$activepb+1);
     foliotext=foliotext.join('\n').replace(/【[^】]+】/,'').split('\n')
     setTimeout(()=>{
         hidepunc=false;
@@ -122,10 +128,11 @@ const onclick=async (e)=>{
     hidepunc=false;
     const {x,y}=e.detail;
     const [cx,cy]=getCharXY(x,y);
-    const tappos=folioLines()*$folioChars*$activepb+ cx*$folioChars + cy;
+    const tappos=MAXFOLIOCHAR*MAXFOLIOLINE*$activepb+ cx* MAXFOLIOCHAR + cy;
+    console.log('tappos',tappos)
     tapmark.set(tappos);
     let [t,pos]=getConcreatePos(foliotext[cx],cy,foliotext[cx+1]);
-    const ck=await folio2ChunkLine(ptk,foliotext, foliofrom,cx,pos);;
+    const ck=folioPos2ChunkLine(get(foliotexts), $activepb+1, cx, pos);
 	const address= 'folio#'+$activefolioid + (ck?('.'+ ck):'') ;
     t=t.replace(/([。！？：、．；，「『（ ])/g,'　');
     while(t.charAt(0)=='　') t=t.slice(1);

@@ -40,12 +40,12 @@ const getFolioId=nfolio=>{
 <div class="book">
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span on:click={()=>selectfolio(nfolio)} class:selecteditem={$activefolioid==folioid} >{getFolioName(nfolio)}</span>
-<Favoritebuttons {folioid} {closePopup}/>
+<Favoritebuttons {ptk} {folioid} {closePopup}/>
 {#each pars as par}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="parallelfolio" on:click={()=>selectfolio(par)} class:selecteditem={$activefolioid==getFolioId(par)} >
 {getFolioName(par)}</span>
-<Favoritebuttons folioid={par} {closePopup} />
+<Favoritebuttons folioid={par} {ptk} {closePopup} />
 {/each}
 </div>
 {/each}
