@@ -1,6 +1,4 @@
 <script>
-import {toChineseNumber} from 'ptk'
-import {activepb,autodict} from './store.js'
 export let entries=[],ptk,wikipedia,fgdzd,dfb;
 let nentry=0;
 let src='',showing='';
@@ -19,6 +17,10 @@ const setOneline=()=>{
     src=onelinelink(entry);
 }
 const availableDict=(n)=>{
+    if ( n>=entries.length) {
+        n=0;
+    }
+    if (!entries[n]) return;
     const at=entries[n][2];
     const flag=ptk.columns.entries.dict[at];
     wikipedia=flag&1;
@@ -28,7 +30,7 @@ const availableDict=(n)=>{
     else if (wikipedia) setWikipedia();
 }
 
-$: availableDict(nentry);
+$: availableDict(nentry,entries);
 
 </script>
 <div class="dictpopup toctext">

@@ -124,26 +124,21 @@ const onclick=async (e)=>{
     const [cx,cy]=getCharXY(x,y);
     const tappos=folioLines()*$folioChars*$activepb+ cx*$folioChars + cy;
     tapmark.set(tappos);
-    // console.log('tappos',tappos,'click',cx,cy)
     let [t,pos]=getConcreatePos(foliotext[cx],cy,foliotext[cx+1]);
-	//get the ck-lineoff 
     const ck=await folio2ChunkLine(ptk,foliotext, foliofrom,cx,pos);;
 	const address= 'folio#'+$activefolioid + (ck?('.'+ ck):'') ;
-    //remove after punc
     t=t.replace(/([。！？：、．；，「『（ ])/g,'　');
     while(t.charAt(0)=='　') t=t.slice(1);
     t=t.replace(/　.+/,'');
-    console.log(address)
     await onTapText(t,address,ptk.name); 
 }
-const gotoPb=(pb)=>{
+const gotoPb=async (pb)=>{
     if (!totalpages || !swiper)return;//not loaded yet
     const go=totalpages-pb-1;
     if (go!==defaultIndex) {
         // console.log('goto',pb, go, defaultIndex)
         swiper.goTo(go);
     }
-    console.log('pb',pb,go)
 }
 const confirmfavorite=()=>{
     if (favoritetimer) {
@@ -196,7 +191,6 @@ const favoritebtn=()=>{
     }
     favorites.set(Object.assign({},bookfavor));
 }
-
 const toggleplaybtn=()=>{
     if (!get(videoid)) {
         if (audiolist.length<2) return;
@@ -209,36 +203,32 @@ const toggleplaybtn=()=>{
 }
 const holderWidth=ls=>{
     if (ls) {
-        return 'width:'+(screen.height*0.5)+'pt';
+        const w=(screen.height *0.45);
+        const r=Math.floor(w*100/screen.width)+1;
+
+        return 'width:'+r+'vw';
     } else {
         return 'width:100%'
     }
     
 }
-const swipeStyle=(ls)=>{
-    if (ls) {
-        return 'left:0%;transform: translate(0%,-50%);'
-    } else {
-        return 'left:50%;transform: translate(-50%,-50%);'
-    }
-    
-}
+
 $: loadZip(src);
 $: gotoPb($activepb); //trigger by goto folio in setting.svelte
 $: audiolist=getAudioList($activefolioid);
 </script>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 {#if ready}
-{#key $landscape}
-<div class="swipe-holder" on:wheel={mousewheel} style={holderWidth(get(landscape))}>
+
+<div class="swipe-holder" on:wheel={mousewheel} style={holderWidth($landscape)}>
 <Swipe bind:this={swiper} {...swipeConfig} {defaultIndex}
  on:click={onclick} on:start={swipeStart} on:change={swipeChanged}>
     {#each images as image,idx}
-    <SwipeItem><img alt='no' class="swipe" style={swipeStyle(get(landscape))} src={images[images.length-idx-1]}/></SwipeItem>
+    <SwipeItem><img alt='no' class="swipe"  src={images[images.length-idx-1]}/></SwipeItem>
     {/each}    
 </Swipe>
 </div>
-{/key}
+
 {:else}
 <div class="message">{@html rotatingwheel}</div>
 {/if}
@@ -284,6 +274,6 @@ img { height:100%}
     height: 100%;
     /* width:100%; */
 }
-.swipe {position:absolute;top:50%; }
+.swipe {position:absolute;}
 
 </style>

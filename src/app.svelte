@@ -52,7 +52,6 @@ const onTapText=(t,_address,ptkname)=>{
     ptk=usePtk(ptkname);
 }
 
-$: console.log($landscape,'landscape')
 $: loadPlayer();
 </script>
 
@@ -63,7 +62,7 @@ $: loadPlayer();
 {#if $showpaiji && !$playing && !showdict && !shownewbie}
 <Paiji/>
 {/if}
-<SwipeZipImage  src={$activefolioid+".zip"} {ptk} {onTapText} {onMainmenu}/>
+<SwipeZipImage  src={$activefolioid+".zip"} {ptk} {onTapText} {onMainmenu} bind:address/>
 {/key}
 
 {#if (shownewbie||showdict)}

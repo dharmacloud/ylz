@@ -19,43 +19,41 @@ const onDict=async (t)=>{
     const tap_at=t.indexOf('^');
     entries=ptk.columns.entries.keys.findMatches( t.replace('^','')).map(it=>[Math.abs(it[0]-tap_at-1),it[1],it[2]]);
     entries.sort((a,b)=> a[0]-b[0]);// 越接近點擊處的優先
-    if (entries.length && $autodict=='on') {
+    if (entries.length) {
         showdict=true;
-        showmainmenu=false;
-        thetab='dict'
-    } else if (~address.indexOf('ck')) {
-        thetab='textual';
     }
 }
 const textWidth=(ls)=>{
     if (ls) {
-        const w=(screen.height *0.5);
-        return 'left:'+w+'pt;width:'+(screen.width-w/2)+'pt';
+        const w=(screen.height *0.45);
+        const r=Math.floor(w*100/screen.width)+1;
+        return 'left:'+r+'vw;width:'+(100-r)+'vw';
     }
     return '';
 }
+$: ls=get(landscape);
 $: ptk=usePtk($activePtk);
-$: onDict(tofind)
+$: thetab=='dict' && onDict(tofind);
 </script>
 {#key $landscape}
-<div class="popup" style={textWidth(get(landscape))}>
+<div class="popup" style={textWidth(ls)}>
     <div class="tabs">    
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="about"} on:click={()=>thetab="about"}>⚙️</span>
+        <span class='clickable' class:selected={thetab=="about"} on:click={()=>thetab="about"}>⚙️{#if ls}設定{/if}</span>
 
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="list"} on:click={()=>thetab="list"}>📚</span>
+        <span class='clickable' class:selected={thetab=="list"} on:click={()=>thetab="list"}>📚{#if ls}經卷{/if}</span>
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="toc"} on:click={()=>thetab="toc"}>🧭</span>
+        <span class='clickable' class:selected={thetab=="toc"} on:click={()=>thetab="toc"}>🧭{#if ls}目錄{/if}</span>
         
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="textual"} on:click={()=>thetab="textual"}>📜</span>    
+        <span class='clickable' class:selected={thetab=="textual"} on:click={()=>thetab="textual"}>📜{#if ls}文字{/if}</span>    
         <!-- svelte-ignore a11y-click-events-have-key-events -->
+        {#if !ls}
         <span class='clickable' class:selected={thetab=="audio"} on:click={()=>thetab="audio"}>🎵</span>
+        {/if}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <!-- <span class='clickable' class:selected={thetab=="favorite"} on:click={()=>thetab="favorite"}>❤️</span> -->
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        {#if entries.length} <span class='clickable' class:selected={thetab=="dict"} on:click={()=>thetab="dict"}>🔎</span>{/if}
+        <span class='clickable' class:selected={thetab=="dict"} on:click={()=>thetab="dict"}>🔎{#if ls}查詢{/if}</span>
 
         
 

@@ -19,6 +19,7 @@ export const loadFolio=(folioid,func)=>{
         activepb.set(0);
         loadingbook.set(true);
         activefolioid.set(folioid);
+        tapmark.set(0);
         timer=setInterval(()=>{
             if (!get(loadingbook)) {
                 clearInterval(timer);
