@@ -6,18 +6,17 @@ import Swipe from './3rd/swipe.svelte';
 import SwipeItem from './3rd/swipeitem.svelte';
 import {rotatingwheel} from './3rd/rotatingwheel.js';
 import {getAudioList} from './mediaurls.js'
-import {favortypes, landscape} from './store.js'
-
-export let src;
-
-import {getConcreatePos,fetchFolioText,folioPos2ChunkLine,extractPuncPos,usePtk,MAXFOLIOCHAR,MAXFOLIOLINE, getFolioPageText} from 'ptk'
+import {extractPuncPos,usePtk,FolioText, getConcreatePos} from 'ptk'
+import { makeAddressFromFolioPos } from './nav.js';
 import {ZipStore} from 'ptk/zip';
-import {foliotexts,foliorawtexts,foliostartfrom,folioLines,folioChars,activePtk,activefolioid,activepb,favorites,videoid,ytplayer,showpunc,
+import {favortypes, landscape,foliotext,folioLines,folioChars,activePtk,activefolioid,activepb,favorites,videoid,ytplayer,showpunc,
     maxfolio,tapmark, playing, remainrollback, idlecount,showpaiji,idletime,loadingbook, selectmedia, prefervideo} from './store.js'
 import { get } from 'svelte/store';
+export let src;
+
 
 let ptk=usePtk($activePtk)
-let foliotext='',foliofrom=0,puncs=[],ready,images=[],hidepunc=false;
+let foliopage=[],puncs=[],ready,images=[],hidepunc=false;
 export let totalpages=0;
 export let onTapText=function(){};
 let swiper;
@@ -53,11 +52,9 @@ const loadZip=async ()=>{
     if (document.location.host.startsWith('yonglezang.github.io')) {
         host='https://dharmacloud.github.io/swipegallery/folio/';
     }
-    const [text1,from1,to,offtexts]=await fetchFolioText(ptk,$activefolioid);
-    foliotexts.set(text1);
-    console.log('foliotextfrom',from1)
-    foliorawtexts.set(offtexts);
-    foliostartfrom.set(from1);
+    const ftext=new FolioText(ptk);//fetchFolioText(ptk,$activefolioid);
+    await ftext.load($activefolioid)
+    foliotext.set(ftext);
 
     const res=await fetch(host+src);
     const buf=await res.arrayBuffer();
@@ -80,7 +77,7 @@ const swipeStart=(obj)=>{
 const swipeChanged=(obj)=>{
     const {active_item}=obj.detail;
     defaultIndex=active_item;
-    activepb.set(totalpages- defaultIndex-1);
+    activepb.set( (totalpages- defaultIndex).toString() );
     updateFolioText();
     useractive();
     confirmfavorite();
@@ -88,11 +85,11 @@ const swipeChanged=(obj)=>{
 const updateFolioText=()=>{
     hidepunc=true;
     const fl=folioLines();
-    [foliotext]=getFolioPageText(get(foliorawtexts),$activepb+1);
-    foliotext=foliotext.join('\n').replace(/【[^】]+】/,'').split('\n')
+    foliopage=get(foliotext).folioPageText($activepb);
+    foliopage=foliopage.join('\n').replace(/【[^】]+】/,'').split('\n')
     setTimeout(()=>{
         hidepunc=false;
-        puncs=extractPuncPos(foliotext,fl);
+        puncs=extractPuncPos(foliopage,fl);
     },200); //wait until swiper stop
 }
 const useractive=()=>{
@@ -128,12 +125,11 @@ const onclick=async (e)=>{
     hidepunc=false;
     const {x,y}=e.detail;
     const [cx,cy]=getCharXY(x,y);
-    const tappos=MAXFOLIOCHAR*MAXFOLIOLINE*$activepb+ cx* MAXFOLIOCHAR + cy;
-    console.log('tappos',tappos)
-    tapmark.set(tappos);
-    let [t,pos]=getConcreatePos(foliotext[cx],cy,foliotext[cx+1]);
-    const ck=folioPos2ChunkLine(get(foliotexts), $activepb+1, cx, pos);
-	const address= 'folio#'+$activefolioid + (ck?('.'+ ck):'') ;
+    tapmark.set([ $activepb ,cx,cy ]);
+
+    let [t]=getConcreatePos(foliopage[cx],cy,foliotext[cx+1])
+    address=makeAddressFromFolioPos($activepb,cx,cy);
+
     t=t.replace(/([。！？：、．；，「『（ ])/g,'　');
     while(t.charAt(0)=='　') t=t.slice(1);
     t=t.replace(/　.+/,'');
@@ -141,7 +137,7 @@ const onclick=async (e)=>{
 }
 const gotoPb=async (pb)=>{
     if (!totalpages || !swiper)return;//not loaded yet
-    const go=totalpages-pb-1;
+    const go=totalpages-parseInt(pb);
     if (go!==defaultIndex) {
         // console.log('goto',pb, go, defaultIndex)
         swiper.goTo(go);
@@ -266,7 +262,7 @@ $: audiolist=getAudioList($activefolioid);
 {#if $showpunc=='on'}
 <PuncLayer frame={imageFrame()} folioChars={$folioChars} folioLines={folioLines()} {puncs} />
 {/if}
-<TranscriptLayer frame={imageFrame()} {totalpages} folioLines={folioLines()} {swiper} {ptk} {foliotext}/>
+<TranscriptLayer frame={imageFrame()} {totalpages} folioLines={folioLines()} {swiper} {ptk} {foliopage}/>
 {/if}
 {/key}
 

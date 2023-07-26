@@ -7,7 +7,7 @@ export const activePtk=writable('dc');
 
 export const loadingbook=writable(false);
 export const autodict=writable(settings.autodict);
-export const activepb=writable(0);  //zero base
+export const activepb=writable('1');  //zero base
 export const activefolioid=writable(settings.activefolioid);
 export const maxfolio=writable(0);
 export const favorites=writable(settings.favorites);
@@ -16,9 +16,9 @@ export const showpunc=writable(settings.showpunc);
 export const landscape=writable(false)
 export const isAndroid=writable(false)
 
-export const foliotexts=writable([]);
-export const foliorawtexts=writable([]);
-export const foliostartfrom=writable(0)
+export const foliotext=writable({});
+// export const foliorawtexts=writable([]);
+// export const foliostartfrom=writable(0)
 
 export const mediaurls=writable([silence]);
 export const ytplayer=writable(null)
@@ -52,7 +52,7 @@ export const folioChars=writable(17);
 export const playing=writable(false);
 export const continueplay=writable(false);
 export const playnextjuan=writable(settings.playnextjuan);//自動播放下一卷
-export const tapmark = writable(0);// folio*folioLines*folioChar+offset
+export const tapmark = writable(['1',0,0]);// folio*folioLines*folioChar+offset
 export const remainrollback=writable(-1);//infinite
 
 export const newbie=writable(settings.newbie);
@@ -138,7 +138,7 @@ export const selectmedia=(vid,restart)=>{
         prefervideo.set(Object.assign({},prefer));
     }
     videoid.set(vid||'');
-    if (restart) activepb.set(0);
+    if (restart) activepb.set('1');
 }
 
 export const favortypes=['♡','🤍','❤️', '💚', '💙','💜','🖤'];

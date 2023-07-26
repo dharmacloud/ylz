@@ -1,7 +1,7 @@
 <script>
 import {getParallelLines} from 'ptk/align/';
-import {activepb,activefolioid,activePtk,tapmark,folioChars,folioLines} from './store.js'
-import { parseOfftext,folioPosFromChunkLine, bsearchNumber} from 'ptk';
+import {activepb,activefolioid,activePtk} from './store.js'
+import { parseOfftext, bsearchNumber} from 'ptk';
 
 import SentenceNav from './sentencenav.svelte'
 import { loadFolio } from './nav.js';

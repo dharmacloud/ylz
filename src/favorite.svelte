@@ -22,7 +22,7 @@ const loadfavorites=()=>{
     others=fromObj(_others,(a,b)=>[a,b]);
 }
 const gofavorite=(pb)=>{
-    goPb(ptk,pb);
+    goPb(pb);
     closePopup();
 }
 const firstfavorite=(folioid)=>{
@@ -37,7 +37,7 @@ const gootherfavorite=(folioid)=>{
     closePopup();
     loadFolio(folioid,()=>{
         const first=firstfavorite(folioid);
-        goPb(ptk,(first||0)+1);
+        goPb((first||0)+1);
     });    
 }
 

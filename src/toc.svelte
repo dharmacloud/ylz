@@ -1,19 +1,19 @@
 <script>
 import Slider from './3rd/rangeslider.svelte';
-import { bsearchNumber ,styledNumber,chunkOfFolio,debounce} from "ptk";
+import { bsearchNumber ,styledNumber,debounce} from "ptk";
 import {activepb,maxfolio,activefolioid} from './store.js';
-import {goPbAt, loadFolio} from './nav.js'
+import {goPbAt, loadFolio,makeAddressFromFolioPos} from './nav.js'
 import Juan from './juan.svelte'
-import {get} from 'svelte/store'
-let folio=[$activepb];
+let folio=[parseInt($activepb)-1];
 export let ptk;
 export let address;
 export let closePopup;
 
 const setFolio=async (e)=>{
-    const v=e.detail[0];
-    activepb.set(parseInt(v)||0);
-    address=  'folio#'+$activefolioid +'.ck#'+ chunkOfFolio(ptk,$activefolioid,v)[0];
+    const v=((e.detail[0]||0)+1).toString();
+    activepb.set(v);
+    address=makeAddressFromFolioPos(v);
+    //address=  'folio#'+$activefolioid +'.ck#'+ chunkOfFolio(ptk,$activefolioid,v)[0];
 }
 
 let tocitems=[],cknow;
@@ -46,11 +46,11 @@ const goBookPb=(ptk,at)=>{
     if (folioid!==$activefolioid) {
         loadFolio(folioid,()=>{
             goPbAt(ptk,at);
-            address=  'folio#'+folioid+'.ck#'+ chunkOfFolio(ptk,folioid,get(activepb))[0];
+            address=makeAddressFromFolioPos($activepb+1,0,0);
         })
     } else {
         goPbAt(ptk,at);
-        address=  'folio#'+folioid+'.ck#'+ chunkOfFolio(ptk,folioid,get(activepb))[0];
+        address=makeAddressFromFolioPos($activepb+1,0,0);
     }
     
 }

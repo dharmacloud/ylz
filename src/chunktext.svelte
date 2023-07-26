@@ -1,8 +1,9 @@
 <script>
 export let ptk,start,lineoff ,address;
 import {goPb} from './nav.js'
-import {tapmark,foliorawtexts} from  './store.js'
-import {bsearchNumber, folioPosFromChunkLine} from 'ptk'
+import {tapmark,foliotext} from  './store.js'
+import {bsearchNumber, fromBase26} from 'ptk'
+import {get} from 'svelte/store'
 import ChunkNav from './chunknav.svelte'
 let ck,lines=[];
 
@@ -22,8 +23,8 @@ const setAddress=(lo)=>{
         const pb=ptk.defines.pb;
         const at=bsearchNumber (pb.linepos,start+lo)-1 ;
         const pbid=pb.fields.id.values[at];
-        goPb(ptk,pbid,ck.id,lo);
-        const foliopos=folioPosFromChunkLine( $foliorawtexts, ck.id ,lo);
+        goPb(pbid,ck.id,lo);
+        const foliopos= get(foliotext).toFolioPos(  ck.id,lo);
         tapmark.set(foliopos);
     }
 }
