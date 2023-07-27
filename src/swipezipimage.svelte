@@ -127,7 +127,7 @@ const onclick=async (e)=>{
     const [cx,cy]=getCharXY(x,y);
     tapmark.set([ $activepb ,cx,cy ]);
 
-    let [t]=getConcreatePos(foliopage[cx],cy,foliotext[cx+1])
+    let [t]=getConcreatePos(foliopage[cx],cy,foliopage[cx+1])
     address=makeAddressFromFolioPos($activepb,cx,cy);
 
     t=t.replace(/([。！？：、．；，「『（ ])/g,'　');

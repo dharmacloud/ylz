@@ -60,7 +60,7 @@ $: cknow=getCk(address);
 </script>
 <div  class="toctext">
 <Juan {ptk} {closePopup}/>
-<span class="jumper">跳到第{ (folio[0]||0)+1}頁 
+<br/><span class="jumper">跳到第{ (folio[0]||0)+1}頁 
 <Slider bind:value={folio} on:input={debounce(setFolio,500)} max={$maxfolio} min={0} /></span>
 
 <div class="toc">

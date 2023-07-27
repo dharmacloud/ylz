@@ -40,12 +40,12 @@ onMount(()=>{
         //      clearInterval(timer);
         //      createTencentPlayer();
         //  }
-        if (typeof YT!=='undefined') {
+        if (typeof YT!=='undefined' && YT.Player) {
             console.log('youtube player ok')
             clearInterval(timer);
             createYoutubePlayer();
         }
-    },1500);
+    },1000);
 });
 
 function onPlayerStateChange(e){
@@ -83,7 +83,7 @@ const loadVideo=()=>{
     if (bookid!==$activefolioid) {
         stopVideo();
     } else {
-        const t=get(activepb)*folioLines();
+        const t=(parseInt(get(activepb))-1)*folioLines();
         const start=(timestamp&&timestamp[t])||0;
         const host=mediabyid(vid)?.videohost;
         console.log(host, player(vid))
@@ -94,18 +94,18 @@ const loadVideo=()=>{
         }
     }
 }
-const seekToFolio=(folio,videoid)=>{
+const seekToPb=(pbid,videoid)=>{
     if (!videoid || $continueplay || !$playing) return;
     const {timestamp,bookid} = findByVideoId(videoid);
     if (bookid!==$activefolioid) {
         stopVideo();
     }
     if (!timestamp) return;
-    const line=parseInt(folio)*folioLines();
+    const line=(parseInt(pbid)-1)*folioLines();
     const t=timestamp[line];
     player(videoid)?.seekTo(t);
 }
-$: seekToFolio($activepb,$videoid);
+$: seekToPb($activepb,$videoid);
 $: if (document.location.protocol!=='file:') loadVideo(false,$videoid)
 </script>
 

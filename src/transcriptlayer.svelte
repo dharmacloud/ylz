@@ -8,7 +8,7 @@ import {onDestroy} from 'svelte'
 import {concreateLength} from 'ptk'
     import { allJuan, loadFolio } from './nav.js';
 export let frame={},totalpages;
-export let foliotext=[];
+export let foliopage=[];
 export let ptk;
 const strips=new Array(folioLines());
 const timers=[];
@@ -18,7 +18,7 @@ onDestroy(()=>{
 
 const rollback=()=>{
     continueplay.set(false); 
-    activepb.set(0);
+    activepb.set('1');
     let r=get(remainrollback);
     if (r>0) {
         r--;
@@ -76,7 +76,7 @@ const stripstyle=(i,strip)=>{
     if (!timestamp) {
         return out.join(';'); //cannot play
     }
-    const line=get(activepb)*fl;
+    const line=(parseInt(get(activepb))-1)*fl;
 
     if (!timestamp[line] && i==0) { //read the end
         playnext();
@@ -89,9 +89,9 @@ const stripstyle=(i,strip)=>{
 
     if (i==0) { //翻頁timer
         timers.push( setTimeout(()=>{
-            if (get(activepb)<totalpages-1) { 
+            if ( parseInt(get(activepb))<totalpages) { 
                 continueplay.set(true); //auto swipe , do not trigger 
-                activepb.set(get(activepb)+1);
+                activepb.set( parseInt(get(activepb))+1);
                 setTimeout(()=>{
                     continueplay.set(false);// user swipe manually
                 },100);            
@@ -108,7 +108,7 @@ const stripstyle=(i,strip)=>{
         // console.log('fire',this.idx, 'folio',this.folio, 'activepb',get(activepb))
         const ele=document.getElementById('strip'+this.idx);
         if (!ele) return;
-        const chcount=concreateLength(foliotext[i]||'')
+        const chcount=concreateLength(foliopage[i]||'')
         ele.style.height=Math.floor( chcount*(frame.height/fc))+'px';
     }).bind({idx:i,folio:get(activepb)});
     
