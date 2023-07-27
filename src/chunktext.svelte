@@ -2,17 +2,33 @@
 export let ptk,start,lineoff ,address;
 import {goPb} from './nav.js'
 import {tapmark,foliotext} from  './store.js'
-import {bsearchNumber, fromBase26} from 'ptk'
+import {bsearchNumber} from 'ptk'
 import {get} from 'svelte/store'
 import ChunkNav from './chunknav.svelte'
 let ck,lines=[];
 
-const loadChunk=async (line)=>{
+const loadChunkText=async (line)=>{
     ck=ptk.nearestChunk(line+2);
+    if (!ck) return;
     await ptk.loadLines([ck.line,ck.lineend]);
     lines=ptk.slice(ck.line,ck.lineend);
 }
-$: loadChunk(start+lineoff);
+
+const scrolltoview=()=>{
+    setTimeout(()=>{
+        let ele=document.getElementsByClassName("activeline")[0];
+        if (ele) {
+            if (ele.previousElementSibling) {
+                ele=ele.previousElementSibling;
+            }
+            ele.parentElement.parentElement.parentElement.scrollTop = ele.offsetTop;
+            //scrollIntoView will hide the tabbar
+        }
+        
+    },150)
+}
+$: loadChunkText(start+lineoff,address);
+$: scrolltoview(address);
 const renderLine=line=>{
     return line.replace(/\^[a-z]#?[a-z\d]*/g,'');
 }

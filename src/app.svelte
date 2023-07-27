@@ -4,7 +4,7 @@ import { openPtk,usePtk,loadScript} from 'ptk'
 import SwipeZipImage from "./swipezipimage.svelte";
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import { onDestroy, onMount } from "svelte";
-import {activefolioid,isAndroid,playing,idlecount,showpaiji,newbie,idletime,landscape} from './store.js'
+import {activefolioid,isAndroid,playing,idlecount,showpaiji,newbie,idletime,landscape,bookByFolio} from './store.js'
 import {setTimestampPtk} from './mediaurls.js'
 import TapText from './taptext.svelte'
 import Player from './player.svelte'
@@ -32,11 +32,11 @@ onMount(async ()=>{
 });
 
 const loadPlayer=()=>{
-    loadScript('http://vm.gtimg.cn/tencentvideo/txp/js/txplayer.js')
+    // loadScript('http://vm.gtimg.cn/tencentvideo/txp/js/txplayer.js')
     loadScript('https://www.youtube.com/iframe_api')
 }
 
-let showdict=false,shownewbie=$newbie=='on',address='folio#'+$activefolioid,tofind='';
+let showdict=false,shownewbie=$newbie=='on',address='bk#'+bookByFolio($activefolioid),tofind='';
 const closePopup=()=>{
     shownewbie=false;
     if (get(landscape)) return;

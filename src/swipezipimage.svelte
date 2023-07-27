@@ -117,7 +117,7 @@ const getCharXY=(x,y)=>{
     return [cx,cy];
 }
 
-const onclick=async (e)=>{
+const onfoliopageclick=async (e)=>{
     if ($showpaiji) {
         useractive();
         return;
@@ -226,7 +226,7 @@ $: audiolist=getAudioList($activefolioid);
 
 <div class="swipe-holder" on:wheel={mousewheel} style={holderWidth($landscape)}>
 <Swipe bind:this={swiper} {...swipeConfig} {defaultIndex}
- on:click={onclick} on:start={swipeStart} on:change={swipeChanged}>
+ on:click={onfoliopageclick} on:start={swipeStart} on:change={swipeChanged}>
     {#each images as image,idx}
     <SwipeItem><img alt='no' class="swipe"  src={images[images.length-idx-1]}/></SwipeItem>
     {/each}    

@@ -20,7 +20,7 @@ let tocitems=[],cknow;
 const getTocItems=address=>{
     const out=[];
     if (!address) return out;
-    const m=address.match(/folio#([a-z_]+)(\d*)/);
+    const m=address.match(/bk#([a-z_]+)(\d*)/);
 
     if (!m) return [];
     const bk=m[1]

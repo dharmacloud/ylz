@@ -10,6 +10,7 @@ export let start,ptk;
 export let closePopup;
 export let address;
 $: [start,end, _from,_till ,lineoff]=ptk.rangeOfAddress(address);
+$: console.log(address,start,end)
 
 
 const getExternalLinks=folioid=>{
@@ -22,7 +23,7 @@ const getExternalLinks=folioid=>{
         const sutra=parseInt(n.fields.id.values[at]);
         const juan=folioid.match(/agms(\d+)$/);
         if (juan) {
-            caption=juan[1]+'卷'+sutra+'經導讀';
+            caption=juan[1]+'卷'+sutra+'經導讀(獅子吼)';
             url='https://buddhaspace.org/agama/'+juan[1]+'.html#'+toChineseNumber(sutra);
             out.push([ caption, url]);
         }

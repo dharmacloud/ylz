@@ -1,4 +1,4 @@
-import {foliotext,activefolioid ,videoid,tapmark,activepb,loadingbook, stopVideo} from "./store.js";
+import {foliotext,activefolioid ,videoid,tapmark,activepb,loadingbook, stopVideo,bookByFolio} from "./store.js";
 import {get} from 'svelte/store'
 
 export const goPbAt=async (ptk,at)=>{
@@ -63,6 +63,7 @@ export const allJuan=(ptk,folioid)=>{
 
 export const makeAddressFromFolioPos=(pbid,cx=0,cy=0)=>{
     const [ck,lineoff]=get(foliotext).fromFolioPos(pbid,cx,cy);
-    const address= 'folio#'+get(activefolioid) + '.ck#'+ck+(lineoff?':'+lineoff:'') ;
+
+    const address= 'bk#'+bookByFolio(get(activefolioid)) + '.ck#'+ck+(lineoff?':'+lineoff:'') ;
     return address;
 }

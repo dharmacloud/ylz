@@ -93,9 +93,9 @@ const onclick=(e,_x,_y)=>{
     const [t,pos]=getConcreatePos(foliotext[cx],cy,foliotext[cx+1]);
 	//get the ck-lineoff 
 	const [ckid,lineoff]=folioPos2ChunkLine(ptk,foliotext, foliofrom,cx,pos);
-	const address=  'folio#'+$activefolioid +'.ck#'+  (ckid+ lineoff?':'+lineoff:'')
+	const addr=  'bk#'+bookByFolio($activefolioid) +'.ck#'+  (ckid+ lineoff?':'+lineoff:'')
 
-	onTapText(t,address,ptk.name);
+	onTapText(t,addr,ptk.name);
 }
 
 const ontouchend=e=>{

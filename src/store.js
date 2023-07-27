@@ -28,13 +28,17 @@ export const player=function(vid){
 }
 export const bookByFolio=(fid)=>{
     const dc=usePtk('dc');
-    const folio=dc.defines.folio;
-    const bk=dc.defines.bk;
-    const at=folio.fields.id.values.indexOf(fid);
-    if (!~at) return '';
-    const line=folio.linepos[at]+1;
-    const at2=bsearchNumber(bk.linepos, line)-1;//closest bk
-    return bk.fields.id.values[at2];
+    if (dc) {
+        const folio=dc.defines.folio;
+        const bk=dc.defines.bk;
+        const at=folio.fields.id.values.indexOf(fid);
+        if (!~at) return '';
+        const line=folio.linepos[at]+1;
+        const at2=bsearchNumber(bk.linepos, line)-1;//closest bk
+        return bk.fields.id.values[at2];   
+    } else {
+        return fid.replace(/\d+$/,'')
+    }
 }
 export const videoid=writable('');
 export const folioLines=function(_fid){
