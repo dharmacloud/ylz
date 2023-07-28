@@ -2,7 +2,7 @@
 import { parseAddress,parseAction, styledNumber } from "ptk";
 import SentenceNav from "./sentencenav.svelte";
 export let ptk;
-export let address;
+export let address='';
 let text='';
 const updateVariorum=async (address)=>{
     const r=ptk.defines.r;

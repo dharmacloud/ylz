@@ -1,6 +1,6 @@
 <script>
 export let ptk;
-export let address;
+export let address='';
 export let ck
 import Pager from './comps/pager.svelte';
     import { bookByFolio,activefolioid } from './store';
@@ -29,7 +29,6 @@ const gochunk=(idx)=>{
     cknow=idx;
 }
 $: loadChunk(address);
-$: console.log(address); //ck beyond folio
 </script>
 
 <Pager pages={chunks} nextitems={1} now={cknow} let:active let:caption let:idx>

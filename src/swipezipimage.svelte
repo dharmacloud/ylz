@@ -6,8 +6,8 @@ import Swipe from './3rd/swipe.svelte';
 import SwipeItem from './3rd/swipeitem.svelte';
 import {rotatingwheel} from './3rd/rotatingwheel.js';
 import {getAudioList} from './mediaurls.js'
-import {extractPuncPos,usePtk,FolioText, getConcreatePos} from 'ptk'
-import { makeAddressFromFolioPos } from './nav.js';
+import {extractPuncPos,usePtk,FolioText, parseOfftext} from 'ptk'
+import { CURSORMARK } from './nav.js';
 import {ZipStore} from 'ptk/zip';
 import {favortypes, landscape,foliotext,folioLines,folioChars,activePtk,activefolioid,activepb,favorites,videoid,ytplayer,showpunc,
     maxfolio,tapmark, playing, remainrollback, idlecount,showpaiji,idletime,loadingbook, selectmedia, prefervideo} from './store.js'
@@ -117,7 +117,7 @@ const getCharXY=(x,y)=>{
     return [cx,cy];
 }
 
-const onfoliopageclick=async (e)=>{
+const onfoliopageclick=e=>{
     if ($showpaiji) {
         useractive();
         return;
@@ -126,14 +126,14 @@ const onfoliopageclick=async (e)=>{
     const {x,y}=e.detail;
     const [cx,cy]=getCharXY(x,y);
     tapmark.set([ $activepb ,cx,cy ]);
-
-    let [t]=getConcreatePos(foliopage[cx],cy,foliopage[cx+1])
-    address=makeAddressFromFolioPos($activepb,cx,cy);
-
+    const ft=get(foliotext);
+    const [ckid,lineoff,choff,cklinetext]=ft.fromFolioPos($activepb,cx,cy);
+    const offtext=cklinetext.slice(0,choff)+CURSORMARK+cklinetext.slice(choff)
+    let [t]=parseOfftext(offtext);
     t=t.replace(/([。！？：、．；，「『（ ])/g,'　');
     while(t.charAt(0)=='　') t=t.slice(1);
     t=t.replace(/　.+/,'');
-    await onTapText(t,address,ptk.name); 
+    onTapText(t,ptk.name); 
 }
 const gotoPb=async (pb)=>{
     if (!totalpages || !swiper)return;//not loaded yet

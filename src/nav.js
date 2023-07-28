@@ -1,5 +1,15 @@
 import {foliotext,activefolioid ,videoid,tapmark,activepb,loadingbook, stopVideo,bookByFolio} from "./store.js";
 import {get} from 'svelte/store'
+import { makeAddress } from 'ptk';
+export const CURSORMARK='◆'
+export const goPb=(pbid,ck)=>{   
+    activepb.set(pbid);
+    if (ck) { //mark the starting of chunk
+        const ft=get(foliotext);
+        const [pbid,cx,cy]=ft.toFolioPos(ck);
+        tapmark.set([pbid,cx, cy]);
+    }
+}
 
 export const goPbAt=async (ptk,at)=>{
     const ck=ptk.defines.ck;
@@ -7,7 +17,7 @@ export const goPbAt=async (ptk,at)=>{
     const ckline=ck.linepos[at];
     const pbtag=ptk.nearestTag(ckline+1,'pb')-1;
     const pbid=pb.fields.id.values[pbtag];
-    goPb(pbid,ck.fields.id.values[at]);
+    goPb(pbid, ck.fields.id.values[at]);
 }
 export const loadFolio=(folioid,func)=>{
     let timer=0;
@@ -31,20 +41,7 @@ export const loadFolio=(folioid,func)=>{
 }
 
 
-export const goPb=(pbid,ck)=>{   
-    activepb.set(pbid);
-    if (ck) { //mark the starting of chunk
-        //console.log('gopb',ck)
-        const foliopage=get(foliotext).folioPageText(pbid);
-        for (let i=0;i<foliopage.length;i++) {
-            const at2=foliopage[i].indexOf('^ck'+ck);
-            if (~at2) {
-                tapmark.set([pbid,i, 0]);
-                break;
-            }
-        }
-    }
-}
+
 
 export const allJuan=(ptk,folioid)=>{
     folioid=folioid||get(activefolioid);
@@ -62,8 +59,15 @@ export const allJuan=(ptk,folioid)=>{
 }
 
 export const makeAddressFromFolioPos=(pbid,cx=0,cy=0)=>{
-    const [ck,lineoff]=get(foliotext).fromFolioPos(pbid,cx,cy);
+    if (typeof pbid!=='string') {
+        cx=pbid[1];
+        cy=pbid[2];
+        pbid=pbid[0];
+    }
+    const ft=get(foliotext);
+    if (!ft||!ft.fromFolioPos) return '';
+    const [ck,lineoff,choff]=ft.fromFolioPos(pbid,cx,cy);
 
-    const address= 'bk#'+bookByFolio(get(activefolioid)) + '.ck#'+ck+(lineoff?':'+lineoff:'') ;
+    const address=makeAddress('','bk#'+bookByFolio(get(activefolioid)) + '.ck#'+ck, 0,0, lineoff,choff) ;
     return address;
 }

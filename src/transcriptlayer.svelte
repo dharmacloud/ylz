@@ -1,12 +1,11 @@
 <script>
 import {stylestring} from './unit.js'
-import {activepb,videoid,folioLines,folioChars,playing,selectmedia,
+import {activepb,videoid,folioLines,foliotext,folioChars,playing,selectmedia,
     stopVideo,remainrollback, player,continueplay, findByVideoId, playnextjuan, activefolioid} from './store.js'
 import {get} from 'svelte/store'
 import {getAudioList} from './mediaurls.js'
 import {onDestroy} from 'svelte'
-import {concreateLength} from 'ptk'
-    import { allJuan, loadFolio } from './nav.js';
+import { allJuan, loadFolio } from './nav.js';
 export let frame={},totalpages;
 export let foliopage=[];
 export let ptk;
@@ -108,7 +107,7 @@ const stripstyle=(i,strip)=>{
         // console.log('fire',this.idx, 'folio',this.folio, 'activepb',get(activepb))
         const ele=document.getElementById('strip'+this.idx);
         if (!ele) return;
-        const chcount=concreateLength(foliopage[i]||'')
+        const chcount=get(foliotext).countFolioChar(foliopage[i]||'');
         ele.style.height=Math.floor( chcount*(frame.height/fc))+'px';
     }).bind({idx:i,folio:get(activepb)});
     

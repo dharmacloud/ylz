@@ -1,8 +1,8 @@
 <script>
-import { bsearchNumber, makeAddress, parseAction, parseAddress ,rangeOfAddress,styledNumber} from "ptk";
+import { bsearchNumber, makeAddress, parseAction, parseAddress ,styledNumber} from "ptk";
 import { activepb } from "./store";
 export let ptk;
-export let address;
+export let address='';
 
 let humanaddr='', chunklines,ckid;
 let maxchunk=0;

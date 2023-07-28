@@ -11,7 +11,7 @@ import Player from './player.svelte'
 import Newbie from './newbie.svelte';
 import Paiji from './paiji.svelte';
 import { get } from 'svelte/store';
-let ptk;
+let ptk,tofind;
 registerServiceWorker();
 const idleinterval=2;
 isAndroid.set(!!navigator.userAgent.match(/Android/i));
@@ -36,7 +36,7 @@ const loadPlayer=()=>{
     loadScript('https://www.youtube.com/iframe_api')
 }
 
-let showdict=false,shownewbie=$newbie=='on',address='bk#'+bookByFolio($activefolioid),tofind='';
+let showdict=false,shownewbie=$newbie=='on';
 const closePopup=()=>{
     shownewbie=false;
     if (get(landscape)) return;
@@ -45,10 +45,9 @@ const closePopup=()=>{
 const onMainmenu=()=>{
     showdict=false;
 }
-const onTapText=(t,_address,ptkname)=>{
+const onTapText=(t,ptkname)=>{
     showdict=true;
     tofind=t;
-    address=_address;
     ptk=usePtk(ptkname);
 }
 
@@ -62,7 +61,7 @@ $: loadPlayer();
 {#if $showpaiji && !$playing && !showdict && !shownewbie && !landscape}
 <Paiji/>
 {/if}
-<SwipeZipImage src={$activefolioid+".zip"} {ptk} {onTapText} {onMainmenu} bind:address/>
+<SwipeZipImage src={$activefolioid+".zip"} {ptk} {onTapText} {onMainmenu} />
 {/key}
 
 {#if (shownewbie||showdict)}
@@ -71,7 +70,7 @@ $: loadPlayer();
 {/if}
 
 {#if showdict || $landscape}
-<TapText {address} {tofind}  {closePopup}/>
+<TapText  {tofind}  {closePopup}/>
 {/if}
 
 {#if shownewbie}

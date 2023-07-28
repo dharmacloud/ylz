@@ -7,8 +7,9 @@ import Textual from './textual.svelte'
 import { get } from 'svelte/store';
 //import Favorite from "./favorite.svelte"
 import Toc from "./toc.svelte"
-import {activePtk,autodict, landscape} from './store.js'
+import {activePtk,tapmark, landscape} from './store.js'
 import { usePtk} from "ptk";
+import {makeAddressFromFolioPos,CURSORMARK} from './nav.js'
 export let tofind='';
 export let address='';
 export let closePopup;
@@ -17,7 +18,7 @@ let ptk ,entries=[];
 
 const onDict=async (t)=>{
     const tap_at=t.indexOf('^');
-    entries=ptk.columns.entries.keys.findMatches( t.replace('^','')).map(it=>[Math.abs(it[0]-tap_at-1),it[1],it[2]]);
+    entries=ptk.columns.entries.keys.findMatches( t.replace(CURSORMARK,'')).map(it=>[Math.abs(it[0]-tap_at-1),it[1],it[2]]);
     entries.sort((a,b)=> a[0]-b[0]);// 越接近點擊處的優先
     if (entries.length) {
         showdict=true;
@@ -54,11 +55,12 @@ $: thetab=='dict' && onDict(tofind);
         {/if}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="dict"} on:click={()=>thetab="dict"}>🔎{#if ls}查詢{/if}</span>
+        <span style="font-size:75%">{makeAddressFromFolioPos($tapmark)}</span>
     </div>
       <div class="tab-content" class:visible={thetab=='list'}><Foliolist {ptk} {closePopup}/></div>
       <div class="tab-content" class:visible={thetab=='toc'}><Toc {address} {closePopup} {ptk} /></div>
       <!-- <div class="tab-content" class:visible={thetab=='favorite'}><Favorite {address} {closePopup} {ptk} /></div> -->
-      <div class="tab-content" class:visible={thetab=='textual'}><Textual {closePopup} bind:address {ptk}/></div>
+      <div class="tab-content" class:visible={thetab=='textual'}><Textual {closePopup} {ptk}/></div>
       {#if entries.length}
       <div class="tab-content" class:visible={thetab=='dict'}><DictPopup {entries} {ptk} {address}/></div>
       {/if}

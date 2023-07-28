@@ -8,7 +8,7 @@ import {toChineseNumber} from 'ptk'
 import {activefolioid,activepb, hasVariorum,hasTranslation,hasSanskrit,bookByFolio} from './store.js'
 export let start,ptk;
 export let closePopup;
-export let address;
+export let address='';
 $: [start,end, _from,_till ,lineoff]=ptk.rangeOfAddress(address);
 $: console.log(address,start,end)
 
@@ -58,10 +58,10 @@ $: externallinks=getExternalLinks($activefolioid,$activepb)
 {/if}
 
 </div>
-<div class="subtab-content" class:visible={thetab=='chunktext'}><ChunkText {ptk} {start} {lineoff} bind:address /></div>
-<div class="subtab-content" class:visible={thetab=='sourcetext'}><SourceText {ptk} {start} {lineoff} bind:address/></div>
-<div class="subtab-content" class:visible={thetab=='translations'}><Translations {closePopup} bind:address {ptk}/></div>
-<div class="subtab-content" class:visible={thetab=='variorum'}><Variorum {closePopup} bind:address {ptk}/></div>
+<div class="subtab-content" class:visible={thetab=='chunktext'}><ChunkText {ptk} {start} {lineoff}  /></div>
+<div class="subtab-content" class:visible={thetab=='sourcetext'}><SourceText {ptk} {start} {lineoff} /></div>
+<div class="subtab-content" class:visible={thetab=='translations'}><Translations {closePopup} {ptk}/></div>
+<div class="subtab-content" class:visible={thetab=='variorum'}><Variorum {closePopup}  {ptk}/></div>
 <div class="subtab-content" class:visible={thetab=='externals'}><Externals {closePopup} links={externallinks}/></div>
 
     

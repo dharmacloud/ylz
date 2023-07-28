@@ -1,30 +1,22 @@
 <script>
 import Slider from './3rd/rangeslider.svelte';
 import { bsearchNumber ,styledNumber,debounce} from "ptk";
-import {activepb,maxfolio,activefolioid} from './store.js';
+import {activepb,maxfolio,activefolioid, bookByFolio,foliotext} from './store.js';
 import {goPbAt, loadFolio,makeAddressFromFolioPos} from './nav.js'
 import Juan from './juan.svelte'
 let folio=[parseInt($activepb)-1];
 export let ptk;
-export let address;
 export let closePopup;
 
 const setFolio=async (e)=>{
     const v=((e.detail[0]||0)+1).toString();
     activepb.set(v);
-    address=makeAddressFromFolioPos(v);
-    //address=  'folio#'+$activefolioid +'.ck#'+ chunkOfFolio(ptk,$activefolioid,v)[0];
 }
 
 let tocitems=[],cknow;
-const getTocItems=address=>{
+const getTocItems=()=>{
     const out=[];
-    if (!address) return out;
-    const m=address.match(/bk#([a-z_]+)(\d*)/);
-
-    if (!m) return [];
-    const bk=m[1]
-
+    const bk=bookByFolio($activefolioid);
     const bookaddr='bk#'+bk;
     const [from,to]=ptk.rangeOfAddress(bookaddr);
     
@@ -36,26 +28,26 @@ const getTocItems=address=>{
     }
     return out;
 }
-const getCk=(address)=>{
-    const m=address.match(/ck#?(\d+)/);
-    if (m) return m[1];
-}
+
 const goBookPb=(ptk,at)=>{
     const ck=ptk.defines.ck;
-    const folioid=ptk.nearestTag(ck.linepos[at]+1,'folio','id');
+    const folioid=ptk.nearestTag(ck.linepos[at],'folio','id');
     if (folioid!==$activefolioid) {
         loadFolio(folioid,()=>{
             goPbAt(ptk,at);
-            address=makeAddressFromFolioPos($activepb+1,0,0);
         })
-    } else {
+    } else {        
         goPbAt(ptk,at);
-        address=makeAddressFromFolioPos($activepb+1,0,0);
-    }
-    
+    }    
 }
-$: tocitems=getTocItems(address);
-$: cknow=getCk(address);
+const getCk=()=>{
+    const ft=$foliotext;
+    if (!ft||!ft.fromFolioPos) return '';
+    const p=ft.fromFolioPos($activepb);
+    return p[0]
+}
+$: tocitems=getTocItems($activefolioid);
+$: cknow=getCk($activepb);
 
 </script>
 <div  class="toctext">

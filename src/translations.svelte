@@ -6,7 +6,7 @@ import { parseOfftext, bsearchNumber} from 'ptk';
 import SentenceNav from './sentencenav.svelte'
 import { loadFolio } from './nav.js';
 export let closePopup=function(){};
-export let address;
+export let address='';
 export let ptk;
 $: [start,end, _from,_till ,lineoff]=ptk.rangeOfAddress(address);
 
@@ -52,13 +52,13 @@ const puretext=(_text)=>{
     return text;
 }
 
-const updateTranslation=async (address)=>{
+const updateTranslation=async ()=>{
     translations=await getParallelLines(ptk,start+lineoff,null,{local:true,remote:false});//same ptk only
 }
-$: updateTranslation(address);
+$: updateTranslation();
 </script>
 <div class="paralleltext">
-<SentenceNav {ptk} bind:address/>
+<SentenceNav {ptk}/>
 <div class="hr"/>
 {#each translations as item}
 <!-- svelte-ignore a11y-click-events-have-key-events -->

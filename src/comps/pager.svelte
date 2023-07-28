@@ -14,9 +14,15 @@ const makeNeighbors=()=>{
     if (left<2) left=1;
     if (right>=pages.length) right=pages.length-1;
     neighbors.length=0;
+
     for (let j=left;j<right;j++) {
         neighbors.push( pages[j])
     }
+    right+=10;
+    if (right<pages.length-2) neighbors.push(pages[right]);
+    right+=30;
+    if (right<pages.length-2) neighbors.push(pages[right]);
+    
     if (pages.length) last=pages[pages.length-1];
     else last=null;
 }

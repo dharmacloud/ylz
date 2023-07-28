@@ -7,7 +7,7 @@ export const activePtk=writable('dc');
 
 export const loadingbook=writable(false);
 export const autodict=writable(settings.autodict);
-export const activepb=writable('1');  //zero base
+export const activepb=writable('1');  
 export const activefolioid=writable(settings.activefolioid);
 export const maxfolio=writable(0);
 export const favorites=writable(settings.favorites);
