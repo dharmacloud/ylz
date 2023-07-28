@@ -10,7 +10,7 @@
   let max = 100;
   let step = 1;
   let value = [min, max];
-  let pos;
+  let pos=[0,0];
   let active = false;
   let order = false;
 
@@ -41,7 +41,7 @@
   $: min, max, clamp();
   $: progress = `
     left: ${range ? Math.min(pos[0], pos[1]) * 100 : 0}%;
-    right: ${100 - Math.max(pos[0], (range ? pos[1] : pos[0])) * 100}%;
+    right: ${(100 - Math.max(pos[0], (range ? pos[1] : pos[0])) * 100)||100}%;
   `;
 
  
@@ -58,7 +58,7 @@
   }
 
 </style>
-
+<div>
 <input type="number" value={value[0]} name={name[0]} />
 <div class="track">
   <div
@@ -71,4 +71,6 @@
       </slot>
     </slot>
   </Thumb>
+  <slot name="caption"/>
+</div>
 </div>

@@ -2,9 +2,9 @@
 import Slider from './3rd/rangeslider.svelte';
 import { bsearchNumber ,styledNumber,debounce} from "ptk";
 import {activepb,maxfolio,activefolioid, bookByFolio,foliotext} from './store.js';
-import {goPbAt, loadFolio,makeAddressFromFolioPos} from './nav.js'
+import {goPbAt, loadFolio} from './nav.js'
 import Juan from './juan.svelte'
-let folio=[parseInt($activepb)-1];
+$: folio=[parseInt($activepb)-1];
 export let ptk;
 export let closePopup;
 
@@ -43,8 +43,8 @@ const goBookPb=(ptk,at)=>{
 const getCk=()=>{
     const ft=$foliotext;
     if (!ft||!ft.fromFolioPos) return '';
-    const p=ft.fromFolioPos($activepb);
-    return p[0]
+    const {ckid}=ft.fromFolioPos($activepb);
+    return ckid;
 }
 $: tocitems=getTocItems($activefolioid);
 $: cknow=getCk($activepb);
@@ -52,8 +52,8 @@ $: cknow=getCk($activepb);
 </script>
 <div  class="toctext">
 <Juan {ptk} {closePopup}/>
-<br/><span class="jumper">跳到第{ (folio[0]||0)+1}頁 
-<Slider bind:value={folio} on:input={debounce(setFolio,500)} max={$maxfolio} min={0} /></span>
+<Slider bind:value={folio} on:input={debounce(setFolio,500)} max={$maxfolio} min={0} >
+    <span slot="caption" style="float:right">折{(folio[0]||0)+1}/{$maxfolio+1}</span></Slider>
 
 <div class="toc">
 {#each tocitems as item}
@@ -65,6 +65,6 @@ $: cknow=getCk($activepb);
 </div>
 
 <style>
-.jumper {height:10vh}
+
 .toc {overflow-y: auto;height:100%}
 </style>

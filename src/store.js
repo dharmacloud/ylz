@@ -1,6 +1,6 @@
 import {updateSettings,settings} from './savestore.ts'
-import {bsearchNumber, usePtk,parallelWithDiff} from 'ptk'
-import {get,writable } from 'svelte/store';
+import {bsearchNumber, usePtk,makeAddress} from 'ptk'
+import {derived, get,writable } from 'svelte/store';
 import {silence,mediabyid} from './mediaurls.js'
 
 export const activePtk=writable('dc');
@@ -26,9 +26,8 @@ export const qqplayer=writable(null)
 export const player=function(vid){
     return mediabyid(vid||get(videoid))?.videohost=='youtube'?get(ytplayer):get(qqplayer);
 }
-export const bookByFolio=(fid)=>{
-    const dc=usePtk('dc');
-    if (dc) {
+export const bookByFolio=(fid,ptk)=>{
+    if (ptk) {
         const folio=dc.defines.folio;
         const bk=dc.defines.bk;
         const at=folio.fields.id.values.indexOf(fid);
@@ -63,10 +62,6 @@ export const newbie=writable(settings.newbie);
 export const idlecount=writable(0);
 export const showpaiji=writable(false);
 
-
-
-
-
 activefolioid.subscribe((activefolioid)=>updateSettings({activefolioid}));
 autodict.subscribe((autodict)=>updateSettings({autodict}));
 newbie.subscribe((newbie)=>updateSettings({newbie}));
@@ -87,7 +82,6 @@ export const stopVideo=()=>{
     remainrollback.set(-1);
 }
 export const pauseVideo=()=>{
-   
     get(qqplayer)?.pause&&get(qqplayer).pause();
     get(ytplayer)?.stopVideo&&get(ytplayer).stopVideo();
 }
@@ -114,10 +108,31 @@ export const hasSanskrit=bkid=>{
     const at2=ptk.defines.bk.fields.id.values.indexOf(bkid);
     return ~at2;
 }
-export const hasTranslation=(ptk,line)=>{
-    const lines=parallelWithDiff(ptk,line,false,true);
-    return lines.length>1;
+export const hasTranslation=(ptk,bkid)=>{
+    const books=ptk.getParallelBook(bkid);
+    return books.length
 }
+
+const makeAddressFromFolioPos=(pbid,cx=0,cy=0)=>{
+    if (typeof pbid!=='string') {
+        cx=pbid[1];
+        cy=pbid[2];
+        pbid=pbid[0];
+    }
+    const ft=get(foliotext);
+    if (!ft||!ft.fromFolioPos) return '';
+    const {ckid,lineoff,choff}=ft.fromFolioPos(pbid,cx,cy);
+
+    const address=makeAddress('','bk#'+bookByFolio(get(activefolioid)) + '.ck#'+ckid, 0,0, lineoff,choff) ;
+    return address;
+}
+export const tapAddress=derived(tapmark,(mark)=> makeAddressFromFolioPos(mark));
+export const tapChunkLine=derived(tapmark,(mark)=> {
+    const ft=get(foliotext);
+    if (!ft||!ft.fromFolioPos) return {};
+    return ft.fromFolioPos(mark);
+});
+
 export const parallelFolios=(ptk,folioid)=>{
     folioid=folioid||get(activefolioid);
     const folio=ptk.defines.folio;

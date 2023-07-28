@@ -1,15 +1,12 @@
 <script>
 import {getParallelLines} from 'ptk/align/';
-import {activepb,activefolioid,activePtk} from './store.js'
+import {activepb,activefolioid,activePtk,tapChunkLine} from './store.js'
 import { parseOfftext, bsearchNumber} from 'ptk';
-
 import SentenceNav from './sentencenav.svelte'
 import { loadFolio } from './nav.js';
 export let closePopup=function(){};
 export let address='';
 export let ptk;
-$: [start,end, _from,_till ,lineoff]=ptk.rangeOfAddress(address);
-
 let translations=[];
 const getBookTitle=(ptk,nbk)=>{
     const bk=ptk.defines.bk;
@@ -52,10 +49,11 @@ const puretext=(_text)=>{
     return text;
 }
 
-const updateTranslation=async ()=>{
-    translations=await getParallelLines(ptk,start+lineoff,null,{local:true,remote:false});//same ptk only
+const updateTranslation=async (mark)=>{
+    const {ptkline}=$tapChunkLine;    
+    translations=await getParallelLines(ptk,ptkline,null,{local:true,remote:false});//same ptk only
 }
-$: updateTranslation();
+$: updateTranslation($tapChunkLine);
 </script>
 <div class="paralleltext">
 <SentenceNav {ptk}/>

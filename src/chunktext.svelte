@@ -1,19 +1,23 @@
 <script>
-export let ptk,start,lineoff ;
-import {goPb} from './nav.js'
-import {tapmark,foliotext,activefolioid} from  './store.js'
-import {bsearchNumber} from 'ptk'
+export let ptk ;
+
+import {tapmark,foliotext} from  './store.js'
 import {get} from 'svelte/store'
+import {goPb} from './nav.js'
 import ChunkNav from './chunknav.svelte'
-let ck,lines=[];
+let ck,loff,lines=[];
 
-const loadChunkText=async (line)=>{
-    ck=ptk.nearestChunk(line+2);
-    if (!ck) return;
-    await ptk.loadLines([ck.line,ck.lineend]);
-    lines=ptk.slice(ck.line,ck.lineend);
+const loadChunkText=(mark)=>{
+    const ft=get(foliotext);
+    if (!ft||!ft.fromFolioPos) return;
+    const {ckid,lineoff}=ft.fromFolioPos(mark);
+    loff=lineoff;
+    if (ck!==ckid) {
+        lines=ft.chunkText(ckid).split('\n');
+    }
+    ck=ckid;
 }
-
+/*
 const scrolltoview=()=>{
     setTimeout(()=>{
         let ele=document.getElementsByClassName("activeline")[0];
@@ -22,34 +26,29 @@ const scrolltoview=()=>{
                 ele=ele.previousElementSibling;
             }
             ele.parentElement.parentElement.parentElement.scrollTop = ele.offsetTop;
-            //scrollIntoView will hide the tabbar
         }
         
     },150)
 }
-$: loadChunkText(start+lineoff,$activefolioid);
+*/
+$: loadChunkText($tapmark);
 
 const renderLine=line=>{
     return line.replace(/\^[a-z]#?[a-z\d]*/g,'');
 }
-const setAddress=(lo)=>{
-    const newaddress=address.replace(/:\d+$/,'')+(lo?':'+lo:'');
-    if (newaddress && address!==newaddress) {
-        address=newaddress;
-        const pb=ptk.defines.pb;
-        const at=bsearchNumber (pb.linepos,start+lo)-1 ;
-        const pbid=pb.fields.id.values[at];
-        goPb(pbid,ck.id,lo);
-        const foliopos= get(foliotext).toFolioPos(  ck.id,lo);
-        tapmark.set(foliopos);
-    }
+const setAddress=(lineoff)=>{
+    const ft=get(foliotext);
+    if (!ft||!ft.fromFolioPos) return;
+    const [pbid,line,ch]=ft.toFolioPos(ck,lineoff) ;
+    goPb(pbid,ck,line);
+    tapmark.set([pbid,line,ch]);
 }
 </script>
 <div class="toctext">
-<ChunkNav {ptk} {ck}/>
+<ChunkNav {ptk}/>
 {#each lines as line,idx}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div on:click={()=>setAddress(idx)} class:activeline={lineoff==idx}>{@html renderLine(line)}</div>
+<div on:click={()=>setAddress(idx)} class:activeline={loff==idx}>{@html renderLine(line)}</div>
 {/each}
 
 </div>

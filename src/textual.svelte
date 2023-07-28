@@ -43,7 +43,7 @@ $: externallinks=getExternalLinks($activefolioid,$activepb)
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class='clickable' class:selected={thetab=="sourcetext"} on:click={()=>thetab="sourcetext"}>原文</span>    
 {/if}
-{#if hasTranslation(ptk,start+lineoff)}
+{#if hasTranslation(ptk,bookByFolio($activefolioid))}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class='clickable' class:selected={thetab=="translations"} on:click={()=>thetab="translations"}>別譯</span>
 {/if}

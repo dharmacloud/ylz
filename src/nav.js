@@ -1,6 +1,6 @@
 import {foliotext,activefolioid ,videoid,tapmark,activepb,loadingbook, stopVideo,bookByFolio} from "./store.js";
 import {get} from 'svelte/store'
-import { makeAddress } from 'ptk';
+
 export const CURSORMARK='◆'
 export const goPb=(pbid,ck)=>{   
     activepb.set(pbid);
@@ -58,16 +58,3 @@ export const allJuan=(ptk,folioid)=>{
     return juans;
 }
 
-export const makeAddressFromFolioPos=(pbid,cx=0,cy=0)=>{
-    if (typeof pbid!=='string') {
-        cx=pbid[1];
-        cy=pbid[2];
-        pbid=pbid[0];
-    }
-    const ft=get(foliotext);
-    if (!ft||!ft.fromFolioPos) return '';
-    const [ck,lineoff,choff]=ft.fromFolioPos(pbid,cx,cy);
-
-    const address=makeAddress('','bk#'+bookByFolio(get(activefolioid)) + '.ck#'+ck, 0,0, lineoff,choff) ;
-    return address;
-}

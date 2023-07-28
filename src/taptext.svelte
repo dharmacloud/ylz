@@ -7,9 +7,9 @@ import Textual from './textual.svelte'
 import { get } from 'svelte/store';
 //import Favorite from "./favorite.svelte"
 import Toc from "./toc.svelte"
-import {activePtk,tapmark, landscape} from './store.js'
+import {activePtk,tapAddress, landscape} from './store.js'
 import { usePtk} from "ptk";
-import {makeAddressFromFolioPos,CURSORMARK} from './nav.js'
+import {CURSORMARK} from './nav.js'
 export let tofind='';
 export let address='';
 export let closePopup;
@@ -55,7 +55,7 @@ $: thetab=='dict' && onDict(tofind);
         {/if}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="dict"} on:click={()=>thetab="dict"}>🔎{#if ls}查詢{/if}</span>
-        <span style="font-size:75%">{makeAddressFromFolioPos($tapmark)}</span>
+        <span style="font-size:75%">{$tapAddress}</span>
     </div>
       <div class="tab-content" class:visible={thetab=='list'}><Foliolist {ptk} {closePopup}/></div>
       <div class="tab-content" class:visible={thetab=='toc'}><Toc {address} {closePopup} {ptk} /></div>

@@ -1,8 +1,8 @@
 <script>
 import { parseAddress,parseAction, styledNumber } from "ptk";
 import SentenceNav from "./sentencenav.svelte";
+import {tapAddress} from './store.js'
 export let ptk;
-export let address='';
 let text='';
 const updateVariorum=async (address)=>{
     const r=ptk.defines.r;
@@ -30,14 +30,14 @@ const updateVariorum=async (address)=>{
         text=lines.join('<br/>');
     }
 }
-$: updateVariorum(address)
+$: updateVariorum($tapAddress)
 </script>
 
 <div class="toctext">
-<SentenceNav {ptk} bind:address/>
+<SentenceNav {ptk} />
 {@html text}
 
-<SentenceNav {ptk} bind:address/>
+<SentenceNav {ptk}/>
 <div class="endmarker">※※※</div>
 </div>
 

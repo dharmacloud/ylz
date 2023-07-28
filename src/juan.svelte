@@ -30,11 +30,10 @@ const loadJuan=(folioid)=>{
 
 $: loadJuan($activefolioid);
 </script>
-卷
 {#if juans.length==0}
 <span></span>
 {:else}
-<Pager pages={juans} now={currentjuan} let:active let:caption  let:id>
+卷<Pager pages={juans} now={currentjuan} let:active let:caption  let:id>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span on:click={()=>gojuan(id)} class="clickable" class:selected={active}>{caption}</span>
 </Pager>

@@ -3,7 +3,6 @@ import {favortypes,favorites, activepb} from './store.js';
 import { loadFolio } from './nav.js';
 export let folioid;
 export let closePopup;
-export let ptk;
 let favors=[]
 const _favorites=$favorites[folioid];
 for (let i in _favorites) {               

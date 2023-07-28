@@ -69,6 +69,7 @@ const loadZip=async ()=>{
     setTimeout(()=>{
         loadingbook.set(false);
         ready=true;
+        tapmark.set(['1',2,0]); //normally text start from line 2
     },200);   
 }
 const swipeStart=(obj)=>{
@@ -127,8 +128,8 @@ const onfoliopageclick=e=>{
     const [cx,cy]=getCharXY(x,y);
     tapmark.set([ $activepb ,cx,cy ]);
     const ft=get(foliotext);
-    const [ckid,lineoff,choff,cklinetext]=ft.fromFolioPos($activepb,cx,cy);
-    const offtext=cklinetext.slice(0,choff)+CURSORMARK+cklinetext.slice(choff)
+    const {choff,linetext}=ft.fromFolioPos($activepb,cx,cy);
+    const offtext=linetext.slice(0,choff)+CURSORMARK+linetext.slice(choff)
     let [t]=parseOfftext(offtext);
     t=t.replace(/([。！？：、．；，「『（ ])/g,'　');
     while(t.charAt(0)=='　') t=t.slice(1);
