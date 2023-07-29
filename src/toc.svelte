@@ -31,7 +31,7 @@ const getTocItems=()=>{
 
 const goBookPb=(ptk,at)=>{
     const ck=ptk.defines.ck;
-    const folioid=ptk.nearestTag(ck.linepos[at],'folio','id');
+    const folioid=ptk.nearestTag(ck.linepos[at]+1,'folio','id');
     if (folioid!==$activefolioid) {
         loadFolio(folioid,()=>{
             goPbAt(ptk,at);

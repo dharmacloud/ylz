@@ -1,8 +1,9 @@
 <script>
 export let ptk;
 import Pager from './comps/pager.svelte';
-import { styledNumber } from 'ptk';
-import { activepb,bookByFolio,activefolioid,tapmark,foliotext } from './store.js';
+import { rangeOfAddress, styledNumber } from 'ptk';
+import { activepb,bookByFolio,activefolioid,tapmark,foliotext, tapAddress } from './store.js';
+    import { loadFolio } from './nav';
 
 let cknow=0;
 const chunks=[];
@@ -19,12 +20,26 @@ const loadChunks=()=>{
     const ck=ptk.defines.ck;
     let idx=0;
     chunks.length=0;
+    const tapckid=ckid;
     for (let ckat=start;ckat<=end;ckat++ ) {
         const ckid=ck.fields.id.values[ckat];
         const styled=parseInt(ckid).toString()==ckid?styledNumber(parseInt(ckid),'①'):(ckid+'.');
         chunks.push({caption:styled+ck.innertext.get(ckat) ,idx, id:ckat, ckid} ); //id is pager id
+        if (ckid==tapckid) cknow=idx;
         idx++;
     }
+
+    
+}
+const markChunk=ckid=>{
+    const fpos=$foliotext.toFolioPos(ckid);
+    activepb.set(fpos[0]);
+    tapmark.set(fpos)
+}
+const folioByChunk=()=>{
+    const [start]=ptk.rangeOfAddress('bk#'+bookByFolio($activefolioid)+'.ck#'+ckid);
+    const folioid=ptk.nearestTag(start+1,'folio','id');
+    return folioid;
 }
 
 const gochunk=(idx)=>{
@@ -32,9 +47,13 @@ const gochunk=(idx)=>{
     const ck=ptk.defines.ck;
     const ckid=ck.fields.id.values[ckat];
     const ft=$foliotext;
-    const fpos=ft.toFolioPos(ckid);
-    activepb.set(fpos[0]);
-    tapmark.set(fpos)
+    const at=ft.chunks.indexOf(ckid);
+    if (at==-1) {
+        const folioid=folioByChunk(ckid);
+        loadFolio(folioid,()=> markChunk(ckid))
+    } else {
+        markChunk(ckid);
+    }
     cknow=idx;
 }
 $: loadChunks($tapmark);

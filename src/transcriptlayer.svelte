@@ -61,7 +61,8 @@ const stripstyle=(i,strip)=>{
     if (i==0) {
         destroyTimer();
     }
-    if (get(continueplay)) return;//save one repaint, prevent redraw first strip
+    //repaint after continueplay is on
+
     let fl=folioLines();
     let fc=get(folioChars)
     const w=frame.width/fl;
@@ -93,7 +94,7 @@ const stripstyle=(i,strip)=>{
                 activepb.set( parseInt(get(activepb))+1);
                 setTimeout(()=>{
                     continueplay.set(false);// user swipe manually
-                },100);            
+                },500);            
             } else {
                 playnext();
             }
@@ -118,6 +119,7 @@ const stripstyle=(i,strip)=>{
         duration=timestamp[line+i+2]-timestamp[line+i];
     }
     out.push('transition:height '+duration+'s  linear'); //
+
     return out.join(';');
 }
 

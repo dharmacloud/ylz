@@ -10,7 +10,7 @@ import {extractPuncPos,usePtk,FolioText, parseOfftext} from 'ptk'
 import { CURSORMARK } from './nav.js';
 import {ZipStore} from 'ptk/zip';
 import {favortypes, landscape,foliotext,folioLines,folioChars,activePtk,activefolioid,activepb,favorites,videoid,ytplayer,showpunc,
-    maxfolio,tapmark, playing, remainrollback, idlecount,showpaiji,idletime,loadingbook, selectmedia, prefervideo} from './store.js'
+playerready,    maxfolio,tapmark, playing, remainrollback, idlecount,showpaiji,idletime,loadingbook, selectmedia, prefervideo} from './store.js'
 import { get } from 'svelte/store';
 export let src;
 
@@ -47,6 +47,7 @@ const swipeConfig = {
 };
 
 const loadZip=async ()=>{
+    ready=false;
     loadingbook.set(true);
     let host='folio/';
     if (document.location.host.startsWith('yonglezang.github.io')) {
@@ -224,7 +225,6 @@ $: audiolist=getAudioList($activefolioid);
 </script>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 {#if ready}
-
 <div class="swipe-holder" on:wheel={mousewheel} style={holderWidth($landscape)}>
 <Swipe bind:this={swiper} {...swipeConfig} {defaultIndex}
  on:click={onfoliopageclick} on:start={swipeStart} on:change={swipeChanged}>
@@ -242,7 +242,7 @@ $: audiolist=getAudioList($activefolioid);
 <span class:blinkfavorbtn={!!favoritetimer} class="favoritebtn" on:click={favoritebtn}>{ favortypes[$favorites[$activefolioid]?.[$activepb]||0]}</span>
 {/key}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-{#if !$landscape && $ytplayer && audiolist.length>1}
+{#if !$landscape && $playerready && audiolist.length>1}
 <span class="playbtn" on:click={toggleplaybtn}>{$videoid?'◼':'♫'}</span>
 {/if}
 

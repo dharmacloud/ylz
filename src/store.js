@@ -22,6 +22,7 @@ export const foliotext=writable({});
 
 export const mediaurls=writable([silence]);
 export const ytplayer=writable(null)
+export const playerready=writable(false);
 export const qqplayer=writable(null)
 export const player=function(vid){
     return mediabyid(vid||get(videoid))?.videohost=='youtube'?get(ytplayer):get(qqplayer);

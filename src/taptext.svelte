@@ -55,7 +55,7 @@ $: thetab=='dict' && onDict(tofind);
         {/if}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="dict"} on:click={()=>thetab="dict"}>🔎{#if ls}查詢{/if}</span>
-        <span style="font-size:75%">{$tapAddress}</span>
+        {#if $landscape}<span style="font-size:75%">{$tapAddress}</span>{/if}
     </div>
       <div class="tab-content" class:visible={thetab=='list'}><Foliolist {ptk} {closePopup}/></div>
       <div class="tab-content" class:visible={thetab=='toc'}><Toc {address} {closePopup} {ptk} /></div>

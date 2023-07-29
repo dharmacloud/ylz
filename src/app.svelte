@@ -50,7 +50,11 @@ const onTapText=(t,ptkname)=>{
     tofind=t;
     ptk=usePtk(ptkname);
 }
-
+const orientation=(ls)=>{
+    showdict=false;
+    shownewbie=false;
+}
+$: orientation($landscape)
 $: loadPlayer();
 </script>
 
@@ -70,7 +74,7 @@ $: loadPlayer();
 {/if}
 
 {#if showdict || $landscape}
-<TapText  {tofind}  {closePopup}/>
+<TapText {tofind} {closePopup}/>
 {/if}
 
 {#if shownewbie}

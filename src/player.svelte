@@ -1,6 +1,6 @@
 <script>
 import { onMount } from 'svelte';
-import {ytplayer,qqplayer,player,videoid,activefolioid,
+import {ytplayer,qqplayer,player,videoid,activefolioid,playerready,
     activepb,folioLines,playing,continueplay,stopVideo,findByVideoId} from './store.js'
 import {mediabyid} from './mediaurls.js'
 import {get} from 'svelte/store'
@@ -65,7 +65,7 @@ function onPlayerStateChange(e){
 
 function onPlayerReady(e) {
     // 為確保瀏覽器上可以自動播放，要把影片調成靜音
-    console.log('player ready')
+    playerready.set(true) 
     const plyr=player();
     if ($videoid) {
         plyr?.playVideo?plyr.playVideo():(plyr?.play&&plyr.play());
