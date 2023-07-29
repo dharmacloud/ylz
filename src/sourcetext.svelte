@@ -4,6 +4,7 @@ export let ptk
 import {getParallelLines} from 'ptk/align/';
 import {tapmark,tapChunkLine} from './store.js'
 import { parseOfftext } from 'ptk/offtext';
+
 let sourcetexts=[];
 const updateParallels=async ()=>{
     const {ptkline}=$tapChunkLine;
@@ -15,6 +16,7 @@ const puretext=(_text)=>{
 }
 $: updateParallels($tapmark);
 </script>
+
 <div class="paralleltext"> 
     <SentenceNav {ptk}/>
     {#each sourcetexts as item}

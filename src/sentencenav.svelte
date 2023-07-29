@@ -26,8 +26,7 @@ const humancaption=(cl)=>{
 // $: getHumanAddress(address)
 $: updateSentence($tapChunkLine)
 </script>
-{humancaption($tapChunkLine)}
-<Pager pages={sentences} nextitems={5} previtems={4} now={sentnow} let:active let:caption let:idx>
+<Pager caption={humancaption($tapChunkLine)} pages={sentences} nextitems={5} previtems={4} now={sentnow} onselect={gosent} let:active let:caption let:idx>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <span on:click={()=>gosent(idx)} class="clickable" class:selected={active}>{caption}</span>
 </Pager>

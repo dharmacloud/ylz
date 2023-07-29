@@ -161,4 +161,5 @@ export const selectmedia=(vid,restart)=>{
     if (restart) activepb.set('1');
 }
 
+
 export const favortypes=['♡','🤍','❤️', '💚', '💙','💜','🖤'];

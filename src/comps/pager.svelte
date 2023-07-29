@@ -3,10 +3,14 @@ export let pages=[];
 export let now=0;
 export let previtems=1;
 export let nextitems=3;
+export let onselect;
+export let caption='';
+import SwipeView from './swipeview.svelte'
 let left=now-previtems;
 let right=now+nextitems+1;
 const neighbors=[];
 let last=null;
+
 const makeNeighbors=()=>{
     now=parseInt(now);
     left=now-previtems;
@@ -27,7 +31,16 @@ const makeNeighbors=()=>{
     else last=null;
 }
 $:makeNeighbors(now,pages);
+const onswipe=(direction)=>{
+    now+=direction;
+    if (now<0) now=0;
+    if (now>=pages.length-1) now=pages.length-1;
+    onselect&&onselect(now);
+}
+
 </script>
+
+<SwipeView onSwipe={onswipe} {caption}>
 {#if pages.length}
 <slot active={pages[0].idx==now} caption={pages[0].caption} idx=0 id={pages[0].id}></slot>
 {/if}
@@ -38,3 +51,4 @@ $:makeNeighbors(now,pages);
 {#if last}
 <slot active={last.idx==now} caption={last.caption} idx={last.idx} id={last.id}></slot>
 {/if}
+</SwipeView>

@@ -1,4 +1,4 @@
-import {foliotext,activefolioid ,videoid,tapmark,activepb,loadingbook, stopVideo,bookByFolio} from "./store.js";
+import {foliotext,activefolioid ,videoid,tapmark,activepb,loadingbook, stopVideo} from "./store.js";
 import {get} from 'svelte/store'
 
 export const CURSORMARK='◆'
@@ -58,3 +58,32 @@ export const allJuan=(ptk,folioid)=>{
     return juans;
 }
 
+const markChunk=ckid=>{
+    const fpos=get(foliotext).toFolioPos(ckid);
+    activepb.set(fpos[0]);
+    tapmark.set(fpos)
+}
+export const goChunk=(ptk,bkid,ckid,direction=0)=>{
+    const ft=get(foliotext);
+
+    if (direction!==0) {
+        const ck=ptk.defines.ck;
+        const [bkstart,bkend]=ptk.rangeOfAddress('bk#'+bkid);
+        const [start,end]=ptk.rangeOfAddress('bk#'+bkid+'.ck#'+ckid);
+        const newck=ptk.nearestChunk(start+1)
+        
+        const newat=newck.at+direction;
+        const linepos=ck.linepos[newat];
+        if (linepos<bkend && linepos>=bkstart) {
+            ckid=ck.fields.id.values[newat];
+        }
+    }
+
+    const at=ft.chunks.indexOf(ckid);
+    if (at==-1) {
+        const folioid=folioByChunk(ckid);
+        loadFolio(folioid,()=> markChunk(ckid))
+    } else {
+        markChunk(ckid);
+    }
+}

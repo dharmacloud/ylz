@@ -61,7 +61,7 @@ const stripstyle=(i,strip)=>{
     if (i==0) {
         destroyTimer();
     }
-    //repaint after continueplay is on
+    //duplicate repaint after continueplay is on
 
     let fl=folioLines();
     let fc=get(folioChars)

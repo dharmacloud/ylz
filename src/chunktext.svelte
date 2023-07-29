@@ -1,9 +1,7 @@
 <script>
 export let ptk ;
-
 import {tapmark,foliotext} from  './store.js'
 import {get} from 'svelte/store'
-import {goPb} from './nav.js'
 import ChunkNav from './chunknav.svelte'
 let ck,loff,lines=[];
 
@@ -17,20 +15,6 @@ const loadChunkText=(mark)=>{
     }
     ck=ckid;
 }
-/*
-const scrolltoview=()=>{
-    setTimeout(()=>{
-        let ele=document.getElementsByClassName("activeline")[0];
-        if (ele) {
-            if (ele.previousElementSibling) {
-                ele=ele.previousElementSibling;
-            }
-            ele.parentElement.parentElement.parentElement.scrollTop = ele.offsetTop;
-        }
-        
-    },150)
-}
-*/
 $: loadChunkText($tapmark);
 
 const renderLine=line=>{
@@ -44,11 +28,11 @@ const setAddress=(lineoff)=>{
     tapmark.set([pbid,line,ch]);
 }
 </script>
+
 <div class="toctext">
 <ChunkNav {ptk}/>
 {#each lines as line,idx}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div on:click={()=>setAddress(idx)} class:activeline={loff==idx}>{@html renderLine(line)}</div>
 {/each}
-
 </div>

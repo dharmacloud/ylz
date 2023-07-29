@@ -1,9 +1,9 @@
 <script>
 export let ptk;
 import Pager from './comps/pager.svelte';
-import { rangeOfAddress, styledNumber } from 'ptk';
-import { activepb,bookByFolio,activefolioid,tapmark,foliotext, tapAddress } from './store.js';
-    import { loadFolio } from './nav';
+import { styledNumber } from 'ptk';
+import { bookByFolio,activefolioid,tapmark,foliotext } from './store.js';
+import { goChunk } from './nav.js';
 
 let cknow=0;
 const chunks=[];
@@ -27,15 +27,9 @@ const loadChunks=()=>{
         chunks.push({caption:styled+ck.innertext.get(ckat) ,idx, id:ckat, ckid} ); //id is pager id
         if (ckid==tapckid) cknow=idx;
         idx++;
-    }
+    }   
+}
 
-    
-}
-const markChunk=ckid=>{
-    const fpos=$foliotext.toFolioPos(ckid);
-    activepb.set(fpos[0]);
-    tapmark.set(fpos)
-}
 const folioByChunk=()=>{
     const [start]=ptk.rangeOfAddress('bk#'+bookByFolio($activefolioid)+'.ck#'+ckid);
     const folioid=ptk.nearestTag(start+1,'folio','id');
@@ -46,20 +40,14 @@ const gochunk=(idx)=>{
     const ckat=chunks[idx].id;
     const ck=ptk.defines.ck;
     const ckid=ck.fields.id.values[ckat];
-    const ft=$foliotext;
-    const at=ft.chunks.indexOf(ckid);
-    if (at==-1) {
-        const folioid=folioByChunk(ckid);
-        loadFolio(folioid,()=> markChunk(ckid))
-    } else {
-        markChunk(ckid);
-    }
+
+    goChunk(ptk,bookByFolio($activefolioid),ckid);
     cknow=idx;
 }
 $: loadChunks($tapmark);
 </script>
 
-<Pager pages={chunks} nextitems={1} now={cknow} let:active let:caption let:idx>
+<Pager onselect={gochunk} pages={chunks} nextitems={1} now={cknow} let:active let:caption let:idx>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span on:click={()=>gochunk(idx)} class="clickable" class:selected={active}>{caption}</span>
 </Pager>
