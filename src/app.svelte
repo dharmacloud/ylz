@@ -10,6 +10,7 @@ import TapText from './taptext.svelte'
 import Player from './player.svelte'
 import Newbie from './newbie.svelte';
 import Paiji from './paiji.svelte';
+import SidePaiji from './sidepaiji.svelte';
 import { get } from 'svelte/store';
 let ptk,tofind;
 registerServiceWorker();
@@ -75,6 +76,8 @@ $: loadPlayer();
 
 {#if showdict || $landscape}
 <TapText {tofind} {closePopup}/>
+{:else}
+<SidePaiji/>
 {/if}
 
 {#if shownewbie}

@@ -5,7 +5,7 @@ import Switch from './3rd/switch.svelte';
 </script>
 
 <div class="toctext">
-版本：2023.7.29
+版本：2023.7.30
 <br/>到LINE搜尋ID @dharmacloud，或加入<a href="https://lin.ee/1tmTKXi">官方帳號</a>，獲得更新訊息。
 <!-- <Switch bind:value={$autodict} label="立即查字典" design="slider" fontSize="24"/> -->
 <Switch bind:value={$showpunc} label="顯示標點符號" design="slider" fontSize="24"/>

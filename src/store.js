@@ -3,6 +3,7 @@ import {bsearchNumber, usePtk,makeAddress} from 'ptk'
 import {derived, get,writable } from 'svelte/store';
 import {silence,mediabyid} from './mediaurls.js'
 
+export const thezip=writable(null)
 export const activePtk=writable('dc');
 
 export const loadingbook=writable(false);
@@ -161,5 +162,10 @@ export const selectmedia=(vid,restart)=>{
     if (restart) activepb.set('1');
 }
 
+export const sideWidth=()=>{
+    const w=(screen.height *0.45);
+    const r=Math.floor(w*100/screen.width)+1;
+    return 'left:'+r+'vw;width:'+(100-r)+'vw';
+}
 
 export const favortypes=['♡','🤍','❤️', '💚', '💙','💜','🖤'];

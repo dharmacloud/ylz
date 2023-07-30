@@ -9,12 +9,12 @@
 
   let swipeItemInner = null;
   let _height = 0;
-  const fire = createEventDispatcher();
+  // const fire = createEventDispatcher();
 
   function firehHeightChange() {
     if (swipeItemInner) {
       let { scrollHeight, clientHeight } = swipeItemInner;
-      fire('swipe_item_height_change', { height: Math.max(scrollHeight, clientHeight) });
+      // fire('swipe_item_height_change', { height: Math.max(scrollHeight, clientHeight) });
     }
   }
 

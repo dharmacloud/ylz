@@ -9,8 +9,8 @@ import {getAudioList} from './mediaurls.js'
 import {extractPuncPos,usePtk,FolioText, parseOfftext} from 'ptk'
 import { CURSORMARK } from './nav.js';
 import {ZipStore} from 'ptk/zip';
-import {favortypes, landscape,foliotext,folioLines,folioChars,activePtk,activefolioid,activepb,favorites,videoid,ytplayer,showpunc,
-playerready,    maxfolio,tapmark, playing, remainrollback, idlecount,showpaiji,idletime,loadingbook, selectmedia, prefervideo} from './store.js'
+import {thezip,favortypes, landscape,foliotext,folioLines,folioChars,activePtk,activefolioid,activepb,favorites,videoid,showpunc,
+playerready,maxfolio,tapmark, playing, remainrollback, idlecount,showpaiji,idletime,loadingbook, selectmedia, prefervideo} from './store.js'
 import { get } from 'svelte/store';
 export let src;
 
@@ -60,10 +60,17 @@ const loadZip=async ()=>{
     const res=await fetch(host+src);
     const buf=await res.arrayBuffer();
     const zip=new ZipStore(buf);
+    thezip.set(zip);
+
     for (let i=0;i<zip.files.length;i++) {
-        const blob=new Blob([zip.files[i].content]);
-        images.push(URL.createObjectURL(blob));
+        if (i==zip.files.length-1) {
+            const blob=new Blob([zip.files[i].content]);
+            images.push(URL.createObjectURL(blob));
+        } else {
+            images.push('frames/blank.png');
+        }
     }
+
     defaultIndex=zip.files.length-1;
     totalpages=zip.files.length;
     maxfolio.set(totalpages-1);
@@ -80,6 +87,22 @@ const swipeChanged=(obj)=>{
     const {active_item}=obj.detail;
     defaultIndex=active_item;
     activepb.set( (totalpages- defaultIndex).toString() );
+    let i=totalpages- defaultIndex-1;
+    const wrapper=document.getElementsByClassName("swipeable-slot-wrapper")[0];
+    const ele=wrapper.childNodes[defaultIndex].firstChild.firstChild;
+    if (~ele.src.indexOf('blank')) {
+        const blob=new Blob([get(thezip).files[i].content]);
+        ele.src=images[i]=URL.createObjectURL(blob);
+    }
+    if (i<totalpages) { //buffer next page for smooter swipe
+        i++
+        const ele=wrapper.childNodes[defaultIndex-1].firstChild.firstChild;
+        if (~ele.src.indexOf('blank')) {
+            const blob=new Blob([get(thezip).files[i].content]);
+            ele.src=images[i]=URL.createObjectURL(blob);
+        }
+    }
+
     updateFolioText();
     useractive();
     confirmfavorite();
@@ -127,6 +150,7 @@ const onfoliopageclick=e=>{
     hidepunc=false;
     const {x,y}=e.detail;
     const [cx,cy]=getCharXY(x,y);
+    if (cx>=folioLines()!==cx<0) return;
     tapmark.set([ $activepb ,cx,cy ]);
     const ft=get(foliotext);
     const {choff,linetext}=ft.fromFolioPos($activepb,cx,cy);

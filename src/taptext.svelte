@@ -7,7 +7,7 @@ import Textual from './textual.svelte'
 import { get } from 'svelte/store';
 //import Favorite from "./favorite.svelte"
 import Toc from "./toc.svelte"
-import {activePtk,tapAddress, landscape} from './store.js'
+import {activePtk,tapAddress, landscape,sideWidth} from './store.js'
 import { usePtk} from "ptk";
 import {CURSORMARK} from './nav.js'
 export let tofind='';
@@ -24,20 +24,13 @@ const onDict=async (t)=>{
         showdict=true;
     }
 }
-const textWidth=(ls)=>{
-    if (ls) {
-        const w=(screen.height *0.45);
-        const r=Math.floor(w*100/screen.width)+1;
-        return 'left:'+r+'vw;width:'+(100-r)+'vw';
-    }
-    return '';
-}
+
 $: ls=get(landscape);
 $: ptk=usePtk($activePtk);
 $: thetab=='dict' && onDict(tofind);
 </script>
 {#key $landscape}
-<div class="popup" style={textWidth(ls)}>
+<div class="popup" style={ls?sideWidth(ls):''}>
     <div class="tabs">    
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="about"} on:click={()=>thetab="about"}>⚙️{#if ls}設定{/if}</span>
