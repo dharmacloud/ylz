@@ -274,7 +274,7 @@ $: audiolist=getAudioList($activefolioid);
 {#if $playing}
 <span class="remainrollback">{$remainrollback>0?$remainrollback:''}</span>
 {:else if !$showpaiji}
-<span class="idletime">{$idlecount>=idletime-15?idletime-$idlecount:''}</span>
+<!-- <span class="idletime">{$idlecount>=idletime-15?idletime-$idlecount:''}</span> -->
 {/if}
 
 {#key $tapmark+$activepb}

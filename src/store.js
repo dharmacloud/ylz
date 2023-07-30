@@ -96,7 +96,7 @@ export const booknameOf=folioid=>{
     return bk.innertext.get(at);
 }
 
-export const idletime=60;
+export const idletime=30;
 
 export const hasVariorum=(ptk,bkid)=>{
     const at=bkid.indexOf('_')

@@ -4,7 +4,7 @@ import { openPtk,usePtk,loadScript} from 'ptk'
 import SwipeZipImage from "./swipezipimage.svelte";
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import { onDestroy, onMount } from "svelte";
-import {activefolioid,isAndroid,playing,idlecount,showpaiji,newbie,idletime,landscape,bookByFolio} from './store.js'
+import {activefolioid,isAndroid,playing,idlecount,showpaiji,newbie,idletime,landscape,sideWidth} from './store.js'
 import {setTimestampPtk} from './mediaurls.js'
 import TapText from './taptext.svelte'
 import Player from './player.svelte'
@@ -57,15 +57,25 @@ const orientation=(ls)=>{
 }
 $: orientation($landscape)
 $: loadPlayer();
+
+const m=sideWidth().match(/width:(\d+)/);
+const sidepaiji=m&&m[1]&&parseInt(m[1])>20;
+// $: console.log(sidepaiji,idletime,$idlecount,$showpaiji,$playing,showdict)
 </script>
 
 
 <div class="app">
 {#if loaded}
+
 {#key $activefolioid}
-{#if $showpaiji && !$playing && !showdict && !shownewbie && !landscape}
+{#if $showpaiji && !$playing && !showdict && !shownewbie && !$landscape}
+{#if sidepaiji}
+<SidePaiji/>
+{:else}
 <Paiji/>
 {/if}
+{/if}
+
 <SwipeZipImage src={$activefolioid+".zip"} {ptk} {onTapText} {onMainmenu} />
 {/key}
 
@@ -76,8 +86,6 @@ $: loadPlayer();
 
 {#if showdict || $landscape}
 <TapText {tofind} {closePopup}/>
-{:else}
-<SidePaiji/>
 {/if}
 
 {#if shownewbie}
@@ -87,7 +95,7 @@ $: loadPlayer();
 <Player/>
 
 {:else}
-<span class="loading">如果停在此畫面，表示瀏覽器不直持 Emcascript 2015，無法運行本軟件。</span>
+<span class="loading">如果停在此畫面，表示瀏覽器不直持 ECMAscript 2015，無法運行本軟件。</span>
 <a class="toctext" href=_new>官方網站</a>
 {/if}
 
