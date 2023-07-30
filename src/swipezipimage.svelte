@@ -150,16 +150,19 @@ const onfoliopageclick=e=>{
     hidepunc=false;
     const {x,y}=e.detail;
     const [cx,cy]=getCharXY(x,y);
-    if (cx>=folioLines()!==cx<0) return;
+    if (cx>=folioLines()!==cx<0) {
+        onTapText('');
+        return;
+    }
     tapmark.set([ $activepb ,cx,cy ]);
     const ft=get(foliotext);
-    const {choff,linetext}=ft.fromFolioPos($activepb,cx,cy);
-    const offtext=linetext.slice(0,choff)+CURSORMARK+linetext.slice(choff)
+    let {choff,linetext}=ft.fromFolioPos($activepb,cx,cy);
+    linetext=linetext.replace(/([。！？：、．；，「『（ ])/g,'　');
+    const offtext=linetext.slice(0,choff)+CURSORMARK+linetext.slice(choff).replace(/　.+/,'');
     let [t]=parseOfftext(offtext);
-    t=t.replace(/([。！？：、．；，「『（ ])/g,'　');
     while(t.charAt(0)=='　') t=t.slice(1);
-    t=t.replace(/　.+/,'');
-    onTapText(t,ptk.name); 
+    while(t.charAt(t.length-1)=='　') t=t.slice(0,t.length-1);
+    onTapText(t); 
 }
 const gotoPb=async (pb)=>{
     if (!totalpages || !swiper)return;//not loaded yet

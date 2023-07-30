@@ -5,7 +5,6 @@ import {silence,mediabyid} from './mediaurls.js'
 
 export const thezip=writable(null)
 export const activePtk=writable('dc');
-
 export const loadingbook=writable(false);
 export const autodict=writable(settings.autodict);
 export const activepb=writable('1');  
@@ -16,6 +15,7 @@ export const prefervideo=writable(settings.prefervideo);
 export const showpunc=writable(settings.showpunc);
 export const landscape=writable(false)
 export const isAndroid=writable(false)
+export const searchable=writable('')
 
 export const foliotext=writable({});
 // export const foliorawtexts=writable([]);
@@ -96,7 +96,7 @@ export const booknameOf=folioid=>{
     return bk.innertext.get(at);
 }
 
-export const idletime=30;
+export const idletime=2;
 
 export const hasVariorum=(ptk,bkid)=>{
     const at=bkid.indexOf('_')
@@ -164,8 +164,20 @@ export const selectmedia=(vid,restart)=>{
 
 export const sideWidth=()=>{
     const w=(screen.height *0.45);
-    const r=Math.floor(w*100/screen.width)+1;
+    const r=((w*100/screen.width)).toFixed(2);
     return 'left:'+r+'vw;width:'+(100-r)+'vw';
 }
+
+export const paijitexts=[
+    '中部全國供佛齋僧大會',
+    '施主※陳⬚吟',
+    '施主※林⬚娟',
+    '施主※甯⬚南',
+    '切圖※䆁⬚缽',
+    '標記※䆁常明',
+    '標記※林⬚如　謝⬚恆',
+    '時間軸※櫻井⬚志'
+]
+
 
 export const favortypes=['♡','🤍','❤️', '💚', '💙','💜','🖤'];

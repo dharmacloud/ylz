@@ -3,15 +3,12 @@ import Translations from './translations.svelte'
 import ChunkText from './chunktext.svelte'
 import SourceText from './sourcetext.svelte'
 import Variorum from './variorum.svelte'
+import SearchMain from  './searchmain.svelte'
 import Externals from './externals.svelte'
 import {toChineseNumber} from 'ptk'
 import {activefolioid,activepb, hasVariorum,hasTranslation,hasSanskrit,bookByFolio} from './store.js'
-export let start,ptk;
+export let ptk;
 export let closePopup;
-export let address='';
-$: [start,end, _from,_till ,lineoff]=ptk.rangeOfAddress(address);
-$: console.log(address,start,end)
-
 
 const getExternalLinks=folioid=>{
     //todo 更精準地定位 經 ，目前是以頁首，有時是上一經
@@ -37,6 +34,9 @@ $: externallinks=getExternalLinks($activefolioid,$activepb)
 <div class="tabs">    
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
+<span class='clickable' class:selected={thetab=="search"} on:click={()=>thetab="search"}>搜尋</span>    
+
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class='clickable' class:selected={thetab=="chunktext"} on:click={()=>thetab="chunktext"}>全文</span>    
 
 {#if hasSanskrit(bookByFolio($activefolioid))}
@@ -57,9 +57,11 @@ $: externallinks=getExternalLinks($activefolioid,$activepb)
 <span class='clickable' class:selected={thetab=="externals"} on:click={()=>thetab="externals"}>外連</span>    
 {/if}
 
+
 </div>
-<div class="subtab-content" class:visible={thetab=='chunktext'}><ChunkText {ptk} {start} {lineoff}  /></div>
-<div class="subtab-content" class:visible={thetab=='sourcetext'}><SourceText {ptk} {start} {lineoff} /></div>
+<div class="subtab-content" class:visible={thetab=='search'}><SearchMain {ptk} /></div>
+<div class="subtab-content" class:visible={thetab=='chunktext'}><ChunkText {ptk}  /></div>
+<div class="subtab-content" class:visible={thetab=='sourcetext'}><SourceText {ptk}/></div>
 <div class="subtab-content" class:visible={thetab=='translations'}><Translations {closePopup} {ptk}/></div>
 <div class="subtab-content" class:visible={thetab=='variorum'}><Variorum {closePopup}  {ptk}/></div>
 <div class="subtab-content" class:visible={thetab=='externals'}><Externals {closePopup} links={externallinks}/></div>

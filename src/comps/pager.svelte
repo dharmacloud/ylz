@@ -1,5 +1,6 @@
 <script>
 export let pages=[];
+export let count=0;   // auto page
 export let now=0;
 export let previtems=1;
 export let nextitems=3;
@@ -10,6 +11,7 @@ let left=now-previtems;
 let right=now+nextitems+1;
 const neighbors=[];
 let last=null;
+
 
 const makeNeighbors=()=>{
     now=parseInt(now);
@@ -30,6 +32,14 @@ const makeNeighbors=()=>{
     if (pages.length) last=pages[pages.length-1];
     else last=null;
 }
+const makepages=()=>{
+    if (!pages.length && count) {
+        for (let i=0;i<count;i++) {
+            pages.push({caption:i+1,id:i+1,idx:i});
+        }
+    }
+}
+$:makepages(pages,count)
 $:makeNeighbors(now,pages);
 const onswipe=(direction)=>{
     now+=direction;
@@ -37,7 +47,6 @@ const onswipe=(direction)=>{
     if (now>=pages.length-1) now=pages.length-1;
     onselect&&onselect(now);
 }
-
 </script>
 
 <SwipeView onSwipe={onswipe} {caption}>

@@ -7,26 +7,28 @@ import Textual from './textual.svelte'
 import { get } from 'svelte/store';
 //import Favorite from "./favorite.svelte"
 import Toc from "./toc.svelte"
-import {activePtk,tapAddress, landscape,sideWidth} from './store.js'
+import {activePtk,tapAddress, landscape,sideWidth,searchable} from './store.js'
 import { usePtk} from "ptk";
 import {CURSORMARK} from './nav.js'
 export let tofind='';
 export let address='';
 export let closePopup;
-let thetab='toc';
+let thetab=get(landscape)?"textual":"toc";
 let ptk ,entries=[];
 
-const onDict=async (t)=>{
-    const tap_at=t.indexOf('^');
+const onDict=(t)=>{
+    const tap_at=t.indexOf(CURSORMARK);
     entries=ptk.columns.entries.keys.findMatches( t.replace(CURSORMARK,'')).map(it=>[Math.abs(it[0]-tap_at-1),it[1],it[2]]);
     entries.sort((a,b)=> a[0]-b[0]);// 越接近點擊處的優先
-    if (entries.length) {
-        showdict=true;
-    }
+    showdict=true;
 }
-
+const setSearchable=t=>{
+    const tap_at=t.indexOf(CURSORMARK);
+    searchable.set(t.slice(tap_at+1));
+}
 $: ls=get(landscape);
 $: ptk=usePtk($activePtk);
+$: setSearchable(tofind);
 $: thetab=='dict' && onDict(tofind);
 </script>
 {#key $landscape}
@@ -47,7 +49,7 @@ $: thetab=='dict' && onDict(tofind);
         <span class='clickable' class:selected={thetab=="audio"} on:click={()=>thetab="audio"}>🎵</span>
         {/if}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="dict"} on:click={()=>thetab="dict"}>🔎{#if ls}查詢{/if}</span>
+        <span class='clickable' class:selected={thetab=="dict"} on:click={()=>thetab="dict"}>🔠{#if ls}字典{/if}</span>
         {#if $landscape}<span style="font-size:75%">{$tapAddress}</span>{/if}
     </div>
       <div class="tab-content" class:visible={thetab=='list'}><Foliolist {ptk} {closePopup}/></div>

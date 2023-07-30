@@ -10,7 +10,6 @@ import TapText from './taptext.svelte'
 import Player from './player.svelte'
 import Newbie from './newbie.svelte';
 import Paiji from './paiji.svelte';
-import SidePaiji from './sidepaiji.svelte';
 import { get } from 'svelte/store';
 let ptk,tofind;
 registerServiceWorker();
@@ -46,10 +45,9 @@ const closePopup=()=>{
 const onMainmenu=()=>{
     showdict=false;
 }
-const onTapText=(t,ptkname)=>{
+const onTapText=(t)=>{
     showdict=true;
-    tofind=t;
-    ptk=usePtk(ptkname);
+    if (typeof t=='string') tofind=t;
 }
 const orientation=(ls)=>{
     showdict=false;
@@ -58,8 +56,6 @@ const orientation=(ls)=>{
 $: orientation($landscape)
 $: loadPlayer();
 
-const m=sideWidth().match(/width:(\d+)/);
-const sidepaiji=m&&m[1]&&parseInt(m[1])>20;
 // $: console.log(sidepaiji,idletime,$idlecount,$showpaiji,$playing,showdict)
 </script>
 
@@ -69,11 +65,7 @@ const sidepaiji=m&&m[1]&&parseInt(m[1])>20;
 
 {#key $activefolioid}
 {#if $showpaiji && !$playing && !showdict && !shownewbie && !$landscape}
-{#if sidepaiji}
-<SidePaiji/>
-{:else}
 <Paiji/>
-{/if}
 {/if}
 
 <SwipeZipImage src={$activefolioid+".zip"} {ptk} {onTapText} {onMainmenu} />

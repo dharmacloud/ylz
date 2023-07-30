@@ -3,6 +3,7 @@ export let ptk ;
 import {tapmark,foliotext} from  './store.js'
 import {get} from 'svelte/store'
 import ChunkNav from './chunknav.svelte'
+import {goPb} from './nav.js'
 let ck,loff,lines=[];
 
 const loadChunkText=(mark)=>{
