@@ -141,7 +141,7 @@ transition-duration: ${touch_end ? transitionDuration : '0'}ms;
   onMount(() => {
     init();
     if (typeof window !== 'undefined') {
-      //window.addEventListener('resize', update);
+      window.addEventListener('resize', update);
     }
   });
 

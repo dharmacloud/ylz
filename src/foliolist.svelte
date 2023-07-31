@@ -1,8 +1,8 @@
 <script>
 import Favoritebuttons from './favoritebuttons.svelte';
 import { loadFolio } from './nav.js';
-export let ptk;
-import {activefolioid, parallelFolios,activepb, stopVideo} from './store.js';
+export let ptk,thetab;
+import {activefolioid, parallelFolios,stopVideo} from './store.js';
 export let closePopup=function(){};
 
 const getFolioList=()=>{
@@ -23,7 +23,9 @@ const selectfolio=nfolio=>{
     const folio=ptk.defines.folio;
     stopVideo();
     const folioid=folio.fields.id.values[nfolio];
-    loadFolio(folioid);
+    loadFolio(folioid,function(){
+        thetab='toc';
+    });
     closePopup();
 }
 

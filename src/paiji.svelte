@@ -1,7 +1,8 @@
 <script>
-import {sideWidth,paijitexts} from './store.js'
+import {sideWidth,paijitexts,folioHolderWidth,landscape} from './store.js'
 import {onDestroy} from 'svelte'
 let now=0;
+export let forceshow=false;
 let text=paijitexts[0];
 let timer=setInterval(()=>{
     text=paijitexts[ ++now%paijitexts.length ];
@@ -13,14 +14,14 @@ const m=sideWidth().match(/width:(\d+)/);
 const sidepaiji=m&&m[1]&&parseInt(m[1])>20;
 </script>
 
-{#if sidepaiji}
+{#if sidepaiji && !forceshow}
 <div class="sidepaiji" style={sideWidth()} >
     <div class="sidesponsor">{text}</div>  
 </div>
 {:else}
-<div class="paiji">
+<div class="paiji" style={'width:'+(forceshow?folioHolderWidth():'')}>
 <img alt="frame" src="frames/red.jpg"/>
-<div class="sponsor">{text}</div>
+<div class="sponsor" style={"padding-left:"+(forceshow?folioHolderWidth($landscape,0.45):'45vw')}>{text}</div>
 
 <div class="paijitextcontainer">
 <div class="paijitext">

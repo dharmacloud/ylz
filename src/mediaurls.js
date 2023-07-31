@@ -16,7 +16,8 @@ export const mediabyid=(_vid)=>{
     }
 }
 
-export const getAudioList=(activeid)=>{
+export const getAudioList=(activeid,loading)=>{
+    if (loading) return [];
     const ts=ptk.columns.timestamp;
     const out=[silence];
     if (!ptk) return out;

@@ -17,8 +17,8 @@ const getExternalLinks=folioid=>{
     const agmsjuan=folioid.match(/agms(\d+)$/);
     if (agmsjuan) {
         const at=ptk.nearestTag( to+1 ,'n') -1 ;
-        const sutra=parseInt(n.fields.id.values[at]);
         const n=ptk.defines.n;
+        const sutra=parseInt(n.fields.id.values[at]);
 
         caption='雜阿含第'+agmsjuan[1]+'卷'+sutra+'經導讀(獅子吼)';
         url='https://buddhaspace.org/agama/'+agmsjuan[1]+'.html#'+toChineseNumber(sutra);
@@ -44,7 +44,7 @@ const getExternalLinks=folioid=>{
     }
     return out;
 }
-let thetab='chunktext';
+let thetab='search';
 $: externallinks=getExternalLinks($activefolioid,$activepb)
 
 </script>

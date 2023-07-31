@@ -65,6 +65,7 @@ function onPlayerStateChange(e){
 
 function onPlayerReady(e) {
     // 為確保瀏覽器上可以自動播放，要把影片調成靜音
+    console.log('player ready')
     playerready.set(true) 
     const plyr=player();
     if ($videoid) {
@@ -74,8 +75,9 @@ function onPlayerReady(e) {
 const loadVideo=()=>{
     const vid=$videoid;
     const obj=findByVideoId(vid);
-    stopVideo(); 
     if (!obj || !vid) return;
+    stopVideo(); 
+    console.log('load video')
 
     //不同的卷共享一影片，id 必須後綴  ^ 。
     const validvid=vid.replace(/\^\d*$/,'')

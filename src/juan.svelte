@@ -1,5 +1,5 @@
 <script>
-import {activefolioid} from './store.js'
+import {activefolioid,loadingbook} from './store.js'
 import Pager from './comps/pager.svelte'
 import { goPb, loadFolio,allJuan } from './nav.js';
 export let closePopup;
@@ -19,17 +19,17 @@ const gojuan=(idx)=>{
     });
 }
 
-const loadJuan=(folioid)=>{
-    if (!ptk) return;
+const loadJuan=(folioid,loading)=>{
+    if (!ptk || loading) return [];
     const m=folioid.match(/([a-z]+)(\d+$)/);
     if (!m) return [];
     currentjuan=parseInt(m[2])-1;
-    juans=allJuan(ptk,folioid).map((it,idx)=>{
+    return allJuan(ptk,folioid).map((it,idx)=>{
         return {caption:it, idx:parseInt(idx), id:(idx+1).toString() }
     });
 }
 
-$: loadJuan($activefolioid);
+$: juans=loadJuan($activefolioid,$loadingbook);
 </script>
 {#if juans.length==0}
 <span></span>

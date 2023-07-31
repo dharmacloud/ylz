@@ -1,6 +1,6 @@
 <script>
 import {videoid, ytplayer,qqplayer,player,activefolioid, playnextjuan,
-    findByVideoId, remainrollback,selectmedia,mediaurls} from './store.js';
+    findByVideoId, remainrollback,selectmedia,mediaurls,loadingbook} from './store.js';
 import Slider from './3rd/rangeslider.svelte';
 import Switch from './3rd/switch.svelte';
 import {usePtk,parseOfftext,} from 'ptk'
@@ -73,7 +73,7 @@ const humanStoptime=t=>{
     if (!t || ($playnextjuan=='on'&&allJuan(ptk).length>1 ) ) return '';
     return (new Date(Date.now()+t*1000)).toLocaleTimeString()+'停止';
 }
-$: mediaurls.set(getAudioList($activefolioid));
+$: mediaurls.set(getAudioList($activefolioid,$loadingbook));
 </script>
 <div class="toctext">
 {#if !$qqplayer && !$ytplayer}

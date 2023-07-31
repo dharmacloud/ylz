@@ -12,7 +12,6 @@ let right=now+nextitems+1;
 const neighbors=[];
 let last=null;
 
-
 const makeNeighbors=()=>{
     now=parseInt(now);
     left=now-previtems;
@@ -29,18 +28,22 @@ const makeNeighbors=()=>{
     right+=30;
     if (right<pages.length-2) neighbors.push(pages[right]);
     
-    if (pages.length) last=pages[pages.length-1];
+    if (pages.length>1) last=pages[pages.length-1];
     else last=null;
 }
 const makepages=()=>{
-    if (!pages.length && count) {
+    now=0;
+    if (count && pages.length!==count) {
+        pages.length=0;
         for (let i=0;i<count;i++) {
             pages.push({caption:i+1,id:i+1,idx:i});
         }
+        makeNeighbors();
     }
+    
 }
-$:makepages(pages,count)
 $:makeNeighbors(now,pages);
+$:makepages(pages,count)
 const onswipe=(direction)=>{
     now+=direction;
     if (now<0) now=0;
@@ -49,7 +52,7 @@ const onswipe=(direction)=>{
 }
 </script>
 
-<SwipeView onSwipe={onswipe} {caption}>
+<SwipeView onSwipe={onswipe} caption={"⮂"+caption}>
 {#if pages.length}
 <slot active={pages[0].idx==now} caption={pages[0].caption} idx=0 id={pages[0].id}></slot>
 {/if}

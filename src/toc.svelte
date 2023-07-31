@@ -1,7 +1,7 @@
 <script>
 import Slider from './3rd/rangeslider.svelte';
 import { bsearchNumber ,styledNumber,debounce} from "ptk";
-import {activepb,maxfolio,activefolioid, bookByFolio,foliotext} from './store.js';
+import {activepb,maxfolio,activefolioid,loadingbook, bookByFolio,foliotext} from './store.js';
 import {goPbAt, loadFolio} from './nav.js'
 import Juan from './juan.svelte'
 $: folio=[parseInt($activepb)-1];
@@ -14,9 +14,10 @@ const setFolio=async (e)=>{
 }
 
 let tocitems=[],cknow;
-const getTocItems=()=>{
+const getTocItems=(folioid,loading)=>{
+    if (loading) return [];
     const out=[];
-    const bk=bookByFolio($activefolioid);
+    const bk=bookByFolio(folioid);
     const bookaddr='bk#'+bk;
     const [from,to]=ptk.rangeOfAddress(bookaddr);
     
@@ -40,14 +41,15 @@ const goBookPb=(ptk,at)=>{
         goPbAt(ptk,at);
     }    
 }
-const getCk=()=>{
+const getCk=(pb,loading)=>{
+    if (loading) return '';
     const ft=$foliotext;
     if (!ft||!ft.fromFolioPos) return '';
     const {ckid}=ft.fromFolioPos($activepb);
     return ckid;
 }
-$: tocitems=getTocItems($activefolioid);
-$: cknow=getCk($activepb);
+$: tocitems=getTocItems($activefolioid,$loadingbook);
+$: cknow=getCk($activepb,$loadingbook);
 
 </script>
 <div  class="toctext">

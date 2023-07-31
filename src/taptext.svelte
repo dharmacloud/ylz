@@ -50,10 +50,10 @@ $: thetab=='dict' && onDict(tofind);
         {/if}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="dict"} on:click={()=>thetab="dict"}>🔠{#if ls}字典{/if}</span>
-        {#if $landscape}<span style="font-size:75%">{$tapAddress}</span>{/if}
+        {#if $landscape}<span style="font-size:65%">{$tapAddress}</span>{/if}
     </div>
-      <div class="tab-content" class:visible={thetab=='list'}><Foliolist {ptk} {closePopup}/></div>
-      <div class="tab-content" class:visible={thetab=='toc'}><Toc {address} {closePopup} {ptk} /></div>
+      <div class="tab-content" class:visible={thetab=='list'}><Foliolist {ptk} {closePopup}  bind:thetab /></div>
+      <div class="tab-content" class:visible={thetab=='toc'}><Toc {closePopup} {ptk} /></div>
       <!-- <div class="tab-content" class:visible={thetab=='favorite'}><Favorite {address} {closePopup} {ptk} /></div> -->
       <div class="tab-content" class:visible={thetab=='textual'}><Textual {closePopup} {ptk}/></div>
       {#if entries.length}

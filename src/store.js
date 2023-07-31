@@ -168,6 +168,19 @@ export const sideWidth=()=>{
     const r=((w*100/screen.width)).toFixed(2);
     return 'left:'+r+'vw;width:'+(100-r)+'vw';
 }
+export const folioHolderWidth=(ls,ratio=1,_swiper)=>{
+    let style='100vw'
+    ratio=ratio||1;
+    if (get(landscape)) {
+        const w=(screen.height *0.45 * ratio);
+        const r=Math.floor(w*100/screen.width)+1;
+        style=r+'vw';
+    }
+    if (_swiper) setTimeout(()=>{
+        _swiper?.update();
+    },100)
+    return style;
+}
 
 export const paijitexts=[
     '中部全國供佛齋僧大會',

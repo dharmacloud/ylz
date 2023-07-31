@@ -4,14 +4,16 @@ import PuncLayer from './punclayer.svelte';
 import TapMark from './tapmark.svelte';
 import Swipe from './3rd/swipe.svelte';
 import SwipeItem from './3rd/swipeitem.svelte';
-import {rotatingwheel} from './3rd/rotatingwheel.js';
 import {getAudioList} from './mediaurls.js'
 import {extractPuncPos,usePtk,FolioText, parseOfftext} from 'ptk'
 import { CURSORMARK } from './nav.js';
 import {ZipStore} from 'ptk/zip';
-import {thezip,favortypes, landscape,foliotext,folioLines,folioChars,activePtk,activefolioid,activepb,favorites,videoid,showpunc,
-playerready,maxfolio,tapmark, playing, remainrollback, idlecount,showpaiji,idletime,loadingbook, selectmedia, prefervideo} from './store.js'
+import {thezip,favortypes, landscape,foliotext,folioLines,
+    folioChars,activePtk,activefolioid,activepb,favorites,videoid,showpunc,
+playerready,maxfolio,tapmark, playing, remainrollback, 
+idlecount,showpaiji,loadingbook, selectmedia, prefervideo,folioHolderWidth} from './store.js'
 import { get } from 'svelte/store';
+import Paiji from './paiji.svelte'
 export let src;
 
 
@@ -54,17 +56,12 @@ const loadZip=async ()=>{
         host='https://dharmacloud.github.io/swipegallery/folio/';
     }
     const ftext=new FolioText(ptk);//fetchFolioText(ptk,$activefolioid);
-    console.log('loadzip',$activefolioid)
     await ftext.load($activefolioid)
-    console.log('loadzip2',$activefolioid)
-
     foliotext.set(ftext);
-
     const res=await fetch(host+src);
     const buf=await res.arrayBuffer();
     const zip=new ZipStore(buf);
     thezip.set(zip);
-
     for (let i=0;i<zip.files.length;i++) {
         if (i==zip.files.length-1) {
             const blob=new Blob([zip.files[i].content]);
@@ -73,33 +70,35 @@ const loadZip=async ()=>{
             images.push('frames/blank.png');
         }
     }
-
     defaultIndex=zip.files.length-1;
     totalpages=zip.files.length;
-    maxfolio.set(totalpages-1);
     setTimeout(()=>{
+        maxfolio.set(totalpages-1);
         loadingbook.set(false);
         ready=true;
-        tapmark.set(['1',2,0]); //normally text start from line 2
-    },200);   
+        //tapmark.set(['1',2,0]); //normally text start from line 2
+    },100);   
 }
 const swipeStart=(obj)=>{
     hidepunc=true;
 }
 const swipeChanged=(obj)=>{
+    if (!ready) return;
     const {active_item}=obj.detail;
     defaultIndex=active_item;
     activepb.set( (totalpages- defaultIndex).toString() );
     let i=totalpages- defaultIndex-1;
     const wrapper=document.getElementsByClassName("swipeable-slot-wrapper")[0];
-    const ele=wrapper.childNodes[defaultIndex].firstChild.firstChild;
+    if (!wrapper) return;
+    const ele=wrapper.childNodes[defaultIndex]?.firstChild.firstChild;
+    if (!ele) return;
     if (~ele.src.indexOf('blank')) {
         const blob=new Blob([get(thezip).files[i].content]);
         ele.src=images[i]=URL.createObjectURL(blob);
     }
     if (i<totalpages) { //buffer next page for smooter swipe
         i++
-        const ele=wrapper.childNodes[defaultIndex-1].firstChild.firstChild;
+        const ele=wrapper.childNodes[defaultIndex-1]?.firstChild.firstChild;
         if (~ele.src.indexOf('blank')) {
             const blob=new Blob([get(thezip).files[i].content]);
             ele.src=images[i]=URL.createObjectURL(blob);
@@ -236,18 +235,6 @@ const toggleplaybtn=()=>{
         selectmedia('');
     }
 }
-const holderWidth=ls=>{
-    let style='width:100vw'
-    if (ls) {
-        const w=(screen.height *0.45);
-        const r=Math.floor(w*100/screen.width)+1;
-        style='width:'+r+'vw';
-    }
-    setTimeout(()=>{
-        swiper.update();
-    },10)
-    return style;
-}
 
 $: loadZip(src);
 $: gotoPb($activepb); //trigger by goto folio in setting.svelte
@@ -255,7 +242,7 @@ $: audiolist=getAudioList($activefolioid);
 </script>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 {#if ready}
-<div class="swipe-holder" on:wheel={mousewheel} style={holderWidth($landscape)}>
+<div class="swipe-holder" on:wheel={mousewheel} style={"width:"+folioHolderWidth($landscape,1,swiper)}>
 <Swipe bind:this={swiper} {...swipeConfig} {defaultIndex}
  on:click={onfoliopageclick} on:start={swipeStart} on:change={swipeChanged}>
     {#each images as image,idx}
@@ -263,9 +250,10 @@ $: audiolist=getAudioList($activefolioid);
     {/each}    
 </Swipe>
 </div>
-
 {:else}
-<div class="message">{@html rotatingwheel}</div>
+<div style={"width:"+folioHolderWidth($landscape)}>
+<Paiji forceshow={true}/>
+</div>
 {/if}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 {#key favoritetimer}
@@ -279,8 +267,6 @@ $: audiolist=getAudioList($activefolioid);
 <span class="pagenumber">{totalpages-defaultIndex}</span>
 {#if $playing}
 <span class="remainrollback">{$remainrollback>0?$remainrollback:''}</span>
-{:else if !$showpaiji}
-<!-- <span class="idletime">{$idlecount>=idletime-15?idletime-$idlecount:''}</span> -->
 {/if}
 
 {#key $tapmark+$activepb}

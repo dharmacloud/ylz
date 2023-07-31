@@ -4,7 +4,8 @@ import { openPtk,usePtk,loadScript} from 'ptk'
 import SwipeZipImage from "./swipezipimage.svelte";
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import { onDestroy, onMount } from "svelte";
-import {activefolioid,isAndroid,playing,idlecount,showpaiji,newbie,idletime,landscape,showsponsor} from './store.js'
+import {activefolioid,isAndroid,playing,idlecount,showpaiji,folioHolderWidth,
+    newbie,idletime,landscape,showsponsor, loadingbook} from './store.js'
 import {setTimestampPtk} from './mediaurls.js'
 import TapText from './taptext.svelte'
 import Player from './player.svelte'
@@ -63,15 +64,15 @@ $: loadPlayer();
 <div class="app">
 {#if loaded}
 
-{#key $activefolioid}
 {#if $showpaiji && !$playing && !showdict && !shownewbie && !$landscape && $showsponsor=='on'}
 <Paiji/>
 {/if}
 
+{#key $activefolioid} 
 <SwipeZipImage src={$activefolioid+".zip"} {ptk} {onTapText} {onMainmenu} />
 {/key}
 
-{#if (shownewbie||showdict)}
+{#if (shownewbie||showdict) && !$landscape}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="closepopup" on:click={closePopup}>✖️</span> <!--╳-->
 {/if}

@@ -44,12 +44,16 @@ const ontouchend=e=>{
 	touching=-1; 
 	direction=0;    
 }
+const next=()=>{
+	onSwipe&&onSwipe(1);
+}
 </script>
 {#if touching>-1 && direction}<span class="swipe">{@html swipeshapes[direction+1]}</span>{/if}
 <div class="container" 	on:touchstart|passive={ontouchstart}
 	on:touchmove|passive={ontouchmove}
 	on:touchend|passive={ontouchend}>
-{caption}
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<span on:click={next}>{caption}</span>
 <slot></slot>
 </div>
 

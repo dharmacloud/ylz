@@ -1,5 +1,6 @@
 import {foliotext,activefolioid ,videoid,tapmark,activepb,loadingbook,bookByFolio, stopVideo} from "./store.js";
 import {get} from 'svelte/store'
+import {bsearchNumber} from 'ptk/utils'
 
 export const CURSORMARK='◆'
 export const goPb=(pbid,ck)=>{   
@@ -21,7 +22,7 @@ export const goPbAt=async (ptk,at)=>{
 }
 export const loadFolio=(folioid,func)=>{
     let timer=0;
-    console.log('loading folio',folioid)
+    // console.log('loading folio',folioid)
     if (folioid==get(activefolioid)) func&&func(folioid);
     else {
         stopVideo();
@@ -35,9 +36,9 @@ export const loadFolio=(folioid,func)=>{
                 clearInterval(timer);
                 setTimeout(()=>{//wait for 
                     func&&func(folioid);
-                },200);
+                },500); 
             }
-        },300);
+        },100);
     }
 }
 
@@ -93,4 +94,20 @@ export const folioByChunk=(ptk,folioid,ckid)=>{
     const [start]=ptk.rangeOfAddress('bk#'+bookByFolio(folioid)+'.ck#'+ckid);
     const newfolioid=ptk.nearestTag(start+1,'folio','id');
     return newfolioid;
+}
+export const goPtkLine=(ptk,line)=>{
+    const folio=ptk.defines.folio;
+    const ck=ptk.defines.ck;
+    const folioat=bsearchNumber(folio.linepos,line+1)-1;
+    const ckat=bsearchNumber(ck.linepos,line+1)-1;
+    if (~folioat && folio.linepos[folioat+1]>line) {
+        const folioid=folio.fields.id.values[folioat];
+        const ckid=ck.fields.id.values[ckat];
+        const lineoff=line-ck.linepos[ckat];
+        loadFolio(folioid,()=>{
+            const foliopos=get(foliotext).toFolioPos(ckid,lineoff);
+            tapmark.set(foliopos);
+            activepb.set(foliopos[0]);
+        })
+    }
 }
