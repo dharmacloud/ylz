@@ -49,6 +49,8 @@ const dosearch=()=>{
         }
 	});
 }
+
+// add 本卷(本經)
 const setScope=async (idx)=>{
     selected=idx;
     excerptpagecount=0;

@@ -6,6 +6,7 @@ export const loadSettings=()=>{
     const newbie=localStorage.getItem(AppPrefix+'newbie')||'on';  
     const playnextjuan=localStorage.getItem(AppPrefix+'playnextjuan')||'on';  
     const showpunc=localStorage.getItem(AppPrefix+'showpunc')||'on';  
+    const showsponsor=localStorage.getItem(AppPrefix+'showsponsor')||'off';  
     let _favorites=localStorage.getItem(AppPrefix+'favorites')||'{}';
     let _prefervideo=localStorage.getItem(AppPrefix+'prefervideo')||'{}';
     let favorites={},prefervideo={};
@@ -17,7 +18,7 @@ export const loadSettings=()=>{
         favorites={};
         prefervideo={}
     }
-    return {activefolioid,videohost,autodict,newbie,favorites,playnextjuan,prefervideo,showpunc};
+    return {activefolioid,showsponsor,videohost,autodict,newbie,favorites,playnextjuan,prefervideo,showpunc};
 }
 
 export const saveSettings=()=>{ //immediate save

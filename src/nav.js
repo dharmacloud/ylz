@@ -1,4 +1,4 @@
-import {foliotext,activefolioid ,videoid,tapmark,activepb,loadingbook, stopVideo} from "./store.js";
+import {foliotext,activefolioid ,videoid,tapmark,activepb,loadingbook,bookByFolio, stopVideo} from "./store.js";
 import {get} from 'svelte/store'
 
 export const CURSORMARK='◆'
@@ -21,6 +21,7 @@ export const goPbAt=async (ptk,at)=>{
 }
 export const loadFolio=(folioid,func)=>{
     let timer=0;
+    console.log('loading folio',folioid)
     if (folioid==get(activefolioid)) func&&func(folioid);
     else {
         stopVideo();
@@ -81,9 +82,15 @@ export const goChunk=(ptk,bkid,ckid,direction=0)=>{
 
     const at=ft.chunks.indexOf(ckid);
     if (at==-1) {
-        const folioid=folioByChunk(ckid);
+        const folioid=folioByChunk(ptk,get(activefolioid),ckid)
         loadFolio(folioid,()=> markChunk(ckid))
     } else {
         markChunk(ckid);
     }
+}
+
+export const folioByChunk=(ptk,folioid,ckid)=>{
+    const [start]=ptk.rangeOfAddress('bk#'+bookByFolio(folioid)+'.ck#'+ckid);
+    const newfolioid=ptk.nearestTag(start+1,'folio','id');
+    return newfolioid;
 }

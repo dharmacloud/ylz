@@ -54,7 +54,10 @@ const loadZip=async ()=>{
         host='https://dharmacloud.github.io/swipegallery/folio/';
     }
     const ftext=new FolioText(ptk);//fetchFolioText(ptk,$activefolioid);
+    console.log('loadzip',$activefolioid)
     await ftext.load($activefolioid)
+    console.log('loadzip2',$activefolioid)
+
     foliotext.set(ftext);
 
     const res=await fetch(host+src);

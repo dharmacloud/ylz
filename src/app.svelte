@@ -4,7 +4,7 @@ import { openPtk,usePtk,loadScript} from 'ptk'
 import SwipeZipImage from "./swipezipimage.svelte";
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import { onDestroy, onMount } from "svelte";
-import {activefolioid,isAndroid,playing,idlecount,showpaiji,newbie,idletime,landscape,sideWidth} from './store.js'
+import {activefolioid,isAndroid,playing,idlecount,showpaiji,newbie,idletime,landscape,showsponsor} from './store.js'
 import {setTimestampPtk} from './mediaurls.js'
 import TapText from './taptext.svelte'
 import Player from './player.svelte'
@@ -25,7 +25,7 @@ onMount(async ()=>{
     loaded=true;
     timer=setInterval(()=>{
         showpaiji.set($idlecount>=idletime);
-        if (!shownewbie && !showdict) {
+        if (!shownewbie && !showdict && $showsponsor=='on') {
             idlecount.set($idlecount+idleinterval);
         }
     },idleinterval*1000);
@@ -64,7 +64,7 @@ $: loadPlayer();
 {#if loaded}
 
 {#key $activefolioid}
-{#if $showpaiji && !$playing && !showdict && !shownewbie && !$landscape}
+{#if $showpaiji && !$playing && !showdict && !shownewbie && !$landscape && $showsponsor=='on'}
 <Paiji/>
 {/if}
 

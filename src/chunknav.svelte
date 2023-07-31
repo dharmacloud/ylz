@@ -3,7 +3,7 @@ export let ptk;
 import Pager from './comps/pager.svelte';
 import { styledNumber } from 'ptk';
 import { bookByFolio,activefolioid,tapmark,foliotext } from './store.js';
-import { goChunk } from './nav.js';
+import { goChunk} from './nav.js';
 
 let cknow=0;
 const chunks=[];
@@ -28,12 +28,6 @@ const loadChunks=()=>{
         if (ckid==tapckid) cknow=idx;
         idx++;
     }   
-}
-
-const folioByChunk=()=>{
-    const [start]=ptk.rangeOfAddress('bk#'+bookByFolio($activefolioid)+'.ck#'+ckid);
-    const folioid=ptk.nearestTag(start+1,'folio','id');
-    return folioid;
 }
 
 const gochunk=(idx)=>{

@@ -6,22 +6,39 @@ import Variorum from './variorum.svelte'
 import SearchMain from  './searchmain.svelte'
 import Externals from './externals.svelte'
 import {toChineseNumber} from 'ptk'
-import {activefolioid,activepb, hasVariorum,hasTranslation,hasSanskrit,bookByFolio} from './store.js'
+import {activefolioid,activepb, hasVariorum,hasTranslation,hasSanskrit,bookByFolio, tapChunkLine} from './store.js'
 export let ptk;
 export let closePopup;
 
 const getExternalLinks=folioid=>{
     //todo 更精準地定位 經 ，目前是以頁首，有時是上一經
-    const [from,to]=ptk.rangeOfAddress('folio#'+folioid+'.pb#'+($activepb+1));
-    const n=ptk.defines.n;
-    const at=ptk.nearestTag( to+1 ,'n') -1 ;
+    const [from,to]=ptk.rangeOfAddress('folio#'+folioid+'.pb#'+($activepb));
     const out=[]
-    if (~at) {
+    const agmsjuan=folioid.match(/agms(\d+)$/);
+    if (agmsjuan) {
+        const at=ptk.nearestTag( to+1 ,'n') -1 ;
         const sutra=parseInt(n.fields.id.values[at]);
-        const juan=folioid.match(/agms(\d+)$/);
-        if (juan) {
-            caption=juan[1]+'卷'+sutra+'經導讀(獅子吼)';
-            url='https://buddhaspace.org/agama/'+juan[1]+'.html#'+toChineseNumber(sutra);
+        const n=ptk.defines.n;
+
+        caption='雜阿含第'+agmsjuan[1]+'卷'+sutra+'經導讀(獅子吼)';
+        url='https://buddhaspace.org/agama/'+agmsjuan[1]+'.html#'+toChineseNumber(sutra);
+        out.push([ caption, url]);
+    }
+    const agmdjuan=folioid.match(/agmd(\d+)$/);
+    if (agmdjuan) {
+        const {ckid}=$tapChunkLine;
+        if (ckid) {
+            caption='長阿含第'+agmdjuan[1]+'卷'+parseInt(ckid)+'經導讀(獅子吼)';
+            url='https://buddhaspace.org/agama3/'+parseInt(ckid)+'.html';
+            out.push([ caption, url]);
+        }
+    }
+    const agmmjuan=folioid.match(/agmm(\d+)$/);
+    if (agmmjuan) {
+        const {ckid}=$tapChunkLine;
+        if (ckid) {
+            caption='中阿含第'+agmmjuan[1]+'卷'+parseInt(ckid)+'經導讀(獅子吼)';
+            url='https://buddhaspace.org/agama2/sub/'+ckid+'.html';
             out.push([ caption, url]);
         }
     }

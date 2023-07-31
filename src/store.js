@@ -13,6 +13,7 @@ export const maxfolio=writable(0);
 export const favorites=writable(settings.favorites);
 export const prefervideo=writable(settings.prefervideo);
 export const showpunc=writable(settings.showpunc);
+export const showsponsor=writable(settings.showsponsor);
 export const landscape=writable(false)
 export const isAndroid=writable(false)
 export const searchable=writable('')
@@ -96,7 +97,7 @@ export const booknameOf=folioid=>{
     return bk.innertext.get(at);
 }
 
-export const idletime=2;
+export const idletime=30;
 
 export const hasVariorum=(ptk,bkid)=>{
     const at=bkid.indexOf('_')
@@ -115,7 +116,7 @@ export const hasTranslation=(ptk,bkid)=>{
     return books.length
 }
 
-const makeAddressFromFolioPos=(pbid,cx=0,cy=0)=>{
+export const makeAddressFromFolioPos=(pbid,cx=0,cy=0)=>{
     if (typeof pbid!=='string') {
         cx=pbid[1];
         cy=pbid[2];

@@ -7,7 +7,8 @@ export let ptk;
 let juans=[]; //find out all juan
 let currentjuan=0;
 
-const gojuan=(juan)=>{
+const gojuan=(idx)=>{
+    const juan=juans[idx].id;
     const fid=$activefolioid;
     const newid=fid.replace(/\d+$/,juan);
     if (newid==fid) return;
@@ -33,8 +34,8 @@ $: loadJuan($activefolioid);
 {#if juans.length==0}
 <span></span>
 {:else}
-卷<Pager pages={juans} now={currentjuan} let:active let:caption  let:id>
+<Pager pages={juans} caption="卷" now={currentjuan} let:active let:caption  let:idx onselect={gojuan}>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span on:click={()=>gojuan(id)} class="clickable" class:selected={active}>{caption}</span>
+<span on:click={()=>gojuan(idx)} class="clickable" class:selected={active}>{caption}</span>
 </Pager>
 {/if}
