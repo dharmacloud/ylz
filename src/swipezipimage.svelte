@@ -11,7 +11,7 @@ import {ZipStore} from 'ptk/zip';
 import {thezip,favortypes, landscape,foliotext,folioLines,
     folioChars,activePtk,activefolioid,activepb,favorites,videoid,showpunc,
 playerready,maxfolio,tapmark, playing, remainrollback, 
-idlecount,showpaiji,loadingbook, selectmedia, prefervideo,folioHolderWidth} from './store.js'
+idlecount,showpaiji,loadingbook, selectmedia, prefervideo,folioHolderWidth,leftmode} from './store.js'
 import { get } from 'svelte/store';
 import Paiji from './paiji.svelte'
 export let src;
@@ -125,6 +125,7 @@ const useractive=()=>{
     hidepunc=false;
 }
 const mousewheel=(e)=>{
+    if ($leftmode!=='folio') return;
 	if (e.ctrlKey ) return;
     hidepunc=true;
 	if (e.deltaY>0) {
@@ -242,7 +243,7 @@ $: audiolist=getAudioList($activefolioid);
 </script>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 {#if ready}
-<div class="swipe-holder" on:wheel={mousewheel} style={"width:"+folioHolderWidth($landscape,1,swiper)}>
+<div class="swipe-holder" on:wheel={mousewheel} style={ "opacity:"+($leftmode!=='folio'?'0;':'1')+";width:"+folioHolderWidth($landscape,1,swiper)}>
 <Swipe bind:this={swiper} {...swipeConfig} {defaultIndex}
  on:click={onfoliopageclick} on:start={swipeStart} on:change={swipeChanged}>
     {#each images as image,idx}
@@ -270,13 +271,13 @@ $: audiolist=getAudioList($activefolioid);
 {/if}
 
 {#key $tapmark+$activepb}
-{#if !hidepunc && !$showpaiji}
+{#if !hidepunc && !$showpaiji && $leftmode=='folio'}
 <TapMark mark={$tapmark} pb={$activepb} folioChars={$folioChars} folioLines={folioLines()} frame={imageFrame()}  />
 {/if}
 {/key}
 {#key puncs}
 {#if !hidepunc}
-{#if $showpunc=='on'}
+{#if $showpunc=='on'&& $leftmode=='folio'}
 <PuncLayer frame={imageFrame()} folioChars={$folioChars} folioLines={folioLines()} {puncs} />
 {/if}
 <TranscriptLayer frame={imageFrame()} {totalpages} folioLines={folioLines()} {swiper} {ptk} {foliopage}/>
@@ -290,7 +291,6 @@ $: audiolist=getAudioList($activefolioid);
 
 <style>
 img { height:100%}
-.message {position:absolute;top:50%;left:50%;transform: translate(-50%,-50%); }
 .swipe-holder{
     height: 100%;
     /* width:100%; */

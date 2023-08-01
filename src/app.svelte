@@ -4,14 +4,15 @@ import { openPtk,usePtk,loadScript} from 'ptk'
 import SwipeZipImage from "./swipezipimage.svelte";
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import { onDestroy, onMount } from "svelte";
-import {activefolioid,isAndroid,playing,idlecount,showpaiji,folioHolderWidth,
-    newbie,idletime,landscape,showsponsor, loadingbook} from './store.js'
+import {activefolioid,isAndroid,playing,idlecount,showpaiji,leftmode,
+    newbie,idletime,landscape,showsponsor} from './store.js'
 import {setTimestampPtk} from './mediaurls.js'
 import TapText from './taptext.svelte'
 import Player from './player.svelte'
 import Newbie from './newbie.svelte';
 import Paiji from './paiji.svelte';
 import { get } from 'svelte/store';
+import Left from './left.svelte'
 let ptk,tofind;
 registerServiceWorker();
 const idleinterval=2;
@@ -71,6 +72,10 @@ $: loadPlayer();
 {#key $activefolioid} 
 <SwipeZipImage src={$activefolioid+".zip"} {ptk} {onTapText} {onMainmenu} />
 {/key}
+
+{#if $leftmode!=='folio'}
+<Left {ptk}/>
+{/if}
 
 {#if (shownewbie||showdict) && !$landscape}
 <!-- svelte-ignore a11y-click-events-have-key-events -->

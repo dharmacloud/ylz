@@ -23,6 +23,7 @@ const onDict=(t)=>{
     showdict=true;
 }
 const setSearchable=t=>{
+    console.log('setsearchable',t)
     const tap_at=t.indexOf(CURSORMARK);
     searchable.set(t.slice(tap_at+1));
 }

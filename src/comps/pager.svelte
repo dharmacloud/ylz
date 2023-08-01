@@ -52,7 +52,7 @@ const onswipe=(direction)=>{
 }
 </script>
 
-<SwipeView onSwipe={onswipe} caption={"⮂"+caption}>
+<SwipeView onSwipe={onswipe} caption={"→"+caption}>
 {#if pages.length}
 <slot active={pages[0].idx==now} caption={pages[0].caption} idx=0 id={pages[0].id}></slot>
 {/if}

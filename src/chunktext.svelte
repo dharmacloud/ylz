@@ -4,8 +4,8 @@ import {tapmark,foliotext,loadingbook} from  './store.js'
 import {get} from 'svelte/store'
 import ChunkNav from './chunknav.svelte'
 import {goPb} from './nav.js'
-let ck,loff,lines=[];
-
+let ck,loff, lines=[];
+export let ptkline;
 const loadChunkText=(mark,loading)=>{
     if (loading) return;
     const ft=get(foliotext);
@@ -17,12 +17,26 @@ const loadChunkText=(mark,loading)=>{
     }
     ck=ckid;
 }
-$: loadChunkText($tapmark,$loadingbook);
+const loadPtkLine=async ()=>{
+    const {id,bkid}=ptk.getHeading(ptkline);
+    const address='bk#'+bkid+'.ck#'+id;
+    const [start]=ptk.rangeOfAddress(address);
+    lines=await ptk.fetchAddress(address);
+    loff=ptkline-start;
+    setTimeout(()=>{
+        const ele=document.querySelector('.toctext .activeline');
+        if (!ele) return;
+        ele.parentElement.parentElement.scrollTop=ele.offsetTop-50;
+
+    },100);
+}
+$: ptkline?loadPtkLine():loadChunkText($tapmark,$loadingbook);
 
 const renderLine=line=>{
     return line.replace(/\^[a-z]#?[a-z\d]*/g,'');
 }
 const setAddress=(lineoff)=>{
+    if (ptkline) return;
     const ft=get(foliotext);
     if (!ft||!ft.fromFolioPos) return;
     const [pbid,line,ch]=ft.toFolioPos(ck,lineoff) ;
@@ -43,17 +57,15 @@ const gotop=()=>{
 
 <div class="toctext">
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class="gotop" on:click={gotop}>⮅</span>
+{#if !ptkline}
+<span class="gotop" on:click={gotop}>↑</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="goactiveline" on:click={goactiveline}>▃</span>
 <ChunkNav {ptk}/>
+{/if}
+
 {#each lines as line,idx}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div on:click={()=>setAddress(idx)} class:activeline={loff==idx}>{@html renderLine(line)}</div>
 {/each}
 </div>
-
-<style>
-.gotop {z-index:999;position:fixed;right:1em;top:1em;color:var(--selected-color)}
-.goactiveline {z-index:999;position:fixed;right:1em;color:var(--selected-color)}
-</style>

@@ -1,13 +1,13 @@
 <script>
 import { splitUTF32Char ,listExcerpts, parseOfftext, bsearchNumber} from 'ptk';
-import { searchable} from './store.js'
+import { leftmode, searchable,lefttextline, tofind} from './store.js'
 import { goPtkLine } from './nav.js';
 import SearchHelp from './searchhelp.svelte'
 import Pager from './comps/pager.svelte';
 export let ptk;
 let items=[], theinput, activeidx=-1, value='',
 excerpts=[],chunkhits=[],
-selected=-1,pagecount=0;
+selected=-1,pagecount=0,selecteditem=-1;
 let scopes=[];
 let allexcerpts=[], allchunkhits=[], allpostings=[];
 let now=0;
@@ -38,8 +38,13 @@ const setInput=idx=>{
         activeidx=idx;
     }
 }
+let inputtimer=0;
 const onchange=()=>{
     activeidx=-1;
+    clearTimeout(inputtimer);
+    inputtimer=setTimeout(()=>{
+        tofind.set(value);
+    },250);
 }
 const dosearch=()=>{
     excerpts.length=0;
@@ -48,9 +53,9 @@ const dosearch=()=>{
     } else tf=value;
 
     ptk.scanText(tf).then(res=>{
-		scopes=res.filter(it=>it.count);
+		scopes=res;
         if (scopes.length) {
-            setScope(1)
+            setScope(1);
         }
 	});
 }
@@ -80,6 +85,7 @@ const setScope=async (idx)=>{
 const gopage=async idx=>{
     excerpts.length=0;
     chunkhits.length=0;
+    selecteditem=-1;
     if (selected%2==0) {
         chunkhits=allchunkhits.slice(idx*PERPAGE,(idx+1)*PERPAGE);
         pagecount=Math.floor(allchunkhits.length /PERPAGE)+1;
@@ -102,26 +108,42 @@ const gopage=async idx=>{
     chunkhits=chunkhits;
     now=idx;
 }
+
 const go=(idx)=>{
+    let line=allexcerpts[idx][0];
     if (selected%2==0) { //goto first hit of the chunk
         //todo , click chunk hit to show excepts
         const tlp = ptk.inverted.tokenlinepos;
         const chunktokenpos=tlp[allchunkhits[idx].ck.line];        
         const at=bsearchNumber(allpostings[0],chunktokenpos);
         const closest= allpostings[0][at];
-        const line=bsearchNumber(tlp, closest)-1;
-        goPtkLine(ptk, line);
-
-    } else { //goto line
-        const line=allexcerpts[idx][0];
-        goPtkLine(ptk,line);
+        line=bsearchNumber(tlp, closest)-1;
     }
+    if (selecteditem==idx) { //second click to show folio
+        goPtkLine(ptk, line);
+        leftmode.set('folio')
+    } else {
+        console.log('lefttext',line)
+        lefttextline.set(line);
+        leftmode.set('lefttext')
+    }
+    selecteditem=idx;
+}
+const onfocus=()=>{
+    activeidx=-1;
+    leftmode.set('input')
+}
+const onblur=()=>{
+    setTimeout(()=>{
+        leftmode.set('folio')
+    },200);
 }
 $: makeSearchable($searchable)
 $: dosearch( value, activeidx,$searchable)
 </script>
 <div class="toctext">
-<input placeholder="輸入區" size={8} class:diminput={activeidx>-1} bind:this={theinput} on:input={onchange} bind:value id="tofind"/>
+<input class="tofind" placeholder="輸入區" size={8} class:diminput={activeidx>-1} bind:this={theinput} 
+on:focus={onfocus} on:blur={onblur} on:input={onchange} bind:value id="tofind"/>
 {#each items as item,idx}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="searchable" class:selectedsearchable={idx<=activeidx} on:click={()=>setInput(idx)}>{item}</span>
@@ -149,14 +171,14 @@ $: dosearch( value, activeidx,$searchable)
 {#each excerpts as excerpt,idx}
 <div class="excerptline" class:oddline={idx%2==0}>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class="excerptseq" on:click={go(idx+(now*PERPAGE))}>{idx+(now*PERPAGE)+1}←</span>
+<span class="excerptseq clickable" class:selected={selecteditem==idx} on:click={go(idx+(now*PERPAGE))}>{idx+(now*PERPAGE)+1}←</span>
 {excerpt.puretext}</div>
 {/each}
 
 {#each chunkhits as chit,idx}
 <div class="excerptline" class:oddline={idx%2==0}>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class="excerptseq" on:click={go(idx+(now*PERPAGE))}>{idx+(now*PERPAGE)+1}←</span>
+<span class="excerptseq clickable" class:selected={selecteditem==idx} on:click={go(idx+(now*PERPAGE))}>{idx+(now*PERPAGE)+1}←</span>
 {chit.ck.bk?.caption}/{chit.ck.caption}<span class="hit">{" "+chit.hits}</span></div>
 {/each}
 

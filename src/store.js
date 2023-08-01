@@ -17,8 +17,10 @@ export const showsponsor=writable(settings.showsponsor);
 export const landscape=writable(false)
 export const isAndroid=writable(false)
 export const searchable=writable('')
-
+export const leftmode=writable('folio');
 export const foliotext=writable({});
+export const tofind=writable('');
+export const lefttextline=writable(0);//ptk line to be shown in vtext
 // export const foliorawtexts=writable([]);
 // export const foliostartfrom=writable(0)
 
@@ -164,7 +166,7 @@ export const selectmedia=(vid,restart)=>{
 }
 
 export const sideWidth=()=>{
-    const w=(screen.height *0.45);
+    const w=(screen.height *0.45);//  folio image W720 /H1600 = 0.45
     const r=((w*100/screen.width)).toFixed(2);
     return 'left:'+r+'vw;width:'+(100-r)+'vw';
 }
@@ -173,7 +175,7 @@ export const folioHolderWidth=(ls,ratio=1,_swiper)=>{
     ratio=ratio||1;
     if (get(landscape)) {
         const w=(screen.height *0.45 * ratio);
-        const r=Math.floor(w*100/screen.width)+1;
+        const r=(w*100/screen.width).toFixed(2);
         style=r+'vw';
     }
     if (_swiper) setTimeout(()=>{
