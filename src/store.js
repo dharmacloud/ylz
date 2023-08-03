@@ -166,19 +166,19 @@ export const selectmedia=(vid,restart)=>{
 }
 
 export const sideWidth=()=>{
-    const w=(screen.height *0.45);//  folio image W720 /H1600 = 0.45
-    const r=((w*100/screen.width)).toFixed(2);
+    const w=(window.innerHeight *0.45);//  folio image W720 /H1600 = 0.45
+    const r=((w*100/window.innerWidth)).toFixed(2);
     return 'left:'+r+'vw;width:'+(100-r)+'vw';
 }
 export const folioHolderWidth=(ls,ratio=1,_swiper)=>{
     let style='100vw'
     ratio=ratio||1;
     if (get(landscape)) {
-        const w=(screen.height *0.45 * ratio);
-        const r=(w*100/screen.width).toFixed(2);
+        const w=(window.innerHeight *0.45 * ratio);
+        const r=(w*100/window.innerWidth).toFixed(2);
         style=r+'vw';
     }
-    if (_swiper) setTimeout(()=>{
+    if (_swiper&&_swiper?.update) setTimeout(()=>{
         _swiper?.update();
     },100)
     return style;

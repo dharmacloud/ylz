@@ -53,7 +53,7 @@ const onTapText=(t)=>{
 }
 const orientation=(ls)=>{
     showdict=false;
-    shownewbie=false;
+    if (ls) shownewbie=false;
 }
 $: orientation($landscape)
 $: loadPlayer();

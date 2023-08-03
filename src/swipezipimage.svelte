@@ -62,12 +62,13 @@ const loadZip=async ()=>{
     const buf=await res.arrayBuffer();
     const zip=new ZipStore(buf);
     thezip.set(zip);
+    images.length=0;
     for (let i=0;i<zip.files.length;i++) {
         if (i==zip.files.length-1) {
             const blob=new Blob([zip.files[i].content]);
             images.push(URL.createObjectURL(blob));
         } else {
-            images.push('frames/blank.png');
+            images.push('blank.png');
         }
     }
     defaultIndex=zip.files.length-1;
@@ -96,7 +97,7 @@ const swipeChanged=(obj)=>{
         const blob=new Blob([get(thezip).files[i].content]);
         ele.src=images[i]=URL.createObjectURL(blob);
     }
-    if (i<totalpages) { //buffer next page for smooter swipe
+    if (i+1<totalpages) { //buffer next page for smooter swipe
         i++
         const ele=wrapper.childNodes[defaultIndex-1]?.firstChild.firstChild;
         if (~ele.src.indexOf('blank')) {
