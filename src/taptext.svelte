@@ -46,12 +46,13 @@ $: thetab=='dict' && onDict(tofind);
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="textual"} on:click={()=>thetab="textual"}>📜{#if ls}文字{/if}</span>    
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        {#if !ls}
+        {#if !ls || true}
         <span class='clickable' class:selected={thetab=="audio"} on:click={()=>thetab="audio"}>🎵</span>
         {/if}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="dict"} on:click={()=>thetab="dict"}>🔠{#if ls}字典{/if}</span>
         {#if $landscape}<span style="font-size:65%">{$tapAddress}</span>{/if}
+<!-- svelte-ignore a11y-click-events-have-key-events -->
     </div>
       <div class="tab-content" class:visible={thetab=='list'}><Foliolist {ptk} {closePopup}  bind:thetab /></div>
       <div class="tab-content" class:visible={thetab=='toc'}><Toc {closePopup} {ptk} /></div>

@@ -1,9 +1,9 @@
 <script>
 import {stylestring} from './unit.js'
-import {activepb,videoid,folioLines,foliotext,folioChars,playing,selectmedia,
-    stopVideo,remainrollback, player,continueplay, findByVideoId, playnextjuan, activefolioid} from './store.js'
+import {activepb,audioid,folioLines,foliotext,folioChars,playing,selectmedia,mediaurls,
+    stopAudio,remainrollback, player,continueplay, findByAudioId, playnextjuan, activefolioid} from './store.js'
 import {get} from 'svelte/store'
-import {getAudioList} from './mediaurls.js'
+
 import {onDestroy} from 'svelte'
 import { allJuan, loadFolio } from './nav.js';
 export let frame={},totalpages;
@@ -23,14 +23,14 @@ const rollback=()=>{
         r--;
         remainrollback.set(r);
     }
-    if (r==0) stopVideo();
+    if (r==0) stopAudio();
 }
 const playnext=()=>{
     const juans=allJuan(ptk);
     const folioid=$activefolioid;
-    const vid=$videoid;
+    const vid=$audioid;
     //get the media index in this juan
-    const thisaudiolist=getAudioList(folioid);
+    const thisaudiolist=$mediaurls;
     let performer='';
     for (let i=0;i<thisaudiolist.length;i++) {
         if (thisaudiolist[i].vid==vid) performer=thisaudiolist[i].performer;
@@ -43,10 +43,9 @@ const playnext=()=>{
             const nextfolioid=folioid.replace(juannow,parseInt(juannow)+1);
             console.log('loading next juan',nextfolioid)
             loadFolio(nextfolioid,function(){
-                const audiolist=getAudioList(nextfolioid);
+                const audiolist=$mediaurls;
                 console.log('audiolist',audiolist,nextfolioid)
                 if (audiolist) {
-
                     const sameperformer=audiolist.filter(it=>it.performer==performer);
                     const vid=sameperformer.length?sameperformer[0].vid:audiolist[0].vid;
                     selectmedia(vid);
@@ -72,7 +71,7 @@ const stripstyle=(i,strip)=>{
     out.push('top:0px');
     out.push('width:'+Math.floor(w)+'px');
     out.push('height:0px');
-    const {timestamp} = findByVideoId($videoid);
+    const {timestamp} = findByAudioId($audioid);
     if (!timestamp) {
         return out.join(';'); //cannot play
     }
@@ -81,7 +80,7 @@ const stripstyle=(i,strip)=>{
     if (!timestamp[line] && i==0) { //read the end
         playnext();
     }
-    const playertime=player($videoid)?.getCurrentTime();
+    const playertime=player?.currentTime;
     let timedelta=playertime-timestamp[line];//player 跑得比較快。（因換頁動畫時間），需修正
     if (Math.abs(timedelta)>3 ) { //不會差這麼多，是快速滑輪造成。getCurrentTime 未切到
         timedelta=0.02;
@@ -129,8 +128,8 @@ const destroyTimer=()=>{
 }
 
 </script>
-{#if $playing && findByVideoId($videoid) }
-{#key $activepb}
+{#if $playing && findByAudioId($audioid) }
+{#key $activepb,$audioid}
 <div class="transcript" style={stylestring(frame)} >
     {#each strips as strip,idx}
         <div class="strip" id={'strip'+idx} style={stripstyle(idx,strip)}/>

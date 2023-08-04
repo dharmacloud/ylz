@@ -33,10 +33,6 @@ onMount(async ()=>{
     },idleinterval*1000);
 });
 
-const loadPlayer=()=>{
-    // loadScript('http://vm.gtimg.cn/tencentvideo/txp/js/txplayer.js')
-    loadScript('https://www.youtube.com/iframe_api')
-}
 
 let showdict=false,shownewbie=$newbie=='on';
 const closePopup=()=>{
@@ -56,7 +52,6 @@ const orientation=(ls)=>{
     if (ls) shownewbie=false;
 }
 $: orientation($landscape)
-$: loadPlayer();
 
 // $: console.log(sidepaiji,idletime,$idlecount,$showpaiji,$playing,showdict)
 </script>

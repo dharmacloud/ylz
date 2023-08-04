@@ -1,5 +1,5 @@
-import {foliotext,activefolioid ,videoid,tapmark,lefttextline,
-    activepb,loadingbook,bookByFolio, stopVideo} from "./store.js";
+import {foliotext,activefolioid ,audioid,tapmark,
+    activepb,loadingbook,bookByFolio, stopAudio} from "./store.js";
 import {get} from 'svelte/store'
 import {bsearchNumber} from 'ptk/utils'
 
@@ -26,8 +26,8 @@ export const loadFolio=(folioid,func)=>{
     // console.log('loading folio',folioid)
     if (folioid==get(activefolioid)) func&&func(folioid);
     else {
-        stopVideo();
-        videoid.set('')
+        stopAudio();
+        audioid.set('')
         activepb.set('1');
         loadingbook.set(true);
         activefolioid.set(folioid);

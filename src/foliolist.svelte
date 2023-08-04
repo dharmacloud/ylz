@@ -2,7 +2,7 @@
 import Favoritebuttons from './favoritebuttons.svelte';
 import { loadFolio } from './nav.js';
 export let ptk,thetab;
-import {activefolioid, parallelFolios,stopVideo} from './store.js';
+import {activefolioid, parallelFolios,stopAudio} from './store.js';
 export let closePopup=function(){};
 
 const getFolioList=()=>{
@@ -21,7 +21,7 @@ const getFolioList=()=>{
 const folios=getFolioList();
 const selectfolio=nfolio=>{
     const folio=ptk.defines.folio;
-    stopVideo();
+    stopAudio();
     const folioid=folio.fields.id.values[nfolio];
     loadFolio(folioid,function(){
         thetab='toc';

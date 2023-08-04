@@ -1,7 +1,7 @@
 import {updateSettings,settings} from './savestore.ts'
 import {bsearchNumber, usePtk,makeAddress} from 'ptk'
 import {derived, get,writable } from 'svelte/store';
-import {silence,mediabyid} from './mediaurls.js'
+import {silence} from './mediaurls.js'
 
 export const thezip=writable(null)
 export const activePtk=writable('dc');
@@ -11,7 +11,7 @@ export const activepb=writable('1');
 export const activefolioid=writable(settings.activefolioid);
 export const maxfolio=writable(0);
 export const favorites=writable(settings.favorites);
-export const prefervideo=writable(settings.prefervideo);
+export const preferaudio=writable(settings.preferaudio);
 export const showpunc=writable(settings.showpunc);
 export const showsponsor=writable(settings.showsponsor);
 export const landscape=writable(false)
@@ -21,16 +21,13 @@ export const leftmode=writable('folio');
 export const foliotext=writable({});
 export const tofind=writable('');
 export const lefttextline=writable(0);//ptk line to be shown in vtext
+export let player
+export const setplayer=p=>player=p;
 // export const foliorawtexts=writable([]);
 // export const foliostartfrom=writable(0)
 
 export const mediaurls=writable([silence]);
-export const ytplayer=writable(null)
-export const playerready=writable(false);
-export const qqplayer=writable(null)
-export const player=function(vid){
-    return mediabyid(vid||get(videoid))?.videohost=='youtube'?get(ytplayer):get(qqplayer);
-}
+
 export const bookByFolio=(fid,ptk)=>{
     if (ptk) {
         const folio=dc.defines.folio;
@@ -44,7 +41,8 @@ export const bookByFolio=(fid,ptk)=>{
         return fid.replace(/\d+$/,'')
     }
 }
-export const videoid=writable('');
+export const audioid=writable('');
+
 export const folioLines=function(_fid){
     const ptk=usePtk('dc');
     const fid=_fid||get(activefolioid);
@@ -72,23 +70,19 @@ autodict.subscribe((autodict)=>updateSettings({autodict}));
 newbie.subscribe((newbie)=>updateSettings({newbie}));
 showpunc.subscribe((showpunc)=>updateSettings({showpunc}));
 favorites.subscribe((favorites)=>updateSettings({favorites}));
-prefervideo.subscribe((prefervideo)=>updateSettings({prefervideo}));
+preferaudio.subscribe((preferaudio)=>updateSettings({preferaudio}));
 
-export const findByVideoId=(id,column='timestamp')=>{
+export const findByAudioId=(id,column='timestamp')=>{
     const ptk=usePtk('dc');
     if (!ptk.columns[column]) return null;
     const ts=ptk.columns[column].fieldsByKey(id);
     return {id,...ts};
 }
 
-export const stopVideo=()=>{
-    pauseVideo();
+export const stopAudio=()=>{
+    player?.pause();
     playing.set(false);
     remainrollback.set(-1);
-}
-export const pauseVideo=()=>{
-    get(qqplayer)?.pause&&get(qqplayer).pause();
-    get(ytplayer)?.stopVideo&&get(ytplayer).stopVideo();
 }
 
 export const booknameOf=folioid=>{
@@ -153,16 +147,21 @@ export const parallelFolios=(ptk,folioid)=>{
     return out;
 }
 
-export const selectmedia=(vid,restart)=>{
+export const selectmedia=(aid,restart)=>{
     if (get(remainrollback)==0) remainrollback.set(-1);
-    if (!vid) stopVideo();
+    if (!aid) stopAudio();
     else {
-        const prefer=get(prefervideo)
-        prefer[get(activefolioid)]=vid;
-        prefervideo.set(Object.assign({},prefer));
+        const prefer=get(preferaudio)
+        prefer[get(activefolioid)]=aid;
+        preferaudio.set(Object.assign({},prefer));
+        playing.set(true);        
     }
-    videoid.set(vid||'');
+    audioid.set(aid||'');
     if (restart) activepb.set('1');
+    setTimeout(()=>{
+        player.play();
+    },100)
+
 }
 
 export const sideWidth=()=>{

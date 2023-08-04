@@ -4,14 +4,14 @@ import PuncLayer from './punclayer.svelte';
 import TapMark from './tapmark.svelte';
 import Swipe from './3rd/swipe.svelte';
 import SwipeItem from './3rd/swipeitem.svelte';
-import {getAudioList} from './mediaurls.js'
+
 import {extractPuncPos,usePtk,FolioText, parseOfftext} from 'ptk'
 import { CURSORMARK } from './nav.js';
 import {ZipStore} from 'ptk/zip';
 import {thezip,favortypes, landscape,foliotext,folioLines,
-    folioChars,activePtk,activefolioid,activepb,favorites,videoid,showpunc,
-playerready,maxfolio,tapmark, playing, remainrollback, 
-idlecount,showpaiji,loadingbook, selectmedia, prefervideo,folioHolderWidth,leftmode} from './store.js'
+    folioChars,activePtk,activefolioid,activepb,favorites,audioid,showpunc,
+maxfolio,tapmark, playing, remainrollback, 
+idlecount,showpaiji,loadingbook, selectmedia, preferaudio,folioHolderWidth,leftmode,mediaurls} from './store.js'
 import { get } from 'svelte/store';
 import Paiji from './paiji.svelte'
 export let src;
@@ -68,7 +68,7 @@ const loadZip=async ()=>{
             const blob=new Blob([zip.files[i].content]);
             images.push(URL.createObjectURL(blob));
         } else {
-            images.push('blank.png');
+            images.push('frames/blank.png');
         }
     }
     defaultIndex=zip.files.length-1;
@@ -228,10 +228,10 @@ const favoritebtn=()=>{
     favorites.set(Object.assign({},bookfavor));
 }
 const toggleplaybtn=()=>{
-    if (!get(videoid)) {
-        if (audiolist.length<2) return;
-        const pick=  Math.floor(Math.random()*(audiolist.length-1))+1;
-        const vid= $prefervideo[$activefolioid] || audiolist[pick]?.vid;
+    if (!get(audioid)) {
+        if ($mediaurls.length<2) return;
+        const pick=  Math.floor(Math.random()*($mediaurls.length-1))+1;
+        const vid= $preferaudio[$activefolioid] || $mediaurls[pick]?.vid;
         selectmedia(vid);
     } else {
         selectmedia('');
@@ -240,7 +240,7 @@ const toggleplaybtn=()=>{
 
 $: loadZip(src);
 $: gotoPb($activepb); //trigger by goto folio in setting.svelte
-$: audiolist=getAudioList($activefolioid);
+
 </script>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 {#if ready}
@@ -262,8 +262,8 @@ $: audiolist=getAudioList($activefolioid);
 <span class:blinkfavorbtn={!!favoritetimer} class="favoritebtn" on:click={favoritebtn}>{ favortypes[$favorites[$activefolioid]?.[$activepb]||0]}</span>
 {/key}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-{#if !$landscape && $playerready && audiolist.length>1}
-<span class="playbtn" on:click={toggleplaybtn}>{$videoid?'◼':'♫'}</span>
+{#if !$landscape  && $mediaurls.length>1}
+<span class="playbtn" on:click={toggleplaybtn}>{$audioid?'◼':'♫'}</span>
 {/if}
 
 <span class="pagenumber">{totalpages-defaultIndex}</span>

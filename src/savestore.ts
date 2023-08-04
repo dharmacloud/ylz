@@ -8,17 +8,17 @@ export const loadSettings=()=>{
     const showpunc=localStorage.getItem(AppPrefix+'showpunc')||'on';  
     const showsponsor=localStorage.getItem(AppPrefix+'showsponsor')||'off';  
     let _favorites=localStorage.getItem(AppPrefix+'favorites')||'{}';
-    let _prefervideo=localStorage.getItem(AppPrefix+'prefervideo')||'{}';
-    let favorites={},prefervideo={};
+    let _preferaudio=localStorage.getItem(AppPrefix+'preferaudio')||'{}';
+    let favorites={},preferaudio={};
     try {
         favorites=JSON.parse(_favorites);
-        prefervideo=JSON.parse(_prefervideo);
+        preferaudio=JSON.parse(_preferaudio);
     } catch (e){
         console.log(e);
         favorites={};
-        prefervideo={}
+        preferaudio={}
     }
-    return {activefolioid,showsponsor,videohost,autodict,newbie,favorites,playnextjuan,prefervideo,showpunc};
+    return {activefolioid,showsponsor,videohost,autodict,newbie,favorites,playnextjuan,preferaudio,showpunc};
 }
 
 export const saveSettings=()=>{ //immediate save
