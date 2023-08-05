@@ -2,7 +2,7 @@
 import {player,audioid,activefolioid, playnextjuan, findByAudioId, remainrollback,selectmedia,mediaurls,loadingbook} from './store.js';
 import Slider from './3rd/rangeslider.svelte';
 import Switch from './3rd/switch.svelte';
-import {usePtk,parseOfftext,} from 'ptk'
+import {usePtk,parseOfftext, sleep,} from 'ptk'
 import { onDestroy, onMount } from 'svelte';
 import { get } from 'svelte/store';
 import {audiofolder,fetchAudioList} from './mediaurls.js'
@@ -66,7 +66,11 @@ const downloadit=async (aid)=>{
     await downloadToCache(audiofolder+aid+'.mp3',(now,all)=>{
         progress=Math.round((now/all)*100);
     });
-    await fetchAudioList($activefolioid, false,mediaurls);
+    console.log('refreshing audio list')
+    
+    await sleep(500); //wait for cache to sync
+    const list=await fetchAudioList($activefolioid);
+    mediaurls.set(list);
     downloading='';
 }
 $: loadSubtitle($audioid);

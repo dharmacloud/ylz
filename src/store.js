@@ -185,13 +185,8 @@ export const folioHolderWidth=(ls,ratio=1,_swiper)=>{
 
 export const paijitexts=[
     '中部全國供佛齋僧大會',
-    '施主※陳⬚吟',
-    '施主※林⬚娟',
-    '施主※甯⬚南',
-    '切圖※䆁⬚缽',
-    '標記※䆁常明',
-    '標記※林⬚如　謝⬚恆',
-    '時間軸※櫻井⬚志'
+    '施主※陳碧吟',
+    '施主※甯耀南',
 ]
 
 

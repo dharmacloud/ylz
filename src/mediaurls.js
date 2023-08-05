@@ -42,6 +42,6 @@ export const fetchAudioList=async (activeid,loading,store)=>{
     const cacheno=out.filter(it=>!it.incache).concat();
     out=out.filter(it=>it.incache).concat(cacheno);
     out.unshift(silence);
-    store.set(out);
+    if (store) store.set(out);
     return out;
 };
