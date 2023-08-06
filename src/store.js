@@ -69,6 +69,7 @@ activefolioid.subscribe((activefolioid)=>updateSettings({activefolioid}));
 autodict.subscribe((autodict)=>updateSettings({autodict}));
 newbie.subscribe((newbie)=>updateSettings({newbie}));
 showpunc.subscribe((showpunc)=>updateSettings({showpunc}));
+showpunc.subscribe((showsponsor)=>updateSettings({showsponsor}));
 favorites.subscribe((favorites)=>updateSettings({favorites}));
 preferaudio.subscribe((preferaudio)=>updateSettings({preferaudio}));
 
@@ -188,6 +189,11 @@ export const paijitexts=[
     '施主※陳碧吟',
     '施主※甯耀南',
 ]
-
+export const isSidePaiji=()=>{
+    const m=sideWidth().match(/width:(\d+)/);
+    const sidepaiji=m&&m[1]&&parseInt(m[1])>20;
+    return sidepaiji;    
+}
 
 export const favortypes=['♡','🤍','❤️', '💚', '💙','💜','🖤'];
+

@@ -8,7 +8,7 @@ import SwipeItem from './3rd/swipeitem.svelte';
 import {extractPuncPos,usePtk,FolioText, parseOfftext} from 'ptk'
 import { CURSORMARK } from './nav.js';
 import {ZipStore} from 'ptk/zip';
-import {thezip,favortypes, landscape,foliotext,folioLines,
+import {thezip,favortypes, landscape,foliotext,folioLines,isSidePaiji,
     folioChars,activePtk,activefolioid,activepb,favorites,audioid,showpunc,
 maxfolio,tapmark, playing, remainrollback, 
 idlecount,showpaiji,loadingbook, selectmedia, preferaudio,folioHolderWidth,leftmode,mediaurls} from './store.js'
@@ -120,9 +120,11 @@ const updateFolioText=()=>{
         puncs=extractPuncPos(foliopage,fl);
     },200); //wait until swiper stop
 }
-const useractive=()=>{
-    showpaiji.set(false);
-    idlecount.set(0);
+const useractive=(humanaction=false)=>{
+    if (!isSidePaiji() || humanaction) {
+        showpaiji.set(false);
+        idlecount.set(0);
+    }
     hidepunc=false;
 }
 const mousewheel=(e)=>{
@@ -134,7 +136,7 @@ const mousewheel=(e)=>{
 	} else {
         swiper.nextItem();
 	}
-    useractive();
+    useractive(true);
 	e.preventDefault();
 }
 const getCharXY=(x,y)=>{
@@ -147,8 +149,8 @@ const getCharXY=(x,y)=>{
 }
 
 const onfoliopageclick=e=>{
-    if ($showpaiji) {
-        useractive();
+    if ($showpaiji && !isSidePaiji()) {
+        useractive(true);
         return;
     }
     hidepunc=false;

@@ -1,5 +1,5 @@
 <script>
-import {sideWidth,paijitexts,folioHolderWidth,landscape} from './store.js'
+import {sideWidth,paijitexts,folioHolderWidth,landscape, playing,isSidePaiji} from './store.js'
 import {onDestroy} from 'svelte'
 let now=0;
 export let forceshow=false;
@@ -10,15 +10,16 @@ let timer=setInterval(()=>{
 onDestroy(()=>{
     clearInterval(timer)
 })
-const m=sideWidth().match(/width:(\d+)/);
-const sidepaiji=m&&m[1]&&parseInt(m[1])>20;
+
 </script>
 
-{#if sidepaiji && !forceshow}
+{#if isSidePaiji() && !forceshow}
 <div class="sidepaiji" style={sideWidth()} >
-    <div class="sidesponsor">{text}</div>  
+    <div class="sidesponsor">{text}</div>
+    <div class="sidesponsortext">願以此功德、普及於一切，</div>
+    <div class="sidesponsortext2">我等與眾生、皆共成佛道。</div>
 </div>
-{:else}
+{:else if !$playing}
 <div class="paiji" style={'width:'+(forceshow?folioHolderWidth():'')}>
 <img alt="frame" src="frames/red.jpg"/>
 <div class="sponsor" style={"padding-left:"+(forceshow?folioHolderWidth($landscape,0.45):'45vw')}>{text}</div>

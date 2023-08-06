@@ -19,10 +19,11 @@ export const mediabyid=(_vid)=>{
 }
 
 export const fetchAudioList=async (activeid,loading,store)=>{
-    if (loading) return [];
-    const ts=ptk.columns.timestamp;
     let out=[];
+    if (loading) return out;
     if (!ptk) return out;
+    const ts=ptk.columns.timestamp;
+    if (!ts) return out;
     const cache=await caches.open('v1::ylz');
     const keys=await cache.keys();
     const incaches=keys.map(it=>it.url.slice(window.location.origin.length+audiofolder.length).replace('.mp3',''))

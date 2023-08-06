@@ -13,7 +13,9 @@ const seekToPb=(pbid,audioid)=>{
     if (!timestamp) return;
     const line=(parseInt(pbid)-1)*folioLines();
     const t=timestamp[line];
-    if (player) player.currentTime=t;
+    setTimeout(()=>{ //allow audio to initialized
+        if (player) player.currentTime=t;
+    },30)
 }
 $: seekToPb($activepb,$audioid);
 </script>

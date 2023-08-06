@@ -2,16 +2,19 @@
 
 export const downloadToCache=async(url,cb,cachename='v1::ylz')=>{
     const cachefn=url;
-    if (location.host!=='nissaya.cn') url="https://nissaya.cn/"+url.replace(/^\//,'');
+    if (location.host!=='nissaya.cn' 
+    && location.host.indexOf('localhost')==-1 
+    && location.host.indexOf('127.0.0.1')==-1) url="https://nissaya.cn/"+url.replace(/^\//,'');
 
-    console.log('fetching')
+    cb&&cb('requesting')
     let response = await fetch(url,{method:"GET",mode:"no-cors",cache: "no-cache",
     redirect:"follow",
     credentials: "omit",
     origin:"https://nissaya.cn",
     headers:{"Accept":"audio/mpeg"}});
 
-    
+    cb&&cb('responsed')
+
     if (response.body) { //support progress
         const reader = response.body.getReader();
         // Step 2: get total length
@@ -24,7 +27,7 @@ export const downloadToCache=async(url,cb,cachename='v1::ylz')=>{
             if (done) break;
             chunks.push(value);
             receivedLength += value.length;
-            cb&&cb(receivedLength,contentLength)
+            cb&&cb( Math.floor( (100*receivedLength/contentLength))+'%');
         // console.log(`Received ${receivedLength} of ${contentLength}`)
         }
     
@@ -45,10 +48,9 @@ export const downloadToCache=async(url,cb,cachename='v1::ylz')=>{
         };
         const res=new Response(chunksAll,resp)
         cache.put(cachefn, res);
-    } else {
-        cb&&cb(1,1);
+    } else { //doesn't support download progress
         const cache=await caches.open(cachename);
         cache.put(cachefn, response);
     }
-
+    cb&&cb('cached');
 }

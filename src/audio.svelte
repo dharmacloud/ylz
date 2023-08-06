@@ -60,18 +60,17 @@ const loadSubtitle=async id=>{
 const htmltext=s=>{
     return parseOfftext(s)[0].replace(/[【《〔](.+?)[】》〕]/g,'<span class=bracket>$1 </span>');
 }
-let downloading='',progress=0;
+let downloading='',progress='';
 const downloadit=async (aid)=>{
     downloading=aid;
-    await downloadToCache(audiofolder+aid+'.mp3',(now,all)=>{
-        progress=Math.round((now/all)*100);
+    await downloadToCache(audiofolder+aid+'.mp3',msg=>{
+        progress=msg;
     });
-    console.log('refreshing audio list')
-    
-    await sleep(500); //wait for cache to sync
+    await sleep(1000); //wait for cache to sync
     const list=await fetchAudioList($activefolioid);
     mediaurls.set(list);
     downloading='';
+    progress='';
 }
 $: loadSubtitle($audioid);
 
@@ -100,7 +99,7 @@ $: fetchAudioList($activefolioid,$loadingbook,mediaurls);
 class:selected={media.aid==$audioid}>{media.performer}{idx?'♫':''}</span>
 {:else}
 <span class="uncache">{media.performer+" "}</span><span class="clickable" on:click={()=>!downloading&&downloadit(media.aid)}>{@html downloadicon}</span>
-{#if downloading==media.aid} {progress+"%"}{/if}
+{#if downloading==media.aid} {progress}{/if}
 {/if}
 {#if $audioid==media.vid&& $audioid}
 {humanDuration(getDuration($audioid))}

@@ -50,6 +50,7 @@ const onTapText=(t)=>{
 const orientation=(ls)=>{
     showdict=false;
     if (ls) shownewbie=false;
+    idlecount.set(0)
 }
 $: orientation($landscape)
 
@@ -60,7 +61,7 @@ $: orientation($landscape)
 <div class="app">
 {#if loaded}
 
-{#if $showpaiji && !$playing && !showdict && !shownewbie && !$landscape && $showsponsor=='on'}
+{#if $showpaiji && !showdict && !shownewbie && !$landscape && $showsponsor=='on'}
 <Paiji/>
 {/if}
 
