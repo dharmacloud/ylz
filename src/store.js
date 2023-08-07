@@ -3,8 +3,11 @@ import {bsearchNumber, usePtk,makeAddress} from 'ptk'
 import {derived, get,writable } from 'svelte/store';
 import {silence} from './mediaurls.js'
 
+export const online=writable(navigator.onLine);
+console.log(navigator.onLine)
 export const thezip=writable(null)
 export const activePtk=writable('dc');
+export const folioincache=writable({});
 export const loadingbook=writable(false);
 export const autodict=writable(settings.autodict);
 export const activepb=writable('1');  

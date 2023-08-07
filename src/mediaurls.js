@@ -1,5 +1,5 @@
 let ptk;
-
+import { Cachesname } from "./constant.js";
 export const silence={vid:'',performer:'-靜默-'};
 export const audiofolder='/baudio/'
 export const setTimestampPtk=_ptk=>{
@@ -18,13 +18,12 @@ export const mediabyid=(_vid)=>{
     }
 }
 
-export const fetchAudioList=async (activeid,loading,store)=>{
+export const fetchAudioList=async (activeid,store)=>{
     let out=[];
-    if (loading) return out;
     if (!ptk) return out;
     const ts=ptk.columns.timestamp;
     if (!ts) return out;
-    const cache=await caches.open('v1::ylz');
+    const cache=await caches.open(Cachesname);
     const keys=await cache.keys();
     const incaches=keys.map(it=>it.url.slice(window.location.origin.length+audiofolder.length).replace('.mp3',''))
 

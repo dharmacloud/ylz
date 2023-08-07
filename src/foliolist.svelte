@@ -1,8 +1,9 @@
 <script>
 import Favoritebuttons from './favoritebuttons.svelte';
 import { loadFolio } from './nav.js';
+import {offlinable} from './icons.js'
 export let ptk,thetab;
-import {activefolioid, parallelFolios,stopAudio} from './store.js';
+import {activefolioid, parallelFolios,stopAudio,folioincache,online} from './store.js';
 export let closePopup=function(){};
 
 const getFolioList=()=>{
@@ -21,12 +22,14 @@ const getFolioList=()=>{
 const folios=getFolioList();
 const selectfolio=nfolio=>{
     const folio=ptk.defines.folio;
-    stopAudio();
     const folioid=folio.fields.id.values[nfolio];
-    loadFolio(folioid,function(){
-        thetab='toc';
-    });
-    closePopup();
+    if ($folioincache[folioid] || $online) {
+        stopAudio();
+        loadFolio(folioid,function(){
+            thetab='toc';
+        });
+        closePopup();
+    }
 }
 
 const getFolioName=nfolio=>{
@@ -38,16 +41,19 @@ const getFolioId=nfolio=>{
     return folio.fields.id.values[nfolio]
 }
 </script>
-{#each folios as [nfolio,folioid,pars]}
+{#each folios as [nfolio,folioid,pars,incache]}
 <div class="book">
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<span on:click={()=>selectfolio(nfolio)} class:selecteditem={$activefolioid==folioid} >{getFolioName(nfolio)}</span>
+{#if incache}<span>{@html offlinable}</span>{/if}
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+<span class:dimmed={!$folioincache[folioid] && !$online} on:click={()=>selectfolio(nfolio)} class:selecteditem={$activefolioid==folioid} >{getFolioName(nfolio)}</span>
 <Favoritebuttons {ptk} {folioid} {closePopup}/>
 {#each pars as par}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
+{#if $folioincache[par] || $online}
 <span class="parallelfolio" on:click={()=>selectfolio(par)} class:selecteditem={$activefolioid==getFolioId(par)} >
 {getFolioName(par)}</span>
 <Favoritebuttons folioid={par} {ptk} {closePopup} />
+{/if}
 {/each}
 </div>
 {/each}

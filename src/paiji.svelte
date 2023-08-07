@@ -16,8 +16,8 @@ onDestroy(()=>{
 {#if isSidePaiji() && !forceshow}
 <div class="sidepaiji" style={sideWidth()} >
     <div class="sidesponsor">{text}</div>
-    <div class="sidesponsortext">願以此功德、普及於一切，</div>
-    <div class="sidesponsortext2">我等與眾生、皆共成佛道。</div>
+    <div class="sidesponsortext">我等與眾生、皆共成佛道。</div>
+    <div class="sidesponsortext2">願以此功德、普及於一切，</div>
 </div>
 {:else if !$playing}
 <div class="paiji" style={'width:'+(forceshow?folioHolderWidth():'')}>

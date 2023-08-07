@@ -1,8 +1,9 @@
-import {foliotext,activefolioid ,audioid,tapmark,
+import {foliotext,activefolioid ,audioid,tapmark,folioincache,
     activepb,loadingbook,bookByFolio, stopAudio} from "./store.js";
+import {downloadToCache} from './comps/downloader.js'
 import {get} from 'svelte/store'
 import {bsearchNumber} from 'ptk/utils'
-
+import {fetchFolioList} from './folio.js'
 export const CURSORMARK='◆'
 export const goPb=(pbid,ck)=>{   
     activepb.set(pbid);
@@ -22,6 +23,7 @@ export const goPbAt=async (ptk,at)=>{
     goPb(pbid, ck.fields.id.values[at]);
 }
 export const loadFolio=(folioid,func)=>{
+    console.log('load folio',folioid)
     let timer=0;
     // console.log('loading folio',folioid)
     if (folioid==get(activefolioid)) func&&func(folioid);
@@ -37,6 +39,9 @@ export const loadFolio=(folioid,func)=>{
                 clearInterval(timer);
                 setTimeout(()=>{//wait for 
                     func&&func(folioid);
+                    setTimeout(()=>{
+                        fetchFolioList(folioincache);//update cache
+                    },100);
                 },500); 
             }
         },100);

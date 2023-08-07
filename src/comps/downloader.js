@@ -6,12 +6,14 @@ export const downloadToCache=async(url,cb,cachename='v1::ylz')=>{
     && location.host.indexOf('localhost')==-1 
     && location.host.indexOf('127.0.0.1')==-1) url="https://nissaya.cn/"+url.replace(/^\//,'');
 
+    const headers=url.indexOf('.zip')?{"Accept":"application/octet-stream"}:{"Accept":"audio/mpeg"};
+
     cb&&cb('requesting')
-    let response = await fetch(url,{method:"GET",mode:"no-cors",cache: "no-cache",
+    let response = await fetch(url,{method:"GET",mode:"no-cors",
     redirect:"follow",
     credentials: "omit",
     origin:"https://nissaya.cn",
-    headers:{"Accept":"audio/mpeg"}});
+    headers});
 
     cb&&cb('responsed')
 
@@ -44,13 +46,17 @@ export const downloadToCache=async(url,cb,cachename='v1::ylz')=>{
         const resp= {
             status:response.status,
             statusText:response.statusText,
-            headers: {'X-Shaka-From-Cache': true,contentType:'audio/mpeg',contentLength: contentLength}
+            headers: {'X-Shaka-From-Cache': true,contentType:response.contentType,contentLength: contentLength}
         };
-        const res=new Response(chunksAll,resp)
-        cache.put(cachefn, res);
+        const res=new Response(chunksAll,resp);
+        cache.put(cachefn, res.clone());
+        cb&&cb('cached');
+        return res;
     } else { //doesn't support download progress
         const cache=await caches.open(cachename);
-        cache.put(cachefn, response);
+        cache.put(cachefn, response.clone());
+        cb&&cb('cached');
+        return response;
     }
-    cb&&cb('cached');
+    
 }

@@ -1,5 +1,6 @@
 <script>
-import {player,audioid,activefolioid, playnextjuan, findByAudioId, remainrollback,selectmedia,mediaurls,loadingbook} from './store.js';
+import {online,player,audioid,activefolioid, playnextjuan, findByAudioId,
+     remainrollback,selectmedia,mediaurls} from './store.js';
 import Slider from './3rd/rangeslider.svelte';
 import Switch from './3rd/switch.svelte';
 import {usePtk,parseOfftext, sleep,} from 'ptk'
@@ -55,6 +56,7 @@ const loadSubtitle=async id=>{
     const skptk=usePtk('dc_sanskrit');   
     subtitles2=await skptk.fetchAddress('bk#'+$activefolioid);
     subtitles=await ptk.fetchAddress('bk#'+$activefolioid);
+    
     nsub=0;
 }
 const htmltext=s=>{
@@ -88,23 +90,23 @@ const humanStoptime=t=>{
     if (!t || ($playnextjuan=='on'&&allJuan(ptk).length>1 ) ) return '';
     return (new Date(Date.now()+t*1000)).toLocaleTimeString()+'停止';
 }
-$: fetchAudioList($activefolioid,$loadingbook,mediaurls);
+
 </script>
 <div class="toctext">
-下載後才可以播放，一次下載一個。<br/>
+下載後才可以播放。<br/>
 {#each $mediaurls as media,idx}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 {#if media.incache || !media.aid}
 <span class="clickable" on:click={()=>!downloading&&selectmedia(media.aid,true)} 
-class:selected={media.aid==$audioid}>{media.performer}{idx?'♫':''}</span>
+class:selected={media.aid==$audioid}>{media.performer}{idx?'♫':''}</span><br/>
 {:else}
+{#if $online}
 <span class="uncache">{media.performer+" "}</span><span class="clickable" on:click={()=>!downloading&&downloadit(media.aid)}>{@html downloadicon}</span>
 {#if downloading==media.aid} {progress}{/if}
-{/if}
-{#if $audioid==media.vid&& $audioid}
-{humanDuration(getDuration($audioid))}
-{/if}
+{#if $audioid==media.vid&& $audioid}{humanDuration(getDuration($audioid))}{/if}
 <br/>
+{/if}
+{/if}
 {/each}
 
 
@@ -119,9 +121,5 @@ class:selected={media.aid==$audioid}>{media.performer}{idx?'♫':''}</span>
 <hr/>
 <div class="subtitle">{@html htmltext(subtitle2)}</div>
 <div class="subtitle">{@html htmltext(subtitle)}</div>
-
-
-
-
 
 </div>

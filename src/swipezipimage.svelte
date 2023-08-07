@@ -4,7 +4,7 @@ import PuncLayer from './punclayer.svelte';
 import TapMark from './tapmark.svelte';
 import Swipe from './3rd/swipe.svelte';
 import SwipeItem from './3rd/swipeitem.svelte';
-
+import {downloadToCache} from './comps/downloader.js'
 import {extractPuncPos,usePtk,FolioText, parseOfftext} from 'ptk'
 import { CURSORMARK } from './nav.js';
 import {ZipStore} from 'ptk/zip';
@@ -14,6 +14,7 @@ maxfolio,tapmark, playing, remainrollback,
 idlecount,showpaiji,loadingbook, selectmedia, preferaudio,folioHolderWidth,leftmode,mediaurls} from './store.js'
 import { get } from 'svelte/store';
 import Paiji from './paiji.svelte'
+    import { fetchAudioList } from './mediaurls';
 export let src;
 
 
@@ -58,7 +59,9 @@ const loadZip=async ()=>{
     const ftext=new FolioText(ptk);//fetchFolioText(ptk,$activefolioid);
     await ftext.load($activefolioid)
     foliotext.set(ftext);
-    const res=await fetch(host+src);
+
+    // const res=await fetch(host+src);
+    const res=await downloadToCache(host+src);
     const buf=await res.arrayBuffer();
     const zip=new ZipStore(buf);
     thezip.set(zip);
@@ -71,12 +74,14 @@ const loadZip=async ()=>{
             images.push('frames/blank.png');
         }
     }
+
     defaultIndex=zip.files.length-1;
     totalpages=zip.files.length;
     setTimeout(()=>{
         maxfolio.set(totalpages-1);
         loadingbook.set(false);
         ready=true;
+        fetchAudioList($activefolioid,mediaurls)
         //tapmark.set(['1',2,0]); //normally text start from line 2
     },100);   
 }
@@ -242,7 +247,6 @@ const toggleplaybtn=()=>{
 
 $: loadZip(src);
 $: gotoPb($activepb); //trigger by goto folio in setting.svelte
-
 </script>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 {#if ready}
@@ -264,7 +268,7 @@ $: gotoPb($activepb); //trigger by goto folio in setting.svelte
 <span class:blinkfavorbtn={!!favoritetimer} class="favoritebtn" on:click={favoritebtn}>{ favortypes[$favorites[$activefolioid]?.[$activepb]||0]}</span>
 {/key}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-{#if !$landscape  && $mediaurls.length>1}
+{#if !$landscape  && $mediaurls.filter(it=>it.incache).length}
 <span class="playbtn" on:click={toggleplaybtn}>{$audioid?'◼':'♫'}</span>
 {/if}
 
@@ -285,6 +289,7 @@ $: gotoPb($activepb); //trigger by goto folio in setting.svelte
 {/if}
 <TranscriptLayer frame={imageFrame()} {totalpages} folioLines={folioLines()} {swiper} {ptk} {foliopage}/>
 {/if}
+
 {/key}
 
 <!-- {#if $mediaid} -->

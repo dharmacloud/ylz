@@ -4,9 +4,10 @@ import { openPtk,usePtk,loadScript} from 'ptk'
 import SwipeZipImage from "./swipezipimage.svelte";
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import { onDestroy, onMount } from "svelte";
-import {activefolioid,isAndroid,playing,idlecount,showpaiji,leftmode,
+import {activefolioid,isAndroid,playing,idlecount,showpaiji,leftmode,online,folioincache,
     newbie,idletime,landscape,showsponsor} from './store.js'
 import {setTimestampPtk} from './mediaurls.js'
+import {fetchFolioList} from './folio.js'
 import TapText from './taptext.svelte'
 import Player from './player.svelte'
 import Newbie from './newbie.svelte';
@@ -18,9 +19,17 @@ registerServiceWorker();
 const idleinterval=2;
 isAndroid.set(!!navigator.userAgent.match(/Android/i));
 
+const handleConnection=()=>{
+    online.set(navigator.onLine);
+}
+
+window.addEventListener('online', handleConnection);
+window.addEventListener('offline', handleConnection);
+
 let loaded=false,timer;
 onDestroy(()=>clearInterval(timer))
 onMount(async ()=>{
+    await fetchFolioList(folioincache);
     ptk=await openPtk("dc");
     setTimestampPtk(ptk);
     await openPtk("dc_sanskrit");
