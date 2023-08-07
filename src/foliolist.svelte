@@ -41,11 +41,12 @@ const getFolioId=nfolio=>{
     return folio.fields.id.values[nfolio]
 }
 </script>
-{#each folios as [nfolio,folioid,pars,incache]}
+<div class="toctext">開啟過的經典可離線閱讀</div>
+{#each folios as [nfolio,folioid,pars]}
 <div class="book">
-{#if incache}<span>{@html offlinable}</span>{/if}
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
+ <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class:dimmed={!$folioincache[folioid] && !$online} on:click={()=>selectfolio(nfolio)} class:selecteditem={$activefolioid==folioid} >{getFolioName(nfolio)}</span>
+{#if $online && $folioincache[folioid]}<span>{@html offlinable}</span>{/if}
 <Favoritebuttons {ptk} {folioid} {closePopup}/>
 {#each pars as par}
 <!-- svelte-ignore a11y-click-events-have-key-events -->

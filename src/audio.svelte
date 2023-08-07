@@ -9,7 +9,7 @@ import { get } from 'svelte/store';
 import {audiofolder,fetchAudioList} from './mediaurls.js'
 import {allJuan} from './nav.js'
 import {downloadicon} from './icons.js'
-    import { downloadToCache } from './comps/downloader.js';
+import { downloadToCache } from './comps/downloader.js';
 export let ptk;
 
 let value=[ $remainrollback,0] ;
@@ -93,7 +93,7 @@ const humanStoptime=t=>{
 
 </script>
 <div class="toctext">
-下載後才可以播放。<br/>
+下載後可離線播放<br/>
 {#each $mediaurls as media,idx}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 {#if media.incache || !media.aid}

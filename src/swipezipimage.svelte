@@ -289,14 +289,7 @@ $: gotoPb($activepb); //trigger by goto folio in setting.svelte
 {/if}
 <TranscriptLayer frame={imageFrame()} {totalpages} folioLines={folioLines()} {swiper} {ptk} {foliopage}/>
 {/if}
-
 {/key}
-
-<!-- {#if $mediaid} -->
-
-<!-- {/if} -->
-
-
 <style>
 img { height:100%}
 .swipe-holder{
@@ -304,5 +297,4 @@ img { height:100%}
     /* width:100%; */
 }
 .swipe {position:absolute;}
-
 </style>

@@ -17,6 +17,14 @@ export const downloadToCache=async(url,cb,cachename='v1::ylz')=>{
 
     cb&&cb('responsed')
 
+    const cache=await caches.open(cachename);
+    const cached=await cache.match(url);
+    // console.log(response.headers.get('Content-Length') , cached.headers.get('Content-Length'))
+    if (cached && response.headers.get('Content-Length') == cached.headers.get('Content-Length')) {
+        // console.log('use cached')
+        return response;
+    }
+
     if (response.body) { //support progress
         const reader = response.body.getReader();
         // Step 2: get total length
@@ -40,23 +48,19 @@ export const downloadToCache=async(url,cb,cachename='v1::ylz')=>{
             chunksAll.set(chunk, position); // (4.2)
             position += chunk.length;
         }
-    
         //put to cache
-        const cache=await caches.open(cachename);
         const resp= {
             status:response.status,
             statusText:response.statusText,
-            headers: {'X-Shaka-From-Cache': true,contentType:response.contentType,contentLength: contentLength}
+            headers: {'X-Shaka-From-Cache': true,"Content-Type":'audio/mpeg',"Content-Length": contentLength}
         };
-        const res=new Response(chunksAll,resp);
+        const res=new Response(chunksAll,resp)
         cache.put(cachefn, res.clone());
         cb&&cb('cached');
         return res;
     } else { //doesn't support download progress
-        const cache=await caches.open(cachename);
         cache.put(cachefn, response.clone());
         cb&&cb('cached');
         return response;
     }
-    
 }

@@ -36,7 +36,7 @@ $: thetab=='dict' && onDict(tofind);
 <div class="popup" style={ls?sideWidth(ls):''}>
     <div class="tabs">    
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="about"} on:click={()=>thetab="about"}>🙏{#if ls}護持{/if}</span>
+        <span class='clickable' class:selected={thetab=="about"} on:click={()=>thetab="about"}>{#if !ls}{@html "&nbsp;"} {/if}🙏{#if ls}護持{/if}</span>
 
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="list"} on:click={()=>thetab="list"}>📚{#if ls}經卷{/if}</span>
