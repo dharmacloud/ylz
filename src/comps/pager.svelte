@@ -14,6 +14,7 @@ let last=null;
 
 const makeNeighbors=()=>{
     now=parseInt(now);
+    if (now>=pages.length) now=0;
     left=now-previtems;
     right=now+nextitems+1;
     if (left<2) left=1;
@@ -32,7 +33,6 @@ const makeNeighbors=()=>{
     else last=null;
 }
 const makepages=()=>{
-    now=0;
     if (count && pages.length!==count) {
         pages.length=0;
         for (let i=0;i<count;i++) {
@@ -52,7 +52,7 @@ const onswipe=(direction)=>{
 }
 </script>
 
-<SwipeView onSwipe={onswipe} caption={"→"+caption}>
+<SwipeView onSwipe={onswipe} caption={caption?"→"+caption:''}>
 {#if pages.length}
 <slot active={pages[0].idx==now} caption={pages[0].caption} idx=0 id={pages[0].id}></slot>
 {/if}

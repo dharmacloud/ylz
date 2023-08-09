@@ -12,6 +12,7 @@ export const autodict=writable(settings.autodict);
 export const activepb=writable('1');  
 export const activefolioid=writable(settings.activefolioid);
 export const maxfolio=writable(0);
+export const downloading=writable(0)
 export const favorites=writable(settings.favorites);
 export const preferaudio=writable(settings.preferaudio);
 export const showpunc=writable(settings.showpunc);
@@ -181,7 +182,7 @@ export const folioHolderWidth=(ls,ratio=1,_swiper)=>{
         style=r+'vw';
     }
     if (_swiper&&_swiper?.update) setTimeout(()=>{
-        _swiper?.update();
+        _swiper?.update&&_swiper?.update();
     },100)
     return style;
 }

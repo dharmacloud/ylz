@@ -27,7 +27,7 @@ class:selected={show==1} on:click={toggleshowsponsoring}>支持我們</span>
 {:else if show==3}
 <Workers/>
 {:else}
-<br/>系統設定 版本 2023.8.7
+<br/>系統設定 版本 2023.8.9
 <br/>請加入Line <a href="https://lin.ee/1tmTKXi">官方帳號</a>@dharmacloud
 <br/>WeChat ID: Sukhanika
 <hr/>

@@ -98,8 +98,11 @@ $: orientation($landscape)
 <Player/>
 
 {:else}
-<span class="loading">如果停在此畫面，表示瀏覽器不直持 ECMAscript 2015，無法運行本軟件。</span>
-<a class="toctext" href=_new>官方網站</a>
+<span class="loading">如果停在此畫面，表示瀏覽器不直持 ECMAscript 2015，無法運行本軟件。
+請改用 Chrome 瀏覽器訪問本頁面。iOS 須 13 版以上，並使用內建的 Safari 。
+</span>
+
+<a class="toctext" href="https://nissaya.cn/" target="_new">網址</a>
 {/if}
 
 </div>

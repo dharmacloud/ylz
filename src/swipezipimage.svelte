@@ -8,10 +8,11 @@ import {downloadToCache} from './comps/downloader.js'
 import {extractPuncPos,usePtk,FolioText, parseOfftext} from 'ptk'
 import { CURSORMARK } from './nav.js';
 import {ZipStore} from 'ptk/zip';
+import DownloadStatus from './downloadstatus.svelte'
 import {thezip,favortypes, landscape,foliotext,folioLines,isSidePaiji,
     folioChars,activePtk,activefolioid,activepb,favorites,audioid,showpunc,
 maxfolio,tapmark, playing, remainrollback, 
-idlecount,showpaiji,loadingbook, selectmedia, preferaudio,folioHolderWidth,leftmode,mediaurls} from './store.js'
+idlecount,showpaiji,loadingbook, selectmedia, preferaudio,folioHolderWidth,leftmode,mediaurls, downloading} from './store.js'
 import { get } from 'svelte/store';
 import Paiji from './paiji.svelte'
     import { fetchAudioList } from './mediaurls';
@@ -61,7 +62,10 @@ const loadZip=async ()=>{
     foliotext.set(ftext);
 
     // const res=await fetch(host+src);
-    const res=await downloadToCache(host+src);
+    const res=await downloadToCache(host+src,msg=>{
+        downloading.set(msg);
+    });
+    downloading.set('');
     const buf=await res.arrayBuffer();
     const zip=new ZipStore(buf);
     thezip.set(zip);
@@ -259,9 +263,7 @@ $: gotoPb($activepb); //trigger by goto folio in setting.svelte
 </Swipe>
 </div>
 {:else}
-<div style={"width:"+folioHolderWidth($landscape)}>
-<Paiji forceshow={true}/>
-</div>
+<DownloadStatus msg={$downloading}/>
 {/if}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 {#key favoritetimer}

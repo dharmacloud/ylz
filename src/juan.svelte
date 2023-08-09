@@ -5,7 +5,8 @@ import { goPb, loadFolio,allJuan } from './nav.js';
 export let closePopup;
 export let ptk;
 let juans=[]; //find out all juan
-let currentjuan=0;
+const m=$activefolioid.match(/([a-z]+)(\d+$)/);
+let currentjuan=m?parseInt(m[2])-1:0;
 
 const gojuan=(idx)=>{
     const juan=juans[idx].id;
@@ -26,7 +27,7 @@ const loadJuan=(folioid,loading)=>{
     currentjuan=parseInt(m[2])-1;
     return allJuan(ptk,folioid).map((it,idx)=>{
         return {caption:it, idx:parseInt(idx), id:(idx+1).toString() }
-    });
+    });    
 }
 
 $: juans=loadJuan($activefolioid,$loadingbook);

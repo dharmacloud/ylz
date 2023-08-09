@@ -6,7 +6,7 @@ import Variorum from './variorum.svelte'
 import SearchMain from  './searchmain.svelte'
 import Externals from './externals.svelte'
 import {toChineseNumber} from 'ptk'
-import {activefolioid,activepb, hasVariorum,hasTranslation,hasSanskrit,bookByFolio, tapChunkLine} from './store.js'
+import {activefolioid,activepb, leftmode,hasVariorum,hasTranslation,hasSanskrit,bookByFolio, tapChunkLine} from './store.js'
 export let ptk;
 export let closePopup;
 
@@ -44,6 +44,10 @@ const getExternalLinks=folioid=>{
     }
     return out;
 }
+const selecttab=tabname=>{
+    leftmode.set('folio')
+    thetab=tabname;
+}
 let thetab='search';
 $: externallinks=getExternalLinks($activefolioid,$activepb)
 
@@ -51,27 +55,27 @@ $: externallinks=getExternalLinks($activefolioid,$activepb)
 <div class="tabs">    
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class='clickable' class:selected={thetab=="search"} on:click={()=>thetab="search"}>搜尋</span>    
+<span class='clickable' class:selected={thetab=="search"} on:click={()=>selecttab("search")}>搜尋</span>    
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class='clickable' class:selected={thetab=="chunktext"} on:click={()=>thetab="chunktext"}>全文</span>    
+<span class='clickable' class:selected={thetab=="chunktext"} on:click={()=>selecttab("chunktext")}>全文</span>    
 
 {#if hasSanskrit(bookByFolio($activefolioid))}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class='clickable' class:selected={thetab=="sourcetext"} on:click={()=>thetab="sourcetext"}>原文</span>    
+<span class='clickable' class:selected={thetab=="sourcetext"} on:click={()=>selecttab("sourcetext")}>原文</span>    
 {/if}
 {#if hasTranslation(ptk,bookByFolio($activefolioid))}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class='clickable' class:selected={thetab=="translations"} on:click={()=>thetab="translations"}>別譯</span>
+<span class='clickable' class:selected={thetab=="translations"} on:click={()=>selecttab("translations")}>別譯</span>
 {/if}
 {#if hasVariorum(ptk,bookByFolio($activefolioid))}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class='clickable' class:selected={thetab=="variorum"} on:click={()=>thetab="variorum"}>集註</span>    
+<span class='clickable' class:selected={thetab=="variorum"} on:click={()=>selecttab("variorum")}>集註</span>    
 {/if}
 
 {#if externallinks.length}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class='clickable' class:selected={thetab=="externals"} on:click={()=>thetab="externals"}>外連</span>    
+<span class='clickable' class:selected={thetab=="externals"} on:click={()=>selecttab("externals")}>外連</span>    
 {/if}
 
 
