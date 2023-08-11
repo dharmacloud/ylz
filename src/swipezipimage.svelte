@@ -14,8 +14,7 @@ import {thezip,favortypes, landscape,foliotext,folioLines,isSidePaiji,
 maxfolio,tapmark, playing, remainrollback, 
 idlecount,showpaiji,loadingbook, selectmedia, preferaudio,folioHolderWidth,leftmode,mediaurls, downloading} from './store.js'
 import { get } from 'svelte/store';
-import Paiji from './paiji.svelte'
-    import { fetchAudioList } from './mediaurls';
+import { fetchAudioList } from './mediaurls';
 export let src;
 
 
@@ -199,7 +198,7 @@ const confirmfavorite=()=>{
         const bookfavor=Object.assign({},$favorites);
         for (let i in $favorites[$activefolioid]) {
             const f2=$favorites[$activefolioid][i]
-            if (f2==f && pb !==parseInt(i)) {
+            if (f2==f && parseInt(pb) !==parseInt(i)) {
                 delete $favorites[$activefolioid][i];
             }
         }
