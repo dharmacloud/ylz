@@ -47,7 +47,7 @@ $: thetab=='dict' && onDict(tofind);
         <span class='clickable' class:selected={thetab=="textual"} on:click={()=>thetab="textual"}>📜{#if ls}文字{/if}</span>    
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- {#if !ls} -->
-        <span class='clickable' class:selected={thetab=="audio"} on:click={()=>thetab="audio"}>🎵</span>
+        <span class='clickable' class:selected={thetab=="audio"} on:click={()=>thetab="audio"}>🎵{#if ls}讀誦{/if}</span>
         <!-- {/if} -->
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="dict"} on:click={()=>thetab="dict"}>🔠{#if ls}字典{/if}</span>

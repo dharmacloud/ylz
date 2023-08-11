@@ -14,6 +14,7 @@ import Newbie from './newbie.svelte';
 import Paiji from './paiji.svelte';
 import { get } from 'svelte/store';
 import Left from './left.svelte'
+    import { downloadToCache } from './comps/downloader';
 let ptk,tofind;
 registerServiceWorker();
 const idleinterval=2;
@@ -26,13 +27,21 @@ const handleConnection=()=>{
 window.addEventListener('online', handleConnection);
 window.addEventListener('offline', handleConnection);
 
-let loaded=false,timer;
+let loaded=false,timer,downloadmessage='';
 onDestroy(()=>clearInterval(timer))
 onMount(async ()=>{
+    const resdc=await downloadToCache('dc.ptk',msg=>{
+        downloadmessage='Downloading dc.ptk '+msg;
+    })    
+    const resdcsanskrit=await downloadToCache('dc_sanskrit.ptk');
+    downloadmessage='';
+
     await fetchFolioList(folioincache);
-    ptk=await openPtk("dc");
+
+    
+    ptk=await openPtk("dc",new Uint8Array(await resdc.arrayBuffer()));
     setTimestampPtk(ptk);
-    await openPtk("dc_sanskrit");
+    await openPtk("dc_sanskrit",new Uint8Array(await resdcsanskrit.arrayBuffer()));
     loaded=true;
     timer=setInterval(()=>{
         showpaiji.set($idlecount>=idletime);
@@ -98,11 +107,13 @@ $: orientation($landscape)
 <Player/>
 
 {:else}
-<span class="loading">如果停在此畫面，表示瀏覽器不直持 ECMAscript 2015，無法運行本軟件。
+<span class="loading">
+如果停在此畫面沒有進度，表示瀏覽器不直持 ECMAscript 2015，無法運行本軟件。
 請改用 Chrome 瀏覽器訪問本頁面。iOS 須 13 版以上，並使用內建的 Safari 。
+<br/>{downloadmessage}
 </span>
 
-<a class="toctext" href="https://nissaya.cn/" target="_new">網址</a>
+<a class="toctext" href="/" target="_new">官網</a>
 {/if}
 
 </div>

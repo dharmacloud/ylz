@@ -45,13 +45,15 @@ const getFolioId=nfolio=>{
 {#each folios as [nfolio,folioid,pars]}
 <div class="book">
  <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class:dimmed={!$folioincache[folioid] && !$online} on:click={()=>selectfolio(nfolio)} class:selecteditem={$activefolioid==folioid} >{getFolioName(nfolio)}</span>
-{#if $online && $folioincache[folioid]}<span>{@html offlinable}</span>{/if}
+<span class:dimmed={!$folioincache[folioid]} on:click={()=>selectfolio(nfolio)} class:selecteditem={$activefolioid==folioid} >{getFolioName(nfolio)}</span>
+
 <Favoritebuttons {ptk} {folioid} {closePopup}/>
 {#each pars as par}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 {#if $folioincache[par] || $online}
-<span class="parallelfolio" on:click={()=>selectfolio(par)} class:selecteditem={$activefolioid==getFolioId(par)} >
+<span class="parallelfolio" on:click={()=>selectfolio(par)} 
+    class:dimmed={!$folioincache[par]}
+    class:selecteditem={$activefolioid==getFolioId(par)} >
 {getFolioName(par)}</span>
 <Favoritebuttons folioid={par} {ptk} {closePopup} />
 {/if}

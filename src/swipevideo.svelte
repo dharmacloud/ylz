@@ -1,6 +1,6 @@
 <script>
 import PuncLayer from './punclayer.svelte';
-import {isAndroid,pauseVideo} from './store.js'
+import {isAndroid} from './store.js'
 export let src;
 let mp4player;
 let touching=-1;
@@ -119,10 +119,8 @@ const updateFolioText=()=>{
     [foliotext]=getFolioPageText(get(foliorawtexts),1+Math.floor(mp4player?.currentTime||0));
 	puncs=extractPuncPos(foliotext,folioLines());
 	activepb.set(Math.floor(mp4player.currentTime));
-	pauseVideo();
 }
 const gotoPb=async (t)=>{
-	pauseVideo();
 	if (Math.floor(t)!==Math.floor(mp4player?.currentTime)) {
 		setTimeout(()=>{
 			mp4player.currentTime=Math.floor(t||0)+0.01;
@@ -141,7 +139,6 @@ const videoloaded=()=>{
 	gotPb($activepb);
 	maxfolio.set(mp4player.duration);
 	mp4player.autoplay=false;
-	mp4player.pause();
 }
 
 const setHandle=node=>{

@@ -265,12 +265,14 @@ $: gotoPb($activepb); //trigger by goto folio in setting.svelte
 {:else}
 <DownloadStatus msg={$downloading}/>
 {/if}
-<!-- svelte-ignore a11y-click-events-have-key-events -->
+{#if !$landscape}
 {#key favoritetimer}
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class:blinkfavorbtn={!!favoritetimer} class="favoritebtn" on:click={favoritebtn}>{ favortypes[$favorites[$activefolioid]?.[$activepb]||0]}</span>
 {/key}
-<!-- svelte-ignore a11y-click-events-have-key-events -->
+{/if}
 {#if !$landscape  && $mediaurls.filter(it=>it.incache).length}
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="playbtn" on:click={toggleplaybtn}>{$audioid?'◼':'♫'}</span>
 {/if}
 

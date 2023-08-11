@@ -2,27 +2,35 @@
 
 export const downloadToCache=async(url,cb,cachename='v1::ylz')=>{
     const cachefn=url;
-    if (location.host!=='nissaya.cn' 
-    && location.host.indexOf('localhost')==-1 
-    && location.host.indexOf('127.0.0.1')==-1) url="https://nissaya.cn/"+url.replace(/^\//,'');
-
-    const headers=url.indexOf('.zip')?{"Accept":"application/octet-stream"}:{"Accept":"audio/mpeg"};
-
-    cb&&cb('requesting')
-    let response = await fetch(url,{method:"GET",mode:"no-cors",
-    redirect:"follow",
-    credentials: "omit",
-    origin:"https://nissaya.cn",
-    headers});
-
-    cb&&cb('responsed')
+    // if (location.host!=='nissaya.cn' 
+    // && location.host.indexOf('localhost')==-1 
+    // && location.host.indexOf('127.0.0.1')==-1) url="https://nissaya.cn/"+url.replace(/^\//,'');
+    
+    const ContentType=~url.indexOf('.mp3')?"audio/mpeg":"application/octet-stream";
+    const origin="https://nissaya.cn";
 
     const cache=await caches.open(cachename);
     const cached=await cache.match(url);
-    // console.log(response.headers.get('Content-Length') , cached.headers.get('Content-Length'))
-    if (cached && response.headers.get('Content-Length') == cached.headers.get('Content-Length')) {
+
+    let headresponse = await fetch(url,{method:"HEAD",mode:"no-cors",
+    redirect:"follow", credentials: "omit", origin,
+    headers:{Accept:ContentType}});
+
+    if (cached && headresponse.headers.get('Content-Length') == cached.headers.get('Content-Length')) {
         // console.log('use cached')
-        return response;
+        return cached;
+    }
+
+    cb&&cb('requesting')
+    let response = await fetch(url,{method:"GET",mode:"no-cors",
+    redirect:"follow", credentials: "omit", origin,
+    headers:{Accept:ContentType}});
+
+    cb&&cb('responsed')
+
+    if (response.status>=400) {
+        cb&&cb(response.statusText);
+        return;
     }
 
     if (response.body) { //support progress
@@ -52,7 +60,8 @@ export const downloadToCache=async(url,cb,cachename='v1::ylz')=>{
         const resp= {
             status:response.status,
             statusText:response.statusText,
-            headers: {'X-Shaka-From-Cache': true,"Content-Type":'audio/mpeg',"Content-Length": contentLength}
+            headers: {'X-Shaka-From-Cache': true,"Content-Type":ContentType,
+            "Content-Length": contentLength}
         };
         const res=new Response(chunksAll,resp)
         cache.put(cachefn, res.clone());
