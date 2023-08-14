@@ -23,7 +23,22 @@ const getExternalLinks=folioid=>{
         caption='雜阿含第'+agmsjuan[1]+'卷'+sutra+'經導讀(獅子吼)';
         url='https://buddhaspace.org/agama/'+agmsjuan[1]+'.html#'+toChineseNumber(sutra);
         out.push([ caption, url]);
+
+        //找別譯雜阿含
     }
+
+    const agmssjuan=folioid.match(/agmss(\d+)$/);
+    if (agmssjuan) {
+        //找別譯雜阿含
+        // const at=ptk.nearestTag( to+1 ,'n') -1 ;
+        // const n=ptk.defines.n;
+        // const sutra=parseInt(n.fields.id.values[at]);
+        // caption='雜阿含第'+agmssjuan[1]+'卷'+sutra+'經導讀(獅子吼)';
+        // url='https://buddhaspace.org/agama/'+agmssjuan[1]+'.html#'+toChineseNumber(sutra);
+        // out.push([ caption, url]);
+    }
+
+    
     const agmdjuan=folioid.match(/agmd(\d+)$/);
     if (agmdjuan) {
         const {ckid}=$tapChunkLine;

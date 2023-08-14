@@ -1,7 +1,10 @@
 import {updateSettings,settings} from './savestore.ts'
-import {bsearchNumber, usePtk,makeAddress} from 'ptk'
+import {bsearchNumber, usePtk,makeAddress, parseAddress,folioPosFromAddress} from 'ptk'
 import {derived, get,writable } from 'svelte/store';
 import {silence} from './mediaurls.js'
+import {addressFromUrl, updateUrl } from './urlhash.js';
+
+//const folio=folioPosFromAddress(addressFromUrl());
 
 export const online=writable(navigator.onLine);
 export const thezip=writable(null)
@@ -17,6 +20,7 @@ export const favorites=writable(settings.favorites);
 export const preferaudio=writable(settings.preferaudio);
 export const showpunc=writable(settings.showpunc);
 export const showsponsor=writable(settings.showsponsor);
+export const showyoutube=writable(settings.showyoutube)
 export const landscape=writable(false)
 export const isAndroid=writable(false)
 export const searchable=writable('')
@@ -61,7 +65,7 @@ export const folioChars=writable(17);
 export const playing=writable(false);
 export const continueplay=writable(false);
 export const playnextjuan=writable(settings.playnextjuan);//自動播放下一卷
-export const tapmark = writable(['1',0,0]);// folio*folioLines*folioChar+offset
+export const tapmark = writable(['2',0,0]);// folio*folioLines*folioChar+offset
 export const remainrollback=writable(-1);//infinite
 
 export const newbie=writable(settings.newbie);
@@ -72,7 +76,8 @@ activefolioid.subscribe((activefolioid)=>updateSettings({activefolioid}));
 autodict.subscribe((autodict)=>updateSettings({autodict}));
 newbie.subscribe((newbie)=>updateSettings({newbie}));
 showpunc.subscribe((showpunc)=>updateSettings({showpunc}));
-showpunc.subscribe((showsponsor)=>updateSettings({showsponsor}));
+showsponsor.subscribe((showsponsor)=>updateSettings({showsponsor}));
+showyoutube.subscribe((showyoutube)=>updateSettings({showyoutube}));
 favorites.subscribe((favorites)=>updateSettings({favorites}));
 preferaudio.subscribe((preferaudio)=>updateSettings({preferaudio}));
 
@@ -84,7 +89,7 @@ export const findByAudioId=(id,column='timestamp')=>{
 }
 
 export const stopAudio=()=>{
-    player?.pause();
+    if (player&&player.paused) player?.pause();
     playing.set(false);
     remainrollback.set(-1);
 }
@@ -130,6 +135,8 @@ export const makeAddressFromFolioPos=(pbid,cx=0,cy=0)=>{
     return address;
 }
 export const tapAddress=derived(tapmark,(mark)=> makeAddressFromFolioPos(mark));
+//tapAddress.subscribe((addr)=>updateUrl(addr));
+
 export const tapChunkLine=derived(tapmark,(mark)=> {
     const ft=get(foliotext);
     if (!ft||!ft.fromFolioPos) return {};

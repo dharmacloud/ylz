@@ -1,11 +1,11 @@
 <script>
-import { openPtk,usePtk,loadScript} from 'ptk'
+import { openPtk,folioPosFromAddress} from 'ptk'
 // import SwipeVideo from "./swipevideo.svelte";
 import SwipeZipImage from "./swipezipimage.svelte";
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import { onDestroy, onMount } from "svelte";
 import {activefolioid,isAndroid,playing,idlecount,showpaiji,leftmode,online,folioincache,
-    newbie,idletime,landscape,showsponsor} from './store.js'
+    newbie,idletime,landscape,showsponsor, activepb, tapmark} from './store.js'
 import {setTimestampPtk} from './mediaurls.js'
 import {fetchFolioList} from './folio.js'
 import TapText from './taptext.svelte'
@@ -14,7 +14,8 @@ import Newbie from './newbie.svelte';
 import Paiji from './paiji.svelte';
 import { get } from 'svelte/store';
 import Left from './left.svelte'
-    import { downloadToCache } from './comps/downloader';
+import { downloadToCache } from './comps/downloader.js';
+import { addressFromUrl } from './urlhash.js';
 let ptk,tofind;
 registerServiceWorker();
 const idleinterval=2;
@@ -35,13 +36,20 @@ onMount(async ()=>{
     })    
     const resdcsanskrit=await downloadToCache('dc_sanskrit.ptk');
     downloadmessage='';
-
     await fetchFolioList(folioincache);
-
-    
     ptk=await openPtk("dc",new Uint8Array(await resdc.arrayBuffer()));
     setTimestampPtk(ptk);
     await openPtk("dc_sanskrit",new Uint8Array(await resdcsanskrit.arrayBuffer()));
+
+    const addr=await folioPosFromAddress(ptk,addressFromUrl());
+    
+    if (addr.id) {
+        activefolioid.set(addr.id);
+        const {pb,line,ch}=addr;
+        activepb.set(pb)
+        tapmark.set([pb,line,ch])
+    }
+
     loaded=true;
     timer=setInterval(()=>{
         showpaiji.set($idlecount>=idletime);

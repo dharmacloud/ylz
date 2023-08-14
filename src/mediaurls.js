@@ -2,6 +2,7 @@ let ptk;
 import { Cachesname } from "./constant.js";
 export const silence={vid:'',performer:'-靜默-'};
 export const audiofolder='/baudio/'
+
 export const setTimestampPtk=_ptk=>{
     ptk=_ptk;
 }
@@ -18,7 +19,7 @@ export const mediabyid=(_vid)=>{
     }
 }
 
-export const fetchAudioList=async (activeid,store)=>{
+export const fetchAudioList=async (activeid,store,showyoutube=false)=>{
     let out=[];
     if (!ptk) return out;
     const ts=ptk.columns.timestamp;
@@ -30,11 +31,17 @@ export const fetchAudioList=async (activeid,store)=>{
     for (let i=0;i<ts.keys.len();i++) {
         const aid=ts.keys.get(i);
         const audiohost=ts.videohost[i];
-        const performer=ts.performer[i];
+        let performer=ts.performer[i];
+        let youtube='';
+        const at=performer.indexOf('|');
+        if (~at) {
+            if (showyoutube) youtube=performer.slice(at+1)
+            performer=performer.slice(0,at);
+        }
         const timestamp=ts.timestamp[i];
         const bookid=ts.bookid[i];
         const incache= 1 - !~incaches.indexOf(aid) 
-        activeid==bookid&&out.push( {aid,performer,incache,bookid,timestamp,audiohost});
+        activeid==bookid&&out.push( {aid,performer,youtube,incache,bookid,timestamp,audiohost});
     }
     //sort by name
     out.sort((a,b)=>   a.performer==b.performer?0: (a.performer<b.performer?-1:1))

@@ -9,12 +9,13 @@ import {extractPuncPos,usePtk,FolioText, parseOfftext} from 'ptk'
 import { CURSORMARK } from './nav.js';
 import {ZipStore} from 'ptk/zip';
 import DownloadStatus from './downloadstatus.svelte'
-import {thezip,favortypes, landscape,foliotext,folioLines,isSidePaiji,
+import {thezip,favortypes, landscape,foliotext,folioLines,isSidePaiji,tapAddress,
     folioChars,activePtk,activefolioid,activepb,favorites,audioid,showpunc,
-maxfolio,tapmark, playing, remainrollback, 
+maxfolio,tapmark, playing, remainrollback, showyoutube,
 idlecount,showpaiji,loadingbook, selectmedia, preferaudio,folioHolderWidth,leftmode,mediaurls, downloading} from './store.js'
 import { get } from 'svelte/store';
 import { fetchAudioList } from './mediaurls';
+import { updateUrl } from './urlhash';
 export let src;
 
 
@@ -50,12 +51,11 @@ const swipeConfig = {
 };
 
 const loadZip=async ()=>{
+    // console.log('load zip',$activefolioid)
     ready=false;
     loadingbook.set(true);
     let host='folio/';
-    if (document.location.host.startsWith('yonglezang.github.io')) {
-        host='https://dharmacloud.github.io/swipegallery/folio/';
-    }
+
     const ftext=new FolioText(ptk);//fetchFolioText(ptk,$activefolioid);
     await ftext.load($activefolioid)
     foliotext.set(ftext);
@@ -78,14 +78,15 @@ const loadZip=async ()=>{
         }
     }
 
-    defaultIndex=zip.files.length-1;
+    defaultIndex=zip.files.length-parseInt($activepb);
     totalpages=zip.files.length;
     setTimeout(()=>{
         maxfolio.set(totalpages-1);
         loadingbook.set(false);
         ready=true;
-        fetchAudioList($activefolioid,mediaurls)
-        //tapmark.set(['1',2,0]); //normally text start from line 2
+        // console.log('loaded zip')
+        fetchAudioList($activefolioid,mediaurls,$showyoutube=='on')
+        
     },100);   
 }
 const swipeStart=(obj)=>{
@@ -95,7 +96,11 @@ const swipeChanged=(obj)=>{
     if (!ready) return;
     const {active_item}=obj.detail;
     defaultIndex=active_item;
-    activepb.set( (totalpages- defaultIndex).toString() );
+    const newpb=(totalpages- defaultIndex).toString();
+    
+    if ($activepb!=newpb) {
+        activepb.set(  newpb);
+    }
     let i=totalpages- defaultIndex-1;
     const wrapper=document.getElementsByClassName("swipeable-slot-wrapper")[0];
     if (!wrapper) return;
@@ -113,7 +118,6 @@ const swipeChanged=(obj)=>{
             ele.src=images[i]=URL.createObjectURL(blob);
         }
     }
-
     updateFolioText();
     useractive();
     confirmfavorite();
@@ -169,6 +173,7 @@ const onfoliopageclick=e=>{
         return;
     }
     tapmark.set([ $activepb ,cx,cy ]);
+    updateUrl($tapAddress)
     const ft=get(foliotext);
     let {choff,linetext}=ft.fromFolioPos($activepb,cx,cy);
     linetext=linetext.replace(/([。！？：、．；，「『（ ])/g,'　');
@@ -247,9 +252,9 @@ const toggleplaybtn=()=>{
         selectmedia('');
     }
 }
-
+$: console.log('activepb',$activepb)
 $: loadZip(src);
-$: gotoPb($activepb); //trigger by goto folio in setting.svelte
+//$: gotoPb($activepb); //trigger by goto folio in setting.svelte
 </script>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 {#if ready}
@@ -281,10 +286,12 @@ $: gotoPb($activepb); //trigger by goto folio in setting.svelte
 {/if}
 
 {#key $tapmark+$activepb}
-{#if !hidepunc && !$showpaiji && $leftmode=='folio'}
-<TapMark mark={$tapmark} pb={$activepb} folioChars={$folioChars} folioLines={folioLines()} frame={imageFrame()}  />
+{#if ready&&!hidepunc && !$showpaiji && $leftmode=='folio'}
+<TapMark mark={$tapmark} pb={$activepb} folioChars={$folioChars} 
+folioLines={folioLines()} frame={imageFrame()} />
 {/if}
 {/key}
+
 {#key puncs}
 {#if !hidepunc}
 {#if $showpunc=='on'&& $leftmode=='folio'}

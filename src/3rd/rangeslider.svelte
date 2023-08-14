@@ -15,12 +15,15 @@
   let order = false;
 
   function setValue(pos) {
+    if (!pos || !pos[0]) return;
     const offset = min % step;
     const width = max - min
+
     value = pos
       .map(v => min + v * width)
       .map(v => Math.round((v - offset) / step) * step + offset);
-    dispatch("input", value);
+
+    if (value[0]!=pos[0] || value[1]!=pos[1]) dispatch("input", value);
   }
 
   function setPos(value) {

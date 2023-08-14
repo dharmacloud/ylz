@@ -1,6 +1,6 @@
 <script>
 import {online,player,audioid,activefolioid, playnextjuan, findByAudioId,
-     remainrollback,selectmedia,mediaurls} from './store.js';
+     remainrollback,selectmedia,mediaurls, stopAudio, playing, showyoutube} from './store.js';
 import Slider from './3rd/rangeslider.svelte';
 import Switch from './3rd/switch.svelte';
 import {usePtk,parseOfftext, sleep,} from 'ptk'
@@ -8,7 +8,7 @@ import { onDestroy, onMount } from 'svelte';
 import { get } from 'svelte/store';
 import {audiofolder,fetchAudioList} from './mediaurls.js'
 import {allJuan} from './nav.js'
-import {downloadicon} from './icons.js'
+import {downloadicon,youtubeicon} from './icons.js'
 import { downloadToCache } from './comps/downloader.js';
 export let ptk;
 
@@ -69,7 +69,7 @@ const downloadit=async (aid)=>{
         progress=msg;
     });
     await sleep(1000); //wait for cache to sync
-    const list=await fetchAudioList($activefolioid);
+    const list=await fetchAudioList($activefolioid,mediaurls,$showyoutube=='on');
     mediaurls.set(list);
     downloading='';
     progress='';
@@ -90,19 +90,28 @@ const humanStoptime=t=>{
     if (!t || ($playnextjuan=='on'&&allJuan(ptk).length>1 ) ) return '';
     return (new Date(Date.now()+t*1000)).toLocaleTimeString()+'停止';
 }
-
+const goyoutube=id=>{
+    stopAudio();
+    window.open("https://youtube.com/watch?v="+id,"_blank");
+}
 </script>
 <div class="toctext">
-下載後可離線播放<br/>
 {#each $mediaurls as media,idx}
+{#if idx&& !$playing && media.youtube}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
+<span on:click={goyoutube(media.youtube)}>{@html youtubeicon}</span>
+{/if}
+
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+
 {#if media.incache || !media.aid}
 <span class="clickable" on:click={()=>!downloading&&selectmedia(media.aid,true)} 
-class:selected={media.aid==$audioid}>{media.performer}{idx?'♫':''}</span><br/>
+class:selected={media.aid==$audioid}>{media.performer}{idx&&media.aid==$audioid?'♫':''}</span>
+    <br/>
 {:else}
 {#if $online}
 <span class="uncache">{media.performer+" "}</span><span class="clickable" on:click={()=>!downloading&&downloadit(media.aid)}>{@html downloadicon}</span>
-{#if downloading==media.aid} {progress}{/if}
+{#if downloading==media.aid}Downloading {progress}{/if}
 {#if $audioid==media.vid&& $audioid}{humanDuration(getDuration($audioid))}{/if}
 <br/>
 {/if}

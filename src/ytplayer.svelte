@@ -90,7 +90,6 @@ const loadVideo=()=>{
         const t=(parseInt(get(activepb))-1)*folioLines();
         const start=(timestamp&&timestamp[t])||0;
         const host=mediabyid(vid)?.videohost;
-        console.log(host, player(vid))
         if (host=='youtube') {
             $ytplayer.loadVideoById({'videoId':validvid,suggestedQuality:'low',autoplay:true, startSeconds:start});
         } else {

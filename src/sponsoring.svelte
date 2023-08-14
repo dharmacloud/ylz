@@ -1,10 +1,13 @@
 <script>
 </script>
-<br/>
-<br/>收款人<span class="bankaccount">胡波</span>（微信：zxzcxzvcxz），头像<img src="logo128.png" alt="" style="width:1.2em"/>，留言“支持数字三藏”项目。
-<img alt="" style="width:100%" src="alipay.jpg"/>
-<br/>人民币100元以下捐款，恕不单独列功德芳名，统一合并为“网民群众”。
+以下為代收善款的賢友，除轉款相關事宜，請勿打擾。
 <hr/>
 台灣第一銀行(007)東勢分行，帳號<span class="bankaccount">4215020663</span> 戶名：<span class="bankaccount">王宗景</span>
-<br/>LINE Pay轉帳捐款：請用id加好友 @fayunshi （法雲印經會公務機）再進聊天室轉帳。
+<hr/>
+LINE Pay 轉款：請用id加好友 @fayunshi （法雲印經會公務機）進聊天室，右下角＋→手機轉帳。
 <img alt="" style="width:100%" src="linepay.png"/>
+<br/>台幣500元之捐款，恕不單獨列功德芳名，一律合併为「善男信女」。
+<hr/>
+支付宝收款人<span class="bankaccount">胡波</span>（微信：zxzcxzvcxz），头像<img src="logo128.png" alt="" style="width:1.2em"/>，留言“支持数字三藏”项目。
+<img alt="" style="width:100%" src="alipay.jpg"/>
+<br/>人民币100元以下捐款，恕不单独列功德芳名，一律合并为“善男信女”。

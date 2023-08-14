@@ -1,6 +1,5 @@
 import {foliotext,activefolioid ,audioid,tapmark,folioincache,
     activepb,loadingbook,bookByFolio, stopAudio} from "./store.js";
-import {downloadToCache} from './comps/downloader.js'
 import {get} from 'svelte/store'
 import {bsearchNumber} from 'ptk/utils'
 import {fetchFolioList} from './folio.js'
@@ -23,17 +22,16 @@ export const goPbAt=async (ptk,at)=>{
     goPb(pbid, ck.fields.id.values[at]);
 }
 export const loadFolio=(folioid,func)=>{
-    console.log('load folio',folioid)
     let timer=0;
     // console.log('loading folio',folioid)
     if (folioid==get(activefolioid)) func&&func(folioid);
     else {
         stopAudio();
         audioid.set('')
-        activepb.set('1');
+        //activepb.set('1');
         loadingbook.set(true);
         activefolioid.set(folioid);
-        tapmark.set(['1',0,0]);
+        //tapmark.set(['2',0,0]);
         timer=setInterval(()=>{
             if (!get(loadingbook)) {
                 clearInterval(timer);
@@ -67,6 +65,7 @@ export const allJuan=(ptk,folioid)=>{
 }
 
 const markChunk=ckid=>{
+    console.log('markchunk',ckid)
     const fpos=get(foliotext).toFolioPos(ckid);
     activepb.set(fpos[0]);
     tapmark.set(fpos)

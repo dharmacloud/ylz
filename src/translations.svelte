@@ -21,10 +21,7 @@ const getBookTitle=(ptk,nbk)=>{
     }
 }
 
-const marktap=(pb,line)=>{
-    // const pos=folioPosFromChunkLine(,pb,line)
-    // tapmark.set(pos);
-}
+
 const goFolioByLine=(ptk,line)=>{
     const pb=ptk.defines.pb;
     const folio=ptk.defines.folio;

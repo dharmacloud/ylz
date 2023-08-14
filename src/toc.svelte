@@ -4,13 +4,14 @@ import { bsearchNumber ,styledNumber,debounce} from "ptk";
 import {activepb,maxfolio,activefolioid,loadingbook, bookByFolio,foliotext} from './store.js';
 import {goPbAt, loadFolio} from './nav.js'
 import Juan from './juan.svelte'
-$: folio=[parseInt($activepb)-1];
+let folio=[0,0];
+$: folio=[parseInt($activepb)-1]; 
 export let ptk;
 export let closePopup;
 
 const setFolio=async (e)=>{
     const v=((e.detail[0]||0)+1).toString();
-    activepb.set(v);
+    if ($activepb!==v)activepb.set(v);
 }
 
 let tocitems=[],cknow;

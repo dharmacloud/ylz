@@ -2,11 +2,11 @@ export const AppPrefix='YLZ.'
 export const loadSettings=()=>{
     const activefolioid=localStorage.getItem(AppPrefix+'activefolioid')||'pphs';  
     const autodict=localStorage.getItem(AppPrefix+'autodict')||'off';  
-    const videohost=localStorage.getItem(AppPrefix+'videohost')||'youtube';  
     const newbie=localStorage.getItem(AppPrefix+'newbie')||'on';  
     const playnextjuan=localStorage.getItem(AppPrefix+'playnextjuan')||'on';  
     const showpunc=localStorage.getItem(AppPrefix+'showpunc')||'on';  
     const showsponsor=localStorage.getItem(AppPrefix+'showsponsor')||'off';  
+    const showyoutube=localStorage.getItem(AppPrefix+'showyoutube')||'off';  
     let _favorites=localStorage.getItem(AppPrefix+'favorites')||'{}';
     let _preferaudio=localStorage.getItem(AppPrefix+'preferaudio')||'{}';
     let favorites={},preferaudio={};
@@ -18,7 +18,7 @@ export const loadSettings=()=>{
         favorites={};
         preferaudio={}
     }
-    return {activefolioid,showsponsor,videohost,autodict,newbie,favorites,playnextjuan,preferaudio,showpunc};
+    return {activefolioid,showsponsor,showyoutube,autodict,newbie,favorites,playnextjuan,preferaudio,showpunc};
 }
 
 export const saveSettings=()=>{ //immediate save

@@ -123,7 +123,7 @@ const go=(idx)=>{
         goPtkLine(ptk, line);
         leftmode.set('folio')
     } else {
-        console.log('lefttext',line)
+        // console.log('lefttext',line)
         lefttextline.set(line);
         leftmode.set('lefttext')
     }

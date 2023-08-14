@@ -23,10 +23,19 @@ const onDict=(t)=>{
     showdict=true;
 }
 const setSearchable=t=>{
-    console.log('setsearchable',t)
+    // console.log('setsearchable',t)
     const tap_at=t.indexOf(CURSORMARK);
     searchable.set(t.slice(tap_at+1));
 }
+/*
+const copyaddress=async ele=>{
+    await navigator.clipboard.writeText($tapAddress);
+    ele.target.innerHTML='copied';
+    setTimeout(()=>{
+        ele.target.innerHTML=$tapAddress;
+    },2000)
+}
+*/
 $: ls=get(landscape);
 $: ptk=usePtk($activePtk);
 $: setSearchable(tofind);
@@ -44,14 +53,17 @@ $: thetab=='dict' && onDict(tofind);
         <span class='clickable' class:selected={thetab=="toc"} on:click={()=>thetab="toc"}>🧭{#if ls}目錄{/if}</span>
         
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="textual"} on:click={()=>thetab="textual"}>📜{#if ls}文字{/if}</span>    
+        <span class='clickable' class:selected={thetab=="textual"} on:click={()=>thetab="textual"}>📜{#if ls}文本{/if}</span>    
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- {#if !ls} -->
         <span class='clickable' class:selected={thetab=="audio"} on:click={()=>thetab="audio"}>🎵{#if ls}讀誦{/if}</span>
         <!-- {/if} -->
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="dict"} on:click={()=>thetab="dict"}>🔠{#if ls}字典{/if}</span>
-        {#if $landscape}<span style="font-size:65%">{$tapAddress}</span>{/if}
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <!-- {#key $tapAddress} -->
+        <!-- {#if $landscape}<span style="font-size:65%" on:click={copyaddress}>{$tapAddress}</span>{/if} -->
+        <!-- {/key} -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
     </div>
       <div class="tab-content" class:visible={thetab=='list'}><Foliolist {ptk} {closePopup}  bind:thetab /></div>

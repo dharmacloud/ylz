@@ -41,10 +41,10 @@ const playnext=()=>{
             rollback();
         } else {        
             const nextfolioid=folioid.replace(juannow,parseInt(juannow)+1);
-            console.log('loading next juan',nextfolioid)
+            // console.log('loading next juan',nextfolioid)
             loadFolio(nextfolioid,function(){
                 const audiolist=$mediaurls;
-                console.log('audiolist',audiolist,nextfolioid)
+                // console.log('audiolist',audiolist,nextfolioid)
                 if (audiolist) {
                     const sameperformer=audiolist.filter(it=>it.performer==performer);
                     const vid=sameperformer.length?sameperformer[0].vid:audiolist[0].vid;
@@ -87,6 +87,8 @@ const stripstyle=(i,strip)=>{
     }
 
     if (i==0) { //翻頁timer
+        const lastlinet=timestamp[line+fl] || timestamp[timestamp.length-1];
+        const nextpagetime= ( lastlinet - timestamp[line] -timedelta)*1000;
         timers.push( setTimeout(()=>{
             if ( parseInt(get(activepb))<totalpages) { 
                 continueplay.set(true); //auto swipe , do not trigger 
@@ -97,7 +99,7 @@ const stripstyle=(i,strip)=>{
             } else {
                 playnext();
             }
-        }, (timestamp[line+fl] - timestamp[line] -timedelta)*1000));
+        },nextpagetime));
     }
     let delay=(timestamp[line+i]  - timestamp[line] - timedelta )*1000 ;
     if (i==0&&delay<30) delay=30;// too small value  cause immediate trigger fire
