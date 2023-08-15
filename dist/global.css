@@ -231,7 +231,7 @@ select {font-size:2em}
 .dictgroup {background:#ffb85b}
 
 
-a{color:#563100}
+a {color:#ffb85b}
 
 .parallelfolio {font-size:90% ; padding-left:0.1em;padding-right:0.1em;border-radius: 5px;border:#d27700 1px dotted}
 
@@ -255,3 +255,7 @@ a{color:#563100}
 .hof {color:brown;font-weight: bold;font-size:1.5em}
 .downloading {z-index:1000;display:flex;justify-content:center;align-items: center;height: 100vh;width:100vw;font-size:3em}
 .logotitle{font-size:125%; color:brown}
+.notification {position:absolute;
+  animation: favorblinker 2s linear infinite;
+  top:10vh;left:5vw;height:1.2em;background:#d27700;
+  z-index:1999;width:90vw;font-size:2em}

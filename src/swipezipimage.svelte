@@ -12,7 +12,7 @@ import DownloadStatus from './downloadstatus.svelte'
 import {thezip,favortypes, landscape,foliotext,folioLines,isSidePaiji,tapAddress,
     folioChars,activePtk,activefolioid,activepb,favorites,audioid,showpunc,
 maxfolio,tapmark, playing, remainrollback, showyoutube,
-idlecount,showpaiji,loadingbook, selectmedia, preferaudio,folioHolderWidth,leftmode,mediaurls, downloading} from './store.js'
+idlecount,showpaiji,loadingbook, selectmedia, preferaudio,folioHolderWidth,leftmode,mediaurls, downloading, notificationmessage} from './store.js'
 import { get } from 'svelte/store';
 import { fetchAudioList } from './mediaurls';
 import { updateUrl } from './urlhash';
@@ -172,8 +172,17 @@ const onfoliopageclick=e=>{
         onTapText('');
         return;
     }
-    tapmark.set([ $activepb ,cx,cy ]);
-    updateUrl($tapAddress)
+    const oldmark=$tapmark
+    const newmark=[ $activepb ,cx,cy ];
+    if ( JSON.stringify(oldmark)==JSON.stringify(newmark)) {
+        notificationmessage.set($tapAddress);
+        const addr=location.origin+location.pathname+'#'+$tapAddress;
+        navigator.clipboard.writeText(addr);
+        return;
+    } else {
+        tapmark.set(newmark);
+    }
+    updateUrl($tapAddress);
     const ft=get(foliotext);
     let {choff,linetext}=ft.fromFolioPos($activepb,cx,cy);
     linetext=linetext.replace(/([。！？：、．；，「『（ ])/g,'　');
@@ -252,9 +261,8 @@ const toggleplaybtn=()=>{
         selectmedia('');
     }
 }
-$: console.log('activepb',$activepb)
 $: loadZip(src);
-//$: gotoPb($activepb); //trigger by goto folio in setting.svelte
+$: gotoPb($activepb); //trigger by goto folio in setting.svelte
 </script>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 {#if ready}
@@ -269,7 +277,7 @@ $: loadZip(src);
 {:else}
 <DownloadStatus msg={$downloading}/>
 {/if}
-{#if !$landscape}
+{#if !$landscape && totalpages-defaultIndex>1}
 {#key favoritetimer}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class:blinkfavorbtn={!!favoritetimer} class="favoritebtn" on:click={favoritebtn}>{ favortypes[$favorites[$activefolioid]?.[$activepb]||0]}</span>

@@ -4,7 +4,6 @@ import { tapChunkLine,foliotext ,tapmark, activepb} from "./store.js";
 export let ptk;
 import Pager from './comps/pager.svelte'
 let sentnow=0;
-let sentences=[]
 
 const gosent=idx=>{
     const ft=$foliotext;

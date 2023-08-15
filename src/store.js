@@ -34,7 +34,7 @@ export const setplayer=p=>player=p;
 // export const foliostartfrom=writable(0)
 
 export const mediaurls=writable([silence]);
-
+export const notificationmessage=writable('');
 export const bookByFolio=(fid,ptk)=>{
     if (ptk) {
         const folio=dc.defines.folio;

@@ -9,7 +9,7 @@ const styleString=()=>{
     if (pb!=pbmark) return '';
     return 'left:'+Math.floor(unitw*(folioLines-line-1) )+'px; top:'+
 +Math.floor(frame.top+unith*(ch))+'px;width:'+unitw+'px;height:'+unith
-+'px;background:var(--pinmark);border-radius:5px';
++'px;background:var(--pinmark);border-radius:5px;pointer-events:none';
 }
 
 </script>

@@ -11,7 +11,7 @@ export let closePopup;
 
 const setFolio=async (e)=>{
     const v=((e.detail[0]||0)+1).toString();
-    if ($activepb!==v)activepb.set(v);
+    if ($activepb!==v) activepb.set(v);
 }
 
 let tocitems=[],cknow;

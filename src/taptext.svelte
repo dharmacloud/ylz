@@ -7,7 +7,7 @@ import Textual from './textual.svelte'
 import { get } from 'svelte/store';
 //import Favorite from "./favorite.svelte"
 import Toc from "./toc.svelte"
-import {activePtk,tapAddress, landscape,sideWidth,searchable} from './store.js'
+import {activePtk, landscape,sideWidth,searchable,mediaurls} from './store.js'
 import { usePtk} from "ptk";
 import {CURSORMARK} from './nav.js'
 export let tofind='';
@@ -55,9 +55,9 @@ $: thetab=='dict' && onDict(tofind);
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="textual"} on:click={()=>thetab="textual"}>📜{#if ls}文本{/if}</span>    
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <!-- {#if !ls} -->
+        {#if $mediaurls.length>1}
         <span class='clickable' class:selected={thetab=="audio"} on:click={()=>thetab="audio"}>🎵{#if ls}讀誦{/if}</span>
-        <!-- {/if} -->
+        {/if}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="dict"} on:click={()=>thetab="dict"}>🔠{#if ls}字典{/if}</span>
         <!-- svelte-ignore a11y-click-events-have-key-events -->

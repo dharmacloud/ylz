@@ -96,6 +96,7 @@ const goyoutube=id=>{
 }
 </script>
 <div class="toctext">
+
 {#each $mediaurls as media,idx}
 {#if idx&& !$playing && media.youtube}
 <!-- svelte-ignore a11y-click-events-have-key-events -->

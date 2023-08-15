@@ -41,7 +41,7 @@ const gochunk=(idx)=>{
 $: loadChunks($tapmark);
 </script>
 
-<Pager onselect={gochunk} pages={chunks} nextitems={1} now={cknow} let:active let:caption let:idx>
+<Pager onselect={gochunk} pages={chunks} nextitems={2} now={cknow} let:active let:caption let:idx>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span on:click={()=>gochunk(idx)} class="clickable" class:selected={active}>{caption}</span>
 </Pager>

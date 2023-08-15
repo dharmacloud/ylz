@@ -1,6 +1,7 @@
 <script>
 export let ptk ;
-import {tapmark,foliotext,loadingbook} from  './store.js'
+import {tapmark,foliotext,loadingbook,tapAddress} from  './store.js'
+import {updateUrl} from './urlhash.js'
 import {get} from 'svelte/store'
 import ChunkNav from './chunknav.svelte'
 import {goPb} from './nav.js'
@@ -42,6 +43,7 @@ const setAddress=(lineoff)=>{
     const [pbid,line,ch]=ft.toFolioPos(ck,lineoff) ;
     goPb(pbid,ck,line);
     tapmark.set([pbid,line,ch]);
+    updateUrl($tapAddress);
 }
 const goactiveline=()=>{
     const ele=document.querySelector('.toctext .activeline');
@@ -58,9 +60,9 @@ const gotop=()=>{
 <div class="toctext">
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 {#if !ptkline}
-<span class="gotop" on:click={gotop}>↑</span>
+<span class="clickable gotop" on:click={gotop}>↑</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class="goactiveline" on:click={goactiveline}>▃</span>
+<span class="clickable goactiveline" on:click={goactiveline}>▃</span>
 <ChunkNav {ptk}/>
 {/if}
 

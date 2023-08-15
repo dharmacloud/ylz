@@ -1,8 +1,10 @@
-import {foliotext,activefolioid ,audioid,tapmark,folioincache,
+import {foliotext,activefolioid ,audioid,tapmark,folioincache,tapAddress,
     activepb,loadingbook,bookByFolio, stopAudio} from "./store.js";
+import {updateUrl} from './urlhash.js'
 import {get} from 'svelte/store'
 import {bsearchNumber} from 'ptk/utils'
 import {fetchFolioList} from './folio.js'
+import {folioPosFromAddress} from 'ptk'
 export const CURSORMARK='◆'
 export const goPb=(pbid,ck)=>{   
     activepb.set(pbid);
@@ -10,6 +12,7 @@ export const goPb=(pbid,ck)=>{
         const ft=get(foliotext);
         const [pbid,cx,cy]=ft.toFolioPos(ck);
         tapmark.set([pbid,cx, cy]);
+        updateUrl(get(tapAddress));
     }
 }
 
@@ -65,7 +68,6 @@ export const allJuan=(ptk,folioid)=>{
 }
 
 const markChunk=ckid=>{
-    console.log('markchunk',ckid)
     const fpos=get(foliotext).toFolioPos(ckid);
     activepb.set(fpos[0]);
     tapmark.set(fpos)
@@ -121,4 +123,14 @@ export const goPtkLine=(ptk,line)=>{
         tapmark.set(foliopos);
         activepb.set(foliopos[0]);
     })
+}
+
+export const loadAddress=async(ptk,address)=>{
+    const addr=await folioPosFromAddress(ptk,address);
+    if (addr.id) {
+        activefolioid.set(addr.id);
+        const {pb,line,ch}=addr;
+        activepb.set(pb)
+        tapmark.set([pb,line,ch])
+    }
 }

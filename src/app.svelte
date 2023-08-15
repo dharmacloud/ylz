@@ -1,21 +1,23 @@
 <script>
-import { openPtk,folioPosFromAddress} from 'ptk'
+import { openPtk} from 'ptk'
 // import SwipeVideo from "./swipevideo.svelte";
 import SwipeZipImage from "./swipezipimage.svelte";
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import { onDestroy, onMount } from "svelte";
-import {activefolioid,isAndroid,playing,idlecount,showpaiji,leftmode,online,folioincache,
-    newbie,idletime,landscape,showsponsor, activepb, tapmark} from './store.js'
+import {activefolioid,isAndroid,idlecount,showpaiji,leftmode,online,folioincache,showsponsor,
+    newbie,idletime,landscape} from './store.js'
 import {setTimestampPtk} from './mediaurls.js'
 import {fetchFolioList} from './folio.js'
 import TapText from './taptext.svelte'
 import Player from './player.svelte'
 import Newbie from './newbie.svelte';
 import Paiji from './paiji.svelte';
+import Notification from './notification.svelte';
 import { get } from 'svelte/store';
 import Left from './left.svelte'
 import { downloadToCache } from './comps/downloader.js';
 import { addressFromUrl } from './urlhash.js';
+import {loadAddress} from './nav.js'
 let ptk,tofind;
 registerServiceWorker();
 const idleinterval=2;
@@ -41,14 +43,7 @@ onMount(async ()=>{
     setTimestampPtk(ptk);
     await openPtk("dc_sanskrit",new Uint8Array(await resdcsanskrit.arrayBuffer()));
 
-    const addr=await folioPosFromAddress(ptk,addressFromUrl());
-    
-    if (addr.id) {
-        activefolioid.set(addr.id);
-        const {pb,line,ch}=addr;
-        activepb.set(pb)
-        tapmark.set([pb,line,ch])
-    }
+    await loadAddress(ptk,addressFromUrl());
 
     loaded=true;
     timer=setInterval(()=>{
@@ -98,22 +93,18 @@ $: orientation($landscape)
 {#if $leftmode!=='folio'}
 <Left {ptk}/>
 {/if}
-
 {#if (shownewbie||showdict) && !$landscape}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="closepopup" on:click={closePopup}>✖️</span> <!--╳-->
 {/if}
-
 {#if showdict || $landscape}
 <TapText {tofind} {closePopup}/>
 {/if}
-
 {#if shownewbie}
 <Newbie {closePopup}/>
 {/if}
-
 <Player/>
-
+<Notification/>
 {:else}
 <span class="loading">
 如果停在此畫面沒有進度，表示瀏覽器不直持 ECMAscript 2015，無法運行本軟件。

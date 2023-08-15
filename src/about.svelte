@@ -44,7 +44,7 @@ class:selected={show==1} on:click={toggleshowsponsoring}>護持</span>
 {:else if show==5 && $showpunc!=='on'}
 <ProjectIntro/>
 {:else}
-<span class="logotitle">永樂藏 2023.8.12</span>
+<span class="logotitle">永樂藏 2023.8.15</span>
 <br/>Line <a href="https://lin.ee/1tmTKXi">官號</a>@dharmacloud
 <br/>WeChat: Sukhanika
 <br/>源代碼<a href="https://github.com/dharmacloud/swipegallery/" target=_new>{@html githubicon}</a>
