@@ -7,6 +7,8 @@ import Workers from './workers.svelte'
 import ProjectIntro from './project.svelte'
 import Materials from './materials.svelte'
 import { githubicon,appqrcode } from './icons.js';
+import {Cachesname} from './constant.js'
+
 
 let show=0;
 const toggleshowsponsoring=()=>show=show==1?0:1;
@@ -14,6 +16,19 @@ const toggleshowdonors=()=>show=show==2?0:2;
 const toggleshowworkers=()=>show=show==3?0:3;
 const toggleshowmaterials=()=>show=show==4?0:4;
 const toggleshowproject=()=>show=show==5?0:5;
+const updatePtk=async ()=>{
+    const cache=await caches.open(Cachesname);
+    cache.delete("/dc.ptk")
+    cache.delete("/dc_sanskrit.ptk")
+    cache.delete("/ylz/dc.ptk")
+    cache.delete("/ylz/dc_sanskrit.ptk")
+}
+const clearCache=async ()=>{
+    const cache=await caches.open(Cachesname);
+    const keys=await cache.keys();
+    keys.forEach(key=>cache.delete(key))
+}
+
 </script>
 
 <div class="tabs">
@@ -30,6 +45,7 @@ class:selected={show==1} on:click={toggleshowsponsoring}>護持</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class:selected={show==5}  class="clickable" on:click={toggleshowproject}>項目</span>
 {/if}
+
 
 </div>
 <div class="toctext">
@@ -58,7 +74,16 @@ class:selected={show==1} on:click={toggleshowsponsoring}>護持</span>
 <Switch bind:value={$showsponsor} label="靜置時顯示功德芳名" design="slider" fontSize="24"/>
 <Switch bind:value={$showyoutube} label="顯示油管原始影片連結" design="slider" fontSize="24"/>
 
+{#if $showpunc=='off'}
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<span class="clickable danger" on:click={updatePtk}>清除離線數據庫</span>
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<span class="clickable danger" on:click={clearCache}>清除所有離線數據</span>
+{/if}
 <div class="endmarker">※※※</div>
 
 {/if}
 </div>
+<style>
+.danger {background:red;color:yellow}
+</style>
