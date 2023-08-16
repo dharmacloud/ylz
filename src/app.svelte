@@ -1,6 +1,5 @@
 <script>
 import { openPtk} from 'ptk'
-// import SwipeVideo from "./swipevideo.svelte";
 import SwipeZipImage from "./swipezipimage.svelte";
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import { onDestroy, onMount } from "svelte";

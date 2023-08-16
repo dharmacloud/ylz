@@ -47,8 +47,10 @@ const puretext=(_text)=>{
 
 const updateTranslation=async (mark,loading)=>{
     if (loading) return [];
-    const {ptkline}=$foliotext.fromFolioPos(mark);    
-    translations=await getParallelLines(ptk,ptkline,null,{local:true,remote:false});//same ptk only
+    const cl=$foliotext?.fromFolioPos(mark);    
+    if (!cl) return;
+    translations=await getParallelLines(ptk,cl.ptkline,null,{local:true,remote:false});//same ptk only
+
 }
 $: updateTranslation($tapmark,$loadingbook);
 </script>

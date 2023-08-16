@@ -4,7 +4,7 @@
 <hr/>
 台灣第一銀行(007)東勢分行，帳號<span class="bankaccount">4215020663</span> 戶名：<span class="bankaccount">王宗景</span>
 <hr/>
-LINE Pay 轉款：請用id加好友 @fayunshi （法雲印經會公務機）進聊天室，右下角＋→手機轉帳。
+LINE Pay 轉款：請用id加好友 @fayunshi （法雲寺知客）進聊天室，右下角＋→手機轉帳。
 <img alt="" style="width:100%" src="linepay.png"/>
 <br/>台幣500元之捐款，恕不單獨列功德芳名，一律合併为「善男信女」。
 <hr/>

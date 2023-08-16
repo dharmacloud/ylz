@@ -11,6 +11,5 @@ const styleString=()=>{
 +Math.floor(frame.top+unith*(ch))+'px;width:'+unitw+'px;height:'+unith
 +'px;background:var(--pinmark);border-radius:5px;pointer-events:none';
 }
-
 </script>
 <span class="punc" style={styleString()}> </span>

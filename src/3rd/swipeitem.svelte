@@ -11,20 +11,20 @@
   let _height = 0;
   // const fire = createEventDispatcher();
 
-  function firehHeightChange() {
-    if (swipeItemInner) {
-      let { scrollHeight, clientHeight } = swipeItemInner;
-      // fire('swipe_item_height_change', { height: Math.max(scrollHeight, clientHeight) });
-    }
-  }
+  // function firehHeightChange() {
+  //   if (swipeItemInner) {
+  //     let { scrollHeight, clientHeight } = swipeItemInner;
+  //      fire('swipe_item_height_change', { height: Math.max(scrollHeight, clientHeight) });
+  //   }
+  // }
 
-  $: active, allow_dynamic_height && active && _height && requestAnimationFrame(firehHeightChange);
+  //$: active, allow_dynamic_height && active && _height && requestAnimationFrame(firehHeightChange);
 
-  onMount(() => {
-    setTimeout(() => {
-      allow_dynamic_height && requestAnimationFrame(firehHeightChange);
-    }, 100);
-  });
+  // onMount(() => {
+  //   setTimeout(() => {
+  //     allow_dynamic_height && requestAnimationFrame(firehHeightChange);
+  //   }, 100);
+  // });
 </script>
 
 <div

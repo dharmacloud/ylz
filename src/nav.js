@@ -126,6 +126,7 @@ export const goPtkLine=(ptk,line)=>{
 }
 
 export const loadAddress=async(ptk,address)=>{
+    if (!address) return;
     const addr=await folioPosFromAddress(ptk,address);
     if (addr.id) {
         activefolioid.set(addr.id);

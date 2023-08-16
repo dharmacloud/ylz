@@ -25,7 +25,7 @@ export const landscape=writable(false)
 export const isAndroid=writable(false)
 export const searchable=writable('')
 export const leftmode=writable('folio');
-export const foliotext=writable({});
+export const foliotext=writable(null);
 export const tofind=writable('');
 export const lefttextline=writable(0);//ptk line to be shown in vtext
 export let player

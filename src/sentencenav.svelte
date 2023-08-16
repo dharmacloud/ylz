@@ -7,19 +7,19 @@ let sentnow=0;
 
 const gosent=idx=>{
     const ft=$foliotext;
-    const fpos=ft.toFolioPos($foliotext.fromFolioPos($tapmark).ckid,idx);
+    if (!ft) return;
+    const fpos=ft.toFolioPos($foliotext?.fromFolioPos($tapmark).ckid,idx);
     activepb.set(fpos[0])
     tapmark.set(fpos);
-    console.log('gosent',$tapmark, idx, fpos)
     sentnow=idx;
 }
 let linecount=0,caption='';
 const humancaption=()=>{
     const ft=$foliotext;
-    if (!ft.fromFolioPos) return ;
+    if (!ft||!ft.fromFolioPos) return ;
     const cl=ft.fromFolioPos($tapmark);
     if (!cl || !cl.ckid) return ''
-    linecount=cl.linecount;
+    linecount=cl.linecount||0;
     const styled=parseInt(cl.ckid).toString()==cl.ckid?styledNumber(parseInt(cl.ckid),'①'): (cl.ckid||'')+'.';
     caption= styled+ptk.caption(cl.at);
     console.log(caption,linecount)

@@ -37,6 +37,8 @@ const getLinks=folioid=>{
     const [from,to]=ptk.rangeOfAddress('folio#'+folioid+'.pb#'+($activepb));
     const externals=[],internals=[];
     const agmsjuan=folioid.match(/agms(\d+)$/);
+    const ft=$foliotext;
+    if (!ft) return [[],[]];
     let col,key;
     if (agmsjuan) {
         const at=ptk.nearestTag( to+1 ,'n') -1 ;
@@ -58,22 +60,22 @@ const getLinks=folioid=>{
    
     const agmdjuan=folioid.match(/agmd(\d+)$/);
     if (agmdjuan) {
-        const {ckid}=$foliotext.fromFolioPos($tapmark);
-        if (ckid) {
-            caption='長'+parseInt(ckid)+'導讀';
-            url='https://buddhaspace.org/agama3/'+parseInt(ckid)+'.html';
-            key=ckid;
+        const cl=ft.fromFolioPos($tapmark);
+        if (cl&&cl.ckid) {
+            caption='長'+parseInt(cl.ckid)+'導讀';
+            url='https://buddhaspace.org/agama3/'+parseInt(cl.ckid)+'.html';
+            key=cl.ckid;
             externals.push([ caption, url]);
         }
         col=ptk.columns['par_agmd']
     }
     const agmmjuan=folioid.match(/agmm(\d+)$/);
     if (agmmjuan) {
-        const {ckid}=ft.fromFolioPos($tapmark);
-        if (ckid) {
-            key=keyid;
-            caption='中'+parseInt(ckid)+'導讀';
-            url='https://buddhaspace.org/agama2/sub/'+ckid+'.html';
+        const cl=ft.fromFolioPos($tapmark);
+        if (cl&&cl.ckid) {
+            key=cl.ckid;
+            caption='中'+parseInt(cl.ckid)+'導讀';
+            url='https://buddhaspace.org/agama2/sub/'+cl.ckid+'.html';
             externals.push([ caption, url]);
         }
         col=ptk.columns['par_agmm']
@@ -81,8 +83,11 @@ const getLinks=folioid=>{
     const agmujuan=folioid.match(/agmu(\d+)$/);
     if (agmujuan) {
         col=ptk.columns['par_agmu']
+        const cl=ft.fromFolioPos($tapmark);
+        if (cl&&cl.ckid) {
+            key=cl.ckid;
+        }
     }
-
     if (col && key) {
         const at2=col.keys.indexOf(key.toString());
         const pars=(col.parallels[at2]||'').split(',');

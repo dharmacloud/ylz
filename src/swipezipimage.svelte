@@ -2,6 +2,7 @@
 import TranscriptLayer from './transcriptlayer.svelte';
 import PuncLayer from './punclayer.svelte';
 import TapMark from './tapmark.svelte';
+//import Swipe from './newswiper.svelte'
 import Swipe from './3rd/swipe.svelte';
 import SwipeItem from './3rd/swipeitem.svelte';
 import {downloadToCache} from './comps/downloader.js'
@@ -18,40 +19,34 @@ import { fetchAudioList } from './mediaurls';
 import { updateUrl } from './urlhash';
 export let src;
 
-
 let ptk=usePtk($activePtk)
-let foliopage=[],puncs=[],ready,images=[],hidepunc=false;
+let foliopage=[],puncs=[],ready,hidepunc=false;
 export let totalpages=0;
 export let onTapText=function(){};
+const blankimage='frames/blank.png'
 let swiper;
-let defaultIndex=0;
-let stableleft=0;
+let defaultIndex=1;
+let imageIndex=0;
+
 let favoritetimer=0;
-const imageFrame=()=>{
-    const img=document.getElementsByClassName('swipe')[defaultIndex];
-	if (!img || !img.clientHeight) return [0,0,0,0];
-    
-	const r=img.clientHeight / img.naturalHeight;
-    const rect=img.getBoundingClientRect();
-    if (rect.left<0) {//還沒捲好
-        rect.left=stableleft;
-    } else {
-        stableleft=rect.left; //穩定的
-    }
-	const w=img.naturalWidth * r;
-	const left=Math.floor((img.clientWidth- w)/2) + rect.x;
-	return {left,top:rect.y,width:w,height:img.clientHeight} ;
+let imageFrame={};
+
+const getImages=(idx)=>{
+    const clss=["leftimage","middleimage","rightimage"];
+    const cls=clss[idx];
+    const imgs=document.getElementsByClassName(cls);
+    return imgs;
 }
 
 const swipeConfig = {
     autoplay: false,
     delay: 0,
     showIndicators: false,
-    transitionDuration: 250
+    transitionDuration: 250,
+    allow_infinite_swipe:true,
 };
 
 const loadZip=async ()=>{
-    // console.log('load zip',$activefolioid)
     ready=false;
     loadingbook.set(true);
     let host='folio/';
@@ -68,60 +63,81 @@ const loadZip=async ()=>{
     const buf=await res.arrayBuffer();
     const zip=new ZipStore(buf);
     thezip.set(zip);
-    images.length=0;
-    for (let i=0;i<zip.files.length;i++) {
-        if (i==zip.files.length-1) {
-            const blob=new Blob([zip.files[i].content]);
-            images.push(URL.createObjectURL(blob));
-        } else {
-            images.push('frames/blank.png');
-        }
-    }
 
-    defaultIndex=zip.files.length-parseInt($activepb);
     totalpages=zip.files.length;
+    ready=true;
     setTimeout(()=>{
-        maxfolio.set(totalpages-1);
+        maxfolio.set(totalpages);
         loadingbook.set(false);
-        ready=true;
-        // console.log('loaded zip')
-        fetchAudioList($activefolioid,mediaurls,$showyoutube=='on')
+        setImages(imageIndex);       
+
+        const img=document.getElementsByClassName('middleimage')[0];
+        const r=img.clientHeight / img.naturalHeight;
+        const rect=img.getBoundingClientRect();
+	    const w=img.naturalWidth * r;    
+	    imageFrame={left:0,top:0,width:w,height:img.clientHeight} ; 
         
+        fetchAudioList($activefolioid,mediaurls,$showyoutube=='on')
     },100);   
 }
 const swipeStart=(obj)=>{
     hidepunc=true;
 }
+let oldDefaultIndex=1;
+
+const setImage=(imageidx,zip,idx)=>{
+    if (idx>=totalpages) idx=0;
+    else if (idx<0) idx=totalpages-1;
+
+    const imgs=getImages(imageidx);
+
+    //need to see all clone
+    for(let i=0;i<imgs.length;i++) {
+        const blob=new Blob([zip.files[idx].content]);
+        imgs[i].src=URL.createObjectURL(blob);
+    }
+    swiper.update()
+}
+const setImages=(idx)=>{
+    const zip=$thezip;
+
+    let previdx=idx-1;
+    if (previdx<0) previdx=totalpages-1;
+    let nextidx=idx+1;
+    if (nextidx>=totalpages) nextidx=0;
+
+    setImage((defaultIndex+1)%3,zip,previdx);
+    setImage(defaultIndex,zip,idx);
+    setImage((defaultIndex+2)%3,zip,nextidx);
+    swiper.update()
+    imageIndex=idx;
+}
 const swipeChanged=(obj)=>{
     if (!ready) return;
     const {active_item}=obj.detail;
     defaultIndex=active_item;
-    const newpb=(totalpages- defaultIndex).toString();
-    
-    if ($activepb!=newpb) {
-        activepb.set(  newpb);
+    let idx=imageIndex;
+    const zip=$thezip;
+    if (oldDefaultIndex==defaultIndex) return;
+    //console.log( ((oldDefaultIndex+3) - defaultIndex)%3)
+    if ( ((oldDefaultIndex+3) - defaultIndex)%3 ==1) { //next image
+        idx++;
+        if (idx>=totalpages) idx=0;
+        setImage((oldDefaultIndex+1)%3,zip,idx+1); //change next image
+    } else{ 
+        idx--;
+        if (idx<0) idx=totalpages-1;
+        setImage((oldDefaultIndex+2)%3,zip,idx-1); //change prev image
     }
-    let i=totalpages- defaultIndex-1;
-    const wrapper=document.getElementsByClassName("swipeable-slot-wrapper")[0];
-    if (!wrapper) return;
-    const ele=wrapper.childNodes[defaultIndex]?.firstChild.firstChild;
-    if (!ele) return;
-    if (~ele.src.indexOf('blank')) {
-        const blob=new Blob([get(thezip).files[i].content]);
-        ele.src=images[i]=URL.createObjectURL(blob);
-    }
-    if (i+1<totalpages) { //buffer next page for smooter swipe
-        i++
-        const ele=wrapper.childNodes[defaultIndex-1]?.firstChild.firstChild;
-        if (~ele.src.indexOf('blank')) {
-            const blob=new Blob([get(thezip).files[i].content]);
-            ele.src=images[i]=URL.createObjectURL(blob);
-        }
-    }
+    oldDefaultIndex=defaultIndex;
+    imageIndex=idx;
+    activepb.set((imageIndex+1).toString())
+    swiper.update()    
     updateFolioText();
     useractive();
-    confirmfavorite();
+    confirmfavorite();    
 }
+
 const updateFolioText=()=>{
     hidepunc=true;
     const fl=folioLines();
@@ -141,6 +157,7 @@ const useractive=(humanaction=false)=>{
 }
 const mousewheel=(e)=>{
     if ($leftmode!=='folio') return;
+    if (!ready) return;
 	if (e.ctrlKey ) return;
     hidepunc=true;
 	if (e.deltaY>0) {
@@ -152,7 +169,7 @@ const mousewheel=(e)=>{
 	e.preventDefault();
 }
 const getCharXY=(x,y)=>{
-	const {left,top,width,height}=imageFrame();
+	const {left,top,width,height}=imageFrame;
     x-=left;
     y-=top;	
     const cx=folioLines()-Math.floor((x/width)*folioLines())-1;
@@ -194,11 +211,7 @@ const onfoliopageclick=e=>{
 }
 const gotoPb=async (pb)=>{
     if (!totalpages || !swiper)return;//not loaded yet
-    const go=totalpages-parseInt(pb);
-    if (go!==defaultIndex) {
-        // console.log('goto',pb, go, defaultIndex)
-        swiper.goTo(go);
-    }
+    setImages(parseInt(pb)-1);
 }
 const confirmfavorite=()=>{
     if (favoritetimer) {
@@ -267,11 +280,11 @@ $: gotoPb($activepb); //trigger by goto folio in setting.svelte
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 {#if ready}
 <div class="swipe-holder" on:wheel={mousewheel} style={ "opacity:"+($leftmode!=='folio'?'0;':'1')+";width:"+folioHolderWidth($landscape,1,swiper)}>
-<Swipe bind:this={swiper} {...swipeConfig} {defaultIndex}
+<Swipe bind:this={swiper} {...swipeConfig} {defaultIndex} 
  on:click={onfoliopageclick} on:start={swipeStart} on:change={swipeChanged}>
-    {#each images as image,idx}
-    <SwipeItem><img alt='no' class="swipe"  src={images[images.length-idx-1]}/></SwipeItem>
-    {/each}    
+ <SwipeItem><img src={blankimage} alt='no' class="leftimage swipe"/></SwipeItem>
+ <SwipeItem><img src={blankimage} alt='no' class="middleimage swipe"/></SwipeItem>
+ <SwipeItem><img src={blankimage} alt='no' class="rightimage swipe"/></SwipeItem>
 </Swipe>
 </div>
 {:else}
@@ -288,7 +301,7 @@ $: gotoPb($activepb); //trigger by goto folio in setting.svelte
 <span class="playbtn" on:click={toggleplaybtn}>{$audioid?'◼':'♫'}</span>
 {/if}
 
-<span class="pagenumber">{totalpages-defaultIndex}</span>
+<span class="pagenumber">{imageIndex+1}</span>
 {#if $playing}
 <span class="remainrollback">{$remainrollback>0?$remainrollback:''}</span>
 {/if}
@@ -296,16 +309,16 @@ $: gotoPb($activepb); //trigger by goto folio in setting.svelte
 {#key $tapmark+$activepb}
 {#if ready&&!hidepunc && !$showpaiji && $leftmode=='folio'}
 <TapMark mark={$tapmark} pb={$activepb} folioChars={$folioChars} 
-folioLines={folioLines()} frame={imageFrame()} />
+folioLines={folioLines()} frame={imageFrame} />
 {/if}
 {/key}
 
 {#key puncs}
 {#if !hidepunc}
 {#if $showpunc=='on'&& $leftmode=='folio'}
-<PuncLayer frame={imageFrame()} folioChars={$folioChars} folioLines={folioLines()} {puncs} />
+<PuncLayer frame={imageFrame} folioChars={$folioChars} folioLines={folioLines()} {puncs} />
 {/if}
-<TranscriptLayer frame={imageFrame()} {totalpages} folioLines={folioLines()} {swiper} {ptk} {foliopage}/>
+<TranscriptLayer frame={imageFrame} {totalpages} folioLines={folioLines()} {swiper} {ptk} {foliopage}/>
 {/if}
 {/key}
 <style>
@@ -314,5 +327,5 @@ img { height:100%}
     height: 100%;
     /* width:100%; */
 }
-.swipe {position:absolute;}
+.swipe {position:absolute;} 
 </style>

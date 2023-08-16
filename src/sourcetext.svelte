@@ -8,8 +8,9 @@ import { parseOfftext } from 'ptk/offtext';
 let sourcetexts=[];
 const updateParallels=async (mark,loading)=>{
     if (loading) return;
-    const {ptkline}=$foliotext.fromFolioPos($tapmark);
-    sourcetexts=await getParallelLines(ptk,ptkline,null,{remote:true,local:false});//different ptk only
+    const cl=$foliotext?.fromFolioPos($tapmark);
+    if (!cl) return ;
+    sourcetexts=await getParallelLines(ptk,cl.ptkline,null,{remote:true,local:false});//different ptk only
 }
 const puretext=(_text)=>{
     const [text]=parseOfftext(_text);
