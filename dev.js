@@ -7,11 +7,16 @@ let ctx=await esbuild
     mainFields: ["svelte", "browser", "module", "main"],
     external:[],
     bundle: true,
-    //watch: true,
+    //minify :true,
     outfile: "dist/index.js",
     plugins: [sveltePlugin()],
     logLevel: "info",
   })
   .catch(() => process.exit(1));
-    
-await ctx.watch();
+//await ctx.watch();
+
+ await ctx.serve({
+        servedir: 'dist',
+        port:5000,
+        host:"127.0.0.1"
+ })

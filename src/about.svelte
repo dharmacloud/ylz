@@ -1,5 +1,5 @@
 <script>
-import {newbie,showyoutube,showpunc,showsponsor} from './store.js'
+import {newbie,showyoutube,showpunc,showsponsor,activefolioid} from './store.js'
 import Switch from './3rd/switch.svelte';
 import Sponsoring from './sponsoring.svelte';
 import HOF from './hof.svelte'
@@ -72,14 +72,12 @@ class:selected={show==1} on:click={toggleshowsponsoring}>護持</span>
 {#if $showpunc=='off'}
 {#if clearcount>-1}已清除{clearcount}
 {:else}
-<span class="danger">清除</span>
+<span class="danger">清除離線文件</span>
 {/if}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="clickable" on:click={()=>clearCache(".ptk")}>數據庫</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class="clickable" on:click={()=>clearCache(".mp3")}>音頻</span>
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class="clickable" on:click={()=>clearCache(".zip")}>圖檔</span>
+<span class="clickable" on:click={()=>clearCache($activefolioid+".zip")}>本卷圖檔</span>
 {/if}
 <div class="endmarker">※※※</div>
 

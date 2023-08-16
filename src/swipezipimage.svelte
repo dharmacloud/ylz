@@ -213,7 +213,6 @@ const onfoliopageclick=e=>{
     onTapText(t); 
 }
 const gotoPb=async (pb)=>{
-    console.log('gotopb',pb)
     if (!totalpages || !swiper)return;//not loaded yet
     updateFolioText();
     setImages(parseInt(pb)-1);
@@ -317,7 +316,7 @@ $: gotoPb($activepb); //trigger by goto folio in setting.svelte
 folioLines={folioLines()} frame={imageFrame} />
 {/if}
 {/key}
-
+  
 {#key puncs}
 {#if !hidepunc}
 {#if $showpunc=='on'&& $leftmode=='folio'}
