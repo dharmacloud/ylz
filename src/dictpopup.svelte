@@ -34,6 +34,7 @@ $: availableDict(nentry,entries);
 
 </script>
 <div class="dictpopup toctext">
+{#if entries.length}
 <span class="header">
 
 {#each entries as [distance,entry],idx}
@@ -65,6 +66,7 @@ $: availableDict(nentry,entries);
 
 {#if src}
 <iframe style="border:none" class="iframe" title="wiki" {src}></iframe>
+{/if}
 {/if}
 </div>
 <style>

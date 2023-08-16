@@ -5,7 +5,7 @@
   export let active = false;
   export let classes = '';
   export let style = '';
-  export let allow_dynamic_height = false;
+  //export let allow_dynamic_height = false;
 
   let swipeItemInner = null;
   let _height = 0;

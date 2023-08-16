@@ -16,6 +16,7 @@ export const activepb=writable('1');
 export const activefolioid=writable(settings.activefolioid);
 export const maxfolio=writable(0);
 export const downloading=writable(0)
+export const sharing=writable(false);
 export const favorites=writable(settings.favorites);
 export const preferaudio=writable(settings.preferaudio);
 export const showpunc=writable(settings.showpunc);
@@ -135,9 +136,6 @@ export const makeAddressFromFolioPos=(pbid,cx=0,cy=0)=>{
     return address;
 }
 export const tapAddress=derived(tapmark,(mark)=> makeAddressFromFolioPos(mark));
-//tapAddress.subscribe((addr)=>updateUrl(addr));
-
-
 
 export const parallelFolios=(ptk,folioid)=>{
     folioid=folioid||get(activefolioid);
@@ -203,3 +201,8 @@ export const isSidePaiji=()=>{
 
 export const favortypes=['♡','🤍','❤️', '💚', '💙','💜','🖤'];
 
+
+export const shareAddress=(addr)=>{
+    if (!addr) addr= makeAddressFromFolioPos(get(tapmark));
+    return location.origin+location.pathname+'#'+addr;
+}

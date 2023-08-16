@@ -61,7 +61,7 @@ const stripstyle=(i,strip)=>{
         destroyTimer();
     }
     //duplicate repaint after continueplay is on
-
+    
     let fl=folioLines();
     let fc=get(folioChars)
     const w=frame.width/fl;
@@ -92,7 +92,7 @@ const stripstyle=(i,strip)=>{
         timers.push( setTimeout(()=>{
             if ( parseInt(get(activepb))<totalpages) { 
                 continueplay.set(true); //auto swipe , do not trigger 
-                activepb.set( parseInt(get(activepb))+1);
+                activepb.set( (parseInt(get(activepb))+1).toString());
                 setTimeout(()=>{
                     continueplay.set(false);// user swipe manually
                 },500);            
@@ -105,7 +105,7 @@ const stripstyle=(i,strip)=>{
     if (i==0&&delay<30) delay=30;// too small value  cause immediate trigger fire
     // console.log(i,'delay',delay)
     const fire=(function(){
-        if (this.folio!==get(activepb)) return;
+        if (this.folio!=get(activepb)) return;
         // console.log('fire',this.idx, 'folio',this.folio, 'activepb',get(activepb))
         const ele=document.getElementById('strip'+this.idx);
         if (!ele) return;

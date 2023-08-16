@@ -1,6 +1,6 @@
 <script>
 </script>
-以下為代收善款的賢友，除轉款相關事宜，請勿打擾。
+以下為代收善款的賢友，除轉款相關事宜，請勿連繫。
 <hr/>
 台灣第一銀行(007)東勢分行，帳號<span class="bankaccount">4215020663</span> 戶名：<span class="bankaccount">王宗景</span>
 <hr/>

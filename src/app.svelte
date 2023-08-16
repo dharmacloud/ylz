@@ -3,7 +3,7 @@ import { openPtk} from 'ptk'
 import SwipeZipImage from "./swipezipimage.svelte";
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import { onDestroy, onMount } from "svelte";
-import {activefolioid,isAndroid,idlecount,showpaiji,leftmode,online,folioincache,showsponsor,
+import {activefolioid,isAndroid,idlecount,showpaiji,leftmode,online,folioincache,showsponsor,sharing,
     newbie,idletime,landscape} from './store.js'
 import {setTimestampPtk} from './mediaurls.js'
 import {fetchFolioList} from './folio.js'
@@ -46,41 +46,41 @@ onMount(async ()=>{
     loaded=true;
     timer=setInterval(()=>{
         showpaiji.set($idlecount>=idletime);
-        if (!shownewbie && !showdict && $showsponsor=='on') {
+        if (!shownewbie && !showpopup && $showsponsor=='on') {
             idlecount.set($idlecount+idleinterval);
         }
     },idleinterval*1000);
 });
 
 
-let showdict=false,shownewbie=$newbie=='on';
+let showpopup=false,shownewbie=$newbie=='on';
 const closePopup=()=>{
     shownewbie=false;
     if (get(landscape)) return;
-    showdict=false;
+    showpopup=false;
 }
 const onMainmenu=()=>{
-    showdict=false;
+    showpopup=false;
 }
 const onTapText=(t)=>{
-    showdict=true;
+    showpopup=true;
     if (typeof t=='string') tofind=t;
 }
 const orientation=(ls)=>{
-    showdict=false;
+    showpopup=false;
     if (ls) shownewbie=false;
     idlecount.set(0)
 }
 $: orientation($landscape)
 
-// $: console.log(sidepaiji,idletime,$idlecount,$showpaiji,$playing,showdict)
+// $: console.log(sidepaiji,idletime,$idlecount,$showpaiji,$playing,showpopup)
 </script>
 
 
 <div class="app">
 {#if loaded}
 
-{#if $showpaiji && !showdict && !shownewbie && !$landscape && $showsponsor=='on'}
+{#if $showpaiji && !showpopup && !shownewbie && !$landscape && $showsponsor=='on'}
 <Paiji/>
 {/if}
 
@@ -91,11 +91,11 @@ $: orientation($landscape)
 {#if $leftmode!=='folio'}
 <Left {ptk}/>
 {/if}
-{#if (shownewbie||showdict) && !$landscape}
+{#if (shownewbie||showpopup) && !$landscape}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="closepopup" on:click={closePopup}>✖️</span> <!--╳-->
 {/if}
-{#if showdict || $landscape}
+{#if showpopup || $landscape}
 <TapText {tofind} {closePopup}/>
 {/if}
 {#if shownewbie}

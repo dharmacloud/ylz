@@ -42,7 +42,6 @@ class:selected={show==1} on:click={toggleshowsponsoring}>護持</span>
 <span class:selected={show==5}  class="clickable" on:click={toggleshowproject}>項目</span>
 {/if}
 
-
 </div>
 <div class="toctext">
 {#if show==1}
@@ -60,7 +59,7 @@ class:selected={show==1} on:click={toggleshowsponsoring}>護持</span>
 <br/>Line <a href="https://lin.ee/1tmTKXi">官號</a>@dharmacloud
 <br/>WeChat: Sukhanika
 <br/>源代碼<a href="https://github.com/dharmacloud/swipegallery/" target=_new>{@html githubicon}</a>
-，所有成果若無特別聲明一律採用
+，若無特別聲明則採用
 <br/><a target=_new href="https://creativecommons.org/publicdomain/zero/1.0/deed.zh">CC0 1.0 通用公共领域贡献</a>
 <div class="endmarker">分享此APP</div>
 <span>{@html appqrcode}</span>

@@ -5,15 +5,16 @@ import Audio from "./audio.svelte"
 import About from "./about.svelte"
 import Textual from './textual.svelte'
 import { get } from 'svelte/store';
-//import Favorite from "./favorite.svelte"
+import Sharing from './sharing.svelte'
 import Toc from "./toc.svelte"
-import {activePtk, landscape,sideWidth,searchable,mediaurls} from './store.js'
+import {activePtk, landscape,sideWidth,searchable,mediaurls,sharing} from './store.js'
 import { usePtk} from "ptk";
 import {CURSORMARK} from './nav.js'
+
 export let tofind='';
 export let address='';
 export let closePopup;
-let thetab=get(landscape)?"textual":"toc";
+let thetab=get(landscape)?"textual":"dict";
 let ptk ,entries=[];
 
 const onDict=(t)=>{
@@ -40,12 +41,13 @@ $: ls=get(landscape);
 $: ptk=usePtk($activePtk);
 $: setSearchable(tofind);
 $: thetab=='dict' && onDict(tofind);
+$: if ($sharing) thetab='dict';
 </script>
 {#key $landscape}
 <div class="popup" style={ls?sideWidth(ls):''}>
     <div class="tabs">    
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="about"} on:click={()=>thetab="about"}>{#if !ls}{@html "&nbsp;"} {/if}🙏{#if ls}護持{/if}</span>
+        <span class='clickable' class:selected={thetab=="about"} on:click={()=>thetab="about"}>{#if !ls}{@html "&nbsp;"} {/if}🙏{#if ls}首頁{/if}</span>
 
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="list"} on:click={()=>thetab="list"}>📚{#if ls}經卷{/if}</span>
@@ -55,24 +57,33 @@ $: thetab=='dict' && onDict(tofind);
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="textual"} on:click={()=>thetab="textual"}>📜{#if ls}文本{/if}</span>    
         <!-- svelte-ignore a11y-click-events-have-key-events -->
+
+        <span class='clickable' class:selected={thetab=="dict"} on:click={()=>thetab="dict"}>
+        {#if $sharing}    
+            🔗{#if ls}分享{/if}
+        {:else}
+            🔠{#if ls}字典{/if}
+        {/if}
+        
+        </span>
+
         {#if $mediaurls.length>1}
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="audio"} on:click={()=>thetab="audio"}>🎵{#if ls}讀誦{/if}</span>
         {/if}
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="dict"} on:click={()=>thetab="dict"}>🔠{#if ls}字典{/if}</span>
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <!-- {#key $tapAddress} -->
-        <!-- {#if $landscape}<span style="font-size:65%" on:click={copyaddress}>{$tapAddress}</span>{/if} -->
-        <!-- {/key} -->
-<!-- svelte-ignore a11y-click-events-have-key-events -->
+
     </div>
       <div class="tab-content" class:visible={thetab=='list'}><Foliolist {ptk} {closePopup}  bind:thetab /></div>
       <div class="tab-content" class:visible={thetab=='toc'}><Toc {closePopup} {ptk} /></div>
       <!-- <div class="tab-content" class:visible={thetab=='favorite'}><Favorite {address} {closePopup} {ptk} /></div> -->
       <div class="tab-content" class:visible={thetab=='textual'}><Textual {closePopup} {ptk}/></div>
-      {#if entries.length}
+      
+      {#if $sharing}
+      <div class="tab-content" class:visible={thetab=='dict'}><Sharing/></div>
+      {:else}
       <div class="tab-content" class:visible={thetab=='dict'}><DictPopup {entries} {ptk} {address}/></div>
       {/if}
+      
       <div class="tab-content" class:visible={thetab=='audio'}><Audio {ptk}/></div>
       <div class="tab-content" class:visible={thetab=='about'}><About/></div>
 

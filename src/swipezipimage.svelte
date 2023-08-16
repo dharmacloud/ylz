@@ -12,8 +12,8 @@ import {ZipStore} from 'ptk/zip';
 import DownloadStatus from './downloadstatus.svelte'
 import {thezip,favortypes, landscape,foliotext,folioLines,isSidePaiji,tapAddress,
     folioChars,activePtk,activefolioid,activepb,favorites,audioid,showpunc,
-maxfolio,tapmark, playing, remainrollback, showyoutube,
-idlecount,showpaiji,loadingbook, selectmedia, preferaudio,folioHolderWidth,leftmode,mediaurls, downloading, notificationmessage} from './store.js'
+maxfolio,tapmark, playing, remainrollback, showyoutube,shareAddress,
+idlecount,showpaiji,loadingbook, selectmedia, preferaudio,folioHolderWidth,leftmode,mediaurls, downloading, sharing} from './store.js'
 import { get } from 'svelte/store';
 import { fetchAudioList } from './mediaurls';
 import { updateUrl } from './urlhash';
@@ -65,18 +65,14 @@ const loadZip=async ()=>{
     thezip.set(zip);
 
     totalpages=zip.files.length;
+    imageIndex=parseInt($activepb)-1;
+    if (imageIndex>=totalpages) imageIndex=0;
     ready=true;
     setTimeout(()=>{
         maxfolio.set(totalpages);
         loadingbook.set(false);
-        setImages(imageIndex);       
-
-        const img=document.getElementsByClassName('middleimage')[0];
-        const r=img.clientHeight / img.naturalHeight;
-        const rect=img.getBoundingClientRect();
-	    const w=img.naturalWidth * r;    
-	    imageFrame={left:0,top:0,width:w,height:img.clientHeight} ; 
-        
+        setImages(imageIndex); 
+        updateFolioText()      
         fetchAudioList($activefolioid,mediaurls,$showyoutube=='on')
     },100);   
 }
@@ -111,6 +107,10 @@ const setImages=(idx)=>{
     setImage((defaultIndex+2)%3,zip,nextidx);
     swiper.update()
     imageIndex=idx;
+    const img=document.getElementsByClassName('middleimage')[0];
+    const height=img.clientHeight||imageFrame.height;
+    const width=img.clientWidth||imageFrame.width||height*0.45; //some time width ==0
+    imageFrame={left:0,top:0,width,height}; 
 }
 const swipeChanged=(obj)=>{
     if (!ready) return;
@@ -118,7 +118,10 @@ const swipeChanged=(obj)=>{
     defaultIndex=active_item;
     let idx=imageIndex;
     const zip=$thezip;
-    if (oldDefaultIndex==defaultIndex) return;
+    if (oldDefaultIndex==defaultIndex) {
+        hidepunc=false;
+        return;
+    }
     //console.log( ((oldDefaultIndex+3) - defaultIndex)%3)
     if ( ((oldDefaultIndex+3) - defaultIndex)%3 ==1) { //next image
         idx++;
@@ -140,10 +143,10 @@ const swipeChanged=(obj)=>{
 
 const updateFolioText=()=>{
     hidepunc=true;
-    const fl=folioLines();
     foliopage=get(foliotext).folioPageText($activepb);
     foliopage=foliopage.join('\n').replace(/【[^】]+】/,'').split('\n')
     setTimeout(()=>{
+        const fl=folioLines();
         hidepunc=false;
         puncs=extractPuncPos(foliopage,fl);
     },200); //wait until swiper stop
@@ -153,7 +156,6 @@ const useractive=(humanaction=false)=>{
         showpaiji.set(false);
         idlecount.set(0);
     }
-    hidepunc=false;
 }
 const mousewheel=(e)=>{
     if ($leftmode!=='folio') return;
@@ -192,11 +194,12 @@ const onfoliopageclick=e=>{
     const oldmark=$tapmark
     const newmark=[ $activepb ,cx,cy ];
     if ( JSON.stringify(oldmark)==JSON.stringify(newmark)) {
-        notificationmessage.set($tapAddress);
-        const addr=location.origin+location.pathname+'#'+$tapAddress;
-        navigator.clipboard.writeText(addr);
+        sharing.set(true);
+        navigator.clipboard.writeText( shareAddress());
+        onTapText('');
         return;
     } else {
+        sharing.set(false)
         tapmark.set(newmark);
     }
     updateUrl($tapAddress);
@@ -210,7 +213,9 @@ const onfoliopageclick=e=>{
     onTapText(t); 
 }
 const gotoPb=async (pb)=>{
+    console.log('gotopb',pb)
     if (!totalpages || !swiper)return;//not loaded yet
+    updateFolioText();
     setImages(parseInt(pb)-1);
 }
 const confirmfavorite=()=>{
