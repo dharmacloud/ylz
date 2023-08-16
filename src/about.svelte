@@ -10,22 +10,18 @@ import { githubicon,appqrcode } from './icons.js';
 import {Cachesname} from './constant.js'
 
 
-let show=0;
+let show=0,clearcount=-1;
 const toggleshowsponsoring=()=>show=show==1?0:1;
 const toggleshowdonors=()=>show=show==2?0:2;
 const toggleshowworkers=()=>show=show==3?0:3;
 const toggleshowmaterials=()=>show=show==4?0:4;
 const toggleshowproject=()=>show=show==5?0:5;
-const updatePtk=async ()=>{
+
+const clearCache=async (ext)=>{
     const cache=await caches.open(Cachesname);
-    cache.delete("/dc.ptk")
-    cache.delete("/dc_sanskrit.ptk")
-    cache.delete("/ylz/dc.ptk")
-    cache.delete("/ylz/dc_sanskrit.ptk")
-}
-const clearCache=async ()=>{
-    const cache=await caches.open(Cachesname);
-    const keys=await cache.keys();
+    let keys=await cache.keys();
+    keys=keys.filter(it=>!ext || it.url.endsWith(ext));
+    clearcount=keys.length;
     keys.forEach(key=>cache.delete(key))
 }
 
@@ -60,7 +56,7 @@ class:selected={show==1} on:click={toggleshowsponsoring}>護持</span>
 {:else if show==5 && $showpunc!=='on'}
 <ProjectIntro/>
 {:else}
-<span class="logotitle">永樂藏 2023.8.15</span>
+<span class="logotitle">永樂藏 2023.8.16</span>
 <br/>Line <a href="https://lin.ee/1tmTKXi">官號</a>@dharmacloud
 <br/>WeChat: Sukhanika
 <br/>源代碼<a href="https://github.com/dharmacloud/swipegallery/" target=_new>{@html githubicon}</a>
@@ -75,10 +71,16 @@ class:selected={show==1} on:click={toggleshowsponsoring}>護持</span>
 <Switch bind:value={$showyoutube} label="顯示油管原始影片連結" design="slider" fontSize="24"/>
 
 {#if $showpunc=='off'}
+{#if clearcount>-1}已清除{clearcount}
+{:else}
+<span class="danger">清除</span>
+{/if}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class="clickable danger" on:click={updatePtk}>清除離線數據庫</span>
+<span class="clickable" on:click={()=>clearCache(".ptk")}>數據庫</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class="clickable danger" on:click={clearCache}>清除所有離線數據</span>
+<span class="clickable" on:click={()=>clearCache(".mp3")}>音頻</span>
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<span class="clickable" on:click={()=>clearCache(".zip")}>圖檔</span>
 {/if}
 <div class="endmarker">※※※</div>
 

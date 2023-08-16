@@ -7,7 +7,7 @@ import SearchMain from  './searchmain.svelte'
 import Externals from './externals.svelte'
 import ParText from './partext.svelte'
 import {parseAction, toChineseNumber} from 'ptk'
-import {activefolioid,activepb, leftmode,hasVariorum,hasTranslation,hasSanskrit,bookByFolio, tapChunkLine} from './store.js'
+import {activefolioid,activepb, leftmode,hasVariorum,hasTranslation,hasSanskrit,bookByFolio, tapmark,foliotext} from './store.js'
 export let ptk;
 export let closePopup;
 
@@ -58,7 +58,7 @@ const getLinks=folioid=>{
    
     const agmdjuan=folioid.match(/agmd(\d+)$/);
     if (agmdjuan) {
-        const {ckid}=$tapChunkLine;
+        const {ckid}=$foliotext.fromFolioPos($tapmark);
         if (ckid) {
             caption='長'+parseInt(ckid)+'導讀';
             url='https://buddhaspace.org/agama3/'+parseInt(ckid)+'.html';
@@ -69,7 +69,7 @@ const getLinks=folioid=>{
     }
     const agmmjuan=folioid.match(/agmm(\d+)$/);
     if (agmmjuan) {
-        const {ckid}=$tapChunkLine;
+        const {ckid}=ft.fromFolioPos($tapmark);
         if (ckid) {
             key=keyid;
             caption='中'+parseInt(ckid)+'導讀';

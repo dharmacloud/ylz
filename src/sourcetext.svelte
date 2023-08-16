@@ -2,13 +2,13 @@
 import SentenceNav from './sentencenav.svelte'
 export let ptk
 import {getParallelLines} from 'ptk/align/';
-import {tapmark,tapChunkLine,loadingbook} from './store.js'
+import {tapmark,foliotext,loadingbook} from './store.js'
 import { parseOfftext } from 'ptk/offtext';
 
 let sourcetexts=[];
 const updateParallels=async (mark,loading)=>{
     if (loading) return;
-    const {ptkline}=$tapChunkLine;
+    const {ptkline}=$foliotext.fromFolioPos($tapmark);
     sourcetexts=await getParallelLines(ptk,ptkline,null,{remote:true,local:false});//different ptk only
 }
 const puretext=(_text)=>{

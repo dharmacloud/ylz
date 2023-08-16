@@ -137,11 +137,7 @@ export const makeAddressFromFolioPos=(pbid,cx=0,cy=0)=>{
 export const tapAddress=derived(tapmark,(mark)=> makeAddressFromFolioPos(mark));
 //tapAddress.subscribe((addr)=>updateUrl(addr));
 
-export const tapChunkLine=derived(tapmark,(mark)=> {
-    const ft=get(foliotext);
-    if (!ft||!ft.fromFolioPos) return {};
-    return ft.fromFolioPos(mark);
-});
+
 
 export const parallelFolios=(ptk,folioid)=>{
     folioid=folioid||get(activefolioid);

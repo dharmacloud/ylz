@@ -42,7 +42,6 @@ onMount(async ()=>{
     ptk=await openPtk("dc",new Uint8Array(await resdc.arrayBuffer()));
     setTimestampPtk(ptk);
     await openPtk("dc_sanskrit",new Uint8Array(await resdcsanskrit.arrayBuffer()));
-
     await loadAddress(ptk,addressFromUrl());
 
     loaded=true;

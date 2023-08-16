@@ -1,11 +1,10 @@
 <script>
 import {getParallelLines} from 'ptk/align/';
-import {activepb,activefolioid,activePtk,tapChunkLine,loadingbook} from './store.js'
+import {activepb,activefolioid,activePtk,foliotext,tapmark,loadingbook} from './store.js'
 import { parseOfftext, bsearchNumber} from 'ptk';
 import SentenceNav from './sentencenav.svelte'
 import { loadFolio } from './nav.js';
 export let closePopup=function(){};
-export let address='';
 export let ptk;
 let translations=[];
 const getBookTitle=(ptk,nbk)=>{
@@ -48,10 +47,10 @@ const puretext=(_text)=>{
 
 const updateTranslation=async (mark,loading)=>{
     if (loading) return [];
-    const {ptkline}=$tapChunkLine;    
+    const {ptkline}=$foliotext.fromFolioPos(mark);    
     translations=await getParallelLines(ptk,ptkline,null,{local:true,remote:false});//same ptk only
 }
-$: updateTranslation($tapChunkLine,$loadingbook);
+$: updateTranslation($tapmark,$loadingbook);
 </script>
 <div class="paralleltext">
 <SentenceNav {ptk}/>
@@ -60,11 +59,12 @@ $: updateTranslation($tapChunkLine,$loadingbook);
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 {#if !~item.heading?.bkid?.indexOf('_variorum')}
 <div class:selecteditem={item.heading?.bkid==$activefolioid}>
-<span  on:click={()=>goFolioByLine(item.ptk,item.line)} class="clickable author">{getBookTitle(item.ptk,item.heading?.bk?.at)}{hasfolio(item.ptk)?'←':' '}</span>{puretext(item.linetext)}</div>
+<span  on:click={()=>goFolioByLine(item.ptk,item.line)} 
+    class="clickable author">{getBookTitle(item.ptk,item.heading?.bk?.at)}
+    {hasfolio(item.ptk)?'←':' '}</span>{puretext(item.linetext)}</div>
 {/if}
 <div class="hr"/>
 {/each}
-<SentenceNav {ptk} bind:address/>
 <div class="endmarker">※※※</div>
 </div>
 

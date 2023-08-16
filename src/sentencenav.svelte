@@ -1,26 +1,32 @@
 <script>
 import { styledNumber} from "ptk";
-import { tapChunkLine,foliotext ,tapmark, activepb} from "./store.js";
+import { foliotext,tapmark, activepb} from "./store.js";
 export let ptk;
 import Pager from './comps/pager.svelte'
 let sentnow=0;
 
 const gosent=idx=>{
     const ft=$foliotext;
-    const fpos=ft.toFolioPos($tapChunkLine.ckid,idx);
+    const fpos=ft.toFolioPos($foliotext.fromFolioPos($tapmark).ckid,idx);
     activepb.set(fpos[0])
     tapmark.set(fpos);
+    console.log('gosent',$tapmark, idx, fpos)
     sentnow=idx;
 }
-const humancaption=(cl)=>{
+let linecount=0,caption='';
+const humancaption=()=>{
+    const ft=$foliotext;
+    if (!ft.fromFolioPos) return ;
+    const cl=ft.fromFolioPos($tapmark);
     if (!cl || !cl.ckid) return ''
+    linecount=cl.linecount;
     const styled=parseInt(cl.ckid).toString()==cl.ckid?styledNumber(parseInt(cl.ckid),'①'): (cl.ckid||'')+'.';
-    return styled+ptk.caption(cl.at);
+    caption= styled+ptk.caption(cl.at);
+    console.log(caption,linecount)
 }
-
-// $: getHumanAddress(address)
+$: humancaption($tapmark);
 </script>
-<Pager caption={humancaption($tapChunkLine)} count={$tapChunkLine.linecount} nextitems={5} previtems={4} now={sentnow} onselect={gosent} let:active let:caption let:idx>
+<Pager {caption} count={linecount} nextitems={5} previtems={4} now={sentnow} onselect={gosent} let:active let:caption let:idx>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <span on:click={()=>gosent(idx)} class="clickable" class:selected={active}>{caption}</span>
 </Pager>
