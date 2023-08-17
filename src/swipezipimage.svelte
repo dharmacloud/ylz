@@ -7,7 +7,7 @@ import Swipe from './3rd/swipe.svelte';
 import SwipeItem from './3rd/swipeitem.svelte';
 import {downloadToCache} from './comps/downloader.js'
 import {extractPuncPos,usePtk,FolioText, parseOfftext} from 'ptk'
-import { CURSORMARK ,getPrevJuan, getNextJuan, loadFolio} from './nav.js';
+import { CURSORMARK} from './nav.js';
 import {ZipStore} from 'ptk/zip';
 import DownloadStatus from './downloadstatus.svelte'
 import {thezip,favortypes, landscape,foliotext,folioLines,isSidePaiji,tapAddress,

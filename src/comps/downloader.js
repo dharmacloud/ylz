@@ -1,6 +1,6 @@
 // Step 1: start the fetch and obtain a reader
-
-export const downloadToCache=async(url,cb,cachename='v1::ylz')=>{
+export const cachename='v1::ylz';
+export const downloadToCache=async(url,cb)=>{
     const cachefn=url;
     // if (location.host!=='nissaya.cn' 
     // && location.host.indexOf('localhost')==-1 
@@ -12,16 +12,17 @@ export const downloadToCache=async(url,cb,cachename='v1::ylz')=>{
     const cache=await caches.open(cachename);
     const cached=await cache.match(url);
 
-    if (cached && cached.statusText=='OK') {
+    //once download , zip and mp3 need to manually delete
+    if (cached && cached.statusText=='OK' && (url.endsWith(".zip" || url.endsWith(".mp3")))) {
         return cached;
     }
     //HEAD is slow occasionally, clear it manually if want to update
 
-    // let headresponse = await fetch(url,{method:"HEAD", mode:"no-cors",redirect:"follow", credentials: "omit", origin,headers:{Accept:ContentType}});
-    // if (cached && headresponse.headers.get('Content-Length') == cached.headers.get('Content-Length')) {
-    //     // console.log('use cached')
-    //     return cached;
-    // }
+    let headresponse = await fetch(url,{method:"HEAD", mode:"no-cors",redirect:"follow", credentials: "omit", origin,headers:{Accept:ContentType}});
+    if (cached && headresponse.headers.get('Content-Length') == cached.headers.get('Content-Length')) {
+        // console.log('use cached')
+        return cached;
+    }
 
     cb&&cb('requesting')
     let response = await fetch(url,{method:"GET",mode:"no-cors",
