@@ -15,5 +15,8 @@
     "esbuild-svelte": "^0.7.3",
     "svelte": "^3.59.1",
     "svelte-swipe": "^1.9.2"
+  },
+  "dependencies": {
+    "qrcode": "^1.5.3"
   }
 }

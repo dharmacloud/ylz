@@ -3,7 +3,9 @@ import {parseOfftext} from 'ptk'
 import QRCode from 'qrcode'
 import {shareAddress, foliotext,tapmark} from './store.js'
 import { onMount } from 'svelte';
-let qrcode='',linetext,title='',caption='';
+/* TODO  add more sentence */
+const copylinkmsg='已複製連結到剪貼薄'
+let qrcode='',linetext,title='',caption='',msg=copylinkmsg;
 
 onMount(async()=>{
     const cl=$foliotext.fromFolioPos($tapmark);
@@ -12,8 +14,36 @@ onMount(async()=>{
     caption=cl?.ck.caption;
     qrcode=await QRCode.toString( shareAddress(),{type:'svg'});
 });
-
+let timer;
+const showmessage=(_msg)=>{
+    msg=_msg;
+    clearTimeout(timer);
+}
+const excerptcopy=async ()=>{
+    const text=shareAddress()+'「'+linetext+'」《'+title+'》'+caption;
+    await navigator.clipboard.writeText(text);
+    showmessage('已複製經文及連結到剪貼薄');
+}
+const copylink=async()=>{
+    navigator.clipboard.writeText(shareAddress());
+    showmessage(copylinkmsg);
+}
+const markdowncopy=async ()=>{
+    const text='['+linetext+'《'+title+'》'+caption+']('+shareAddress()+')';
+    await navigator.clipboard.writeText(text);
+    showmessage('已複製Markdown格式到剪貼薄');
+}
+const htmlcopy=async ()=>{
+    const text=linetext+'<a href="'+shareAddress()+'">《'+title+'》'+caption+'</a>';
+    await navigator.clipboard.writeText(text);
+    showmessage('已複製HTML格式到剪貼薄');
+}
 </script>
-<div class="toctext">此段經文網址已在剪貼薄<br/>{linetext}《{title}》{caption}</div>
+<div class="toctext">{msg}<br/>{linetext}《{title}》{caption}</div>
+<button on:click={copylink}>複製連結</button>
+<button on:click={excerptcopy}>複製經文及連結</button>
+<button on:click={htmlcopy}>HTML格式連結</button>
+<button on:click={markdowncopy}>MarkDown格式連結</button>
+
 <span>{@html qrcode}</span>
 {shareAddress()}

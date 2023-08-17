@@ -16,7 +16,7 @@ let ctx=await esbuild
 //await ctx.watch();
 
  await ctx.serve({
-        servedir: 'dist',
-        port:5000,
-        host:"127.0.0.1"
+      servedir: 'dist',
+      port:5000,
+      host:"127.0.0.1"
  })

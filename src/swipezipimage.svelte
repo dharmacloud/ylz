@@ -162,10 +162,15 @@ const mousewheel=(e)=>{
     if (!ready) return;
 	if (e.ctrlKey ) return;
     hidepunc=true;
+    pb=parseInt($activepb);
 	if (e.deltaY>0) {
-		swiper.prevItem();
+		if (pb<totalpages) {
+            activepb.set(pb+1);
+        }
 	} else {
-        swiper.nextItem();
+        if (pb>1 ) {
+            activepb.set(pb-1)
+        }
 	}
     useractive(true);
 	e.preventDefault();
@@ -195,7 +200,7 @@ const onfoliopageclick=e=>{
     const newmark=[ $activepb ,cx,cy ];
     if ( JSON.stringify(oldmark)==JSON.stringify(newmark)) {
         sharing.set(true);
-        navigator.clipboard.writeText( shareAddress());
+        navigator.clipboard.writeText(shareAddress());
         onTapText('');
         return;
     } else {
