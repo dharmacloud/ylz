@@ -7,7 +7,7 @@ import Swipe from './3rd/swipe.svelte';
 import SwipeItem from './3rd/swipeitem.svelte';
 import {downloadToCache} from './comps/downloader.js'
 import {extractPuncPos,usePtk,FolioText, parseOfftext} from 'ptk'
-import { CURSORMARK } from './nav.js';
+import { CURSORMARK ,getPrevJuan, getNextJuan, loadFolio} from './nav.js';
 import {ZipStore} from 'ptk/zip';
 import DownloadStatus from './downloadstatus.svelte'
 import {thezip,favortypes, landscape,foliotext,folioLines,isSidePaiji,tapAddress,
@@ -84,6 +84,7 @@ const swipeStart=(obj)=>{
 let oldDefaultIndex=1;
 
 const setImage=(imageidx,zip,idx)=>{
+    if (!swiper) return;
     if (idx>=totalpages) idx=0;
     else if (idx<0) idx=totalpages-1;
 
@@ -97,6 +98,7 @@ const setImage=(imageidx,zip,idx)=>{
     swiper.update()
 }
 const setImages=(idx)=>{
+    if (!swiper) return;
     const zip=$thezip;
 
     let previdx=idx-1;
@@ -129,7 +131,13 @@ const swipeChanged=(obj)=>{
         idx++;
         if (idx>=totalpages) {
             defaultIndex=oldDefaultIndex;
-            swiper.update()  
+            const nextjuan=getNextJuan($activefolioid,ptk);
+            swiper?.update();
+            if (nextjuan) {   
+                loadFolio(nextjuan, ()=>{
+                    activepb.set('1')
+                });
+            }
             return;
         } 
         setImage((oldDefaultIndex+1)%3,zip,idx+1); //change next image
@@ -137,7 +145,13 @@ const swipeChanged=(obj)=>{
         idx--;           
         if (idx<0) {
             defaultIndex=oldDefaultIndex;
-            swiper.update()  
+            const prevjuan=getPrevJuan($activefolioid)
+            swiper?.update()  
+            if (prevjuan) {
+                loadFolio(prevjuan,()=>{
+                    activepb.set('1')
+                })
+            }
             return;   
         }
         setImage((oldDefaultIndex+2)%3,zip,idx-1); //change prev image
