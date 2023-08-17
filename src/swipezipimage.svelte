@@ -50,15 +50,17 @@ const loadZip=async ()=>{
     ready=false;
     loadingbook.set(true);
     let host='folio/';
-
     const ftext=new FolioText(ptk);//fetchFolioText(ptk,$activefolioid);
     await ftext.load($activefolioid)
     foliotext.set(ftext);
 
     // const res=await fetch(host+src);
+    
     const res=await downloadToCache(host+src,msg=>{
         downloading.set(msg);
     });
+    
+
     downloading.set('');
     const buf=await res.arrayBuffer();
     const zip=new ZipStore(buf);
@@ -72,9 +74,9 @@ const loadZip=async ()=>{
         maxfolio.set(totalpages);
         loadingbook.set(false);
         setImages(imageIndex); 
-        updateFolioText()      
+        updateFolioText()
         fetchAudioList($activefolioid,mediaurls,$showyoutube=='on')
-    },100);   
+    },10);   
 }
 const swipeStart=(obj)=>{
     hidepunc=true;
@@ -125,11 +127,19 @@ const swipeChanged=(obj)=>{
     //console.log( ((oldDefaultIndex+3) - defaultIndex)%3)
     if ( ((oldDefaultIndex+3) - defaultIndex)%3 ==1) { //next image
         idx++;
-        if (idx>=totalpages) idx=0;
+        if (idx>=totalpages) {
+            defaultIndex=oldDefaultIndex;
+            swiper.update()  
+            return;
+        } 
         setImage((oldDefaultIndex+1)%3,zip,idx+1); //change next image
     } else{ 
-        idx--;
-        if (idx<0) idx=totalpages-1;
+        idx--;           
+        if (idx<0) {
+            defaultIndex=oldDefaultIndex;
+            swiper.update()  
+            return;   
+        }
         setImage((oldDefaultIndex+2)%3,zip,idx-1); //change prev image
     }
     oldDefaultIndex=defaultIndex;

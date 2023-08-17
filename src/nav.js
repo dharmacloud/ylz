@@ -41,11 +41,12 @@ export const loadFolio=(folioid,func)=>{
                 setTimeout(()=>{//wait for 
                     func&&func(folioid);
                     setTimeout(()=>{
+                        
                         fetchFolioList(folioincache);//update cache
-                    },100);
-                },500); 
+                    },10);
+                },10); 
             }
-        },100);
+        },10);
     }
 }
 

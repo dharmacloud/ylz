@@ -12,14 +12,16 @@ export const downloadToCache=async(url,cb,cachename='v1::ylz')=>{
     const cache=await caches.open(cachename);
     const cached=await cache.match(url);
 
-    let headresponse = await fetch(url,{method:"HEAD",mode:"no-cors",
-    redirect:"follow", credentials: "omit", origin,
-    headers:{Accept:ContentType}});
-
-    if (cached && headresponse.headers.get('Content-Length') == cached.headers.get('Content-Length')) {
-        // console.log('use cached')
+    if (cached && cached.statusText=='OK') {
         return cached;
     }
+    //HEAD is slow occasionally, clear it manually if want to update
+
+    // let headresponse = await fetch(url,{method:"HEAD", mode:"no-cors",redirect:"follow", credentials: "omit", origin,headers:{Accept:ContentType}});
+    // if (cached && headresponse.headers.get('Content-Length') == cached.headers.get('Content-Length')) {
+    //     // console.log('use cached')
+    //     return cached;
+    // }
 
     cb&&cb('requesting')
     let response = await fetch(url,{method:"GET",mode:"no-cors",

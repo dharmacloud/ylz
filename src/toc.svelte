@@ -4,8 +4,8 @@ import { bsearchNumber ,styledNumber,debounce} from "ptk";
 import {activepb,maxfolio,activefolioid,loadingbook, bookByFolio,foliotext} from './store.js';
 import {goPbAt, loadFolio} from './nav.js'
 import Juan from './juan.svelte'
-let folio=[0,0];
-$: folio=[parseInt($activepb)-1]; 
+let folio=[1,0];
+$: folio=[parseInt($activepb)]; 
 export let ptk;
 export let closePopup;
 
@@ -51,12 +51,11 @@ const getCk=(pb,loading)=>{
 }
 $: tocitems=getTocItems($activefolioid,$loadingbook);
 $: cknow=getCk($activepb,$loadingbook);
-
 </script>
 <div  class="toctext">
 <Juan {ptk} {closePopup}/>
-<Slider bind:value={folio} on:input={debounce(setFolio,500)} max={$maxfolio} min={0} >
-    <span slot="caption" style="float:right">折{(folio[0]||0)+1}/{$maxfolio+1}</span></Slider>
+<Slider bind:value={folio} on:input={debounce(setFolio,300)} max={$maxfolio} min={1} >
+    <span slot="caption" style="float:right">折{(folio[0]||1)}/{$maxfolio}</span></Slider>
 
 <div class="toc">
 {#each tocitems as item}
