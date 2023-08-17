@@ -141,7 +141,9 @@ export const getPrevJuan=folioid=>{
     const m=folioid.match(/(\d+)$/);
     const juan=parseInt(m[1]);
     if (m && juan>1) {
-        return folioid.slice(0,folioid.length-m[1].length)+ parseInt(juan-1);
+        const prevjuan=folioid.slice(0,folioid.length-m[1].length)+ parseInt(juan-1);
+        console.log(prevjuan)
+        return prevjuan;
     }
 }
 

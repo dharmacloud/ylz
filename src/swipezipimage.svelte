@@ -129,31 +129,11 @@ const swipeChanged=(obj)=>{
     //console.log( ((oldDefaultIndex+3) - defaultIndex)%3)
     if ( ((oldDefaultIndex+3) - defaultIndex)%3 ==1) { //next image
         idx++;
-        if (idx>=totalpages) {
-            defaultIndex=oldDefaultIndex;
-            const nextjuan=getNextJuan($activefolioid,ptk);
-            swiper?.update();
-            if (nextjuan) {   
-                loadFolio(nextjuan, ()=>{
-                    activepb.set('1')
-                });
-            }
-            return;
-        } 
+        if (idx>=totalpages) idx=0;
         setImage((oldDefaultIndex+1)%3,zip,idx+1); //change next image
     } else{ 
         idx--;           
-        if (idx<0) {
-            defaultIndex=oldDefaultIndex;
-            const prevjuan=getPrevJuan($activefolioid)
-            swiper?.update()  
-            if (prevjuan) {
-                loadFolio(prevjuan,()=>{
-                    activepb.set('1')
-                })
-            }
-            return;   
-        }
+        if (idx<0) idx=totalpages-1;
         setImage((oldDefaultIndex+2)%3,zip,idx-1); //change prev image
     }
     oldDefaultIndex=defaultIndex;
@@ -188,13 +168,13 @@ const mousewheel=(e)=>{
     hidepunc=true;
     pb=parseInt($activepb);
 	if (e.deltaY>0) {
-		if (pb<totalpages) {
-            activepb.set(pb+1);
-        }
+        pb++;
+        if (pb>totalpages) pb=1;
+        activepb.set(pb);
 	} else {
-        if (pb>1 ) {
-            activepb.set(pb-1)
-        }
+        pb--;
+        if (pb<1) pb=totalpages;
+        activepb.set(pb)
 	}
     useractive(true);
 	e.preventDefault();
