@@ -12,6 +12,7 @@ export const goPb=(pbid,ck)=>{
         const ft=get(foliotext);
         const [pbid,cx,cy]=ft.toFolioPos(ck);
         tapmark.set([pbid,cx, cy]);
+        updateUrl(tapAddress());
     }
 }
 

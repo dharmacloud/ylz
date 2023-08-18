@@ -6,9 +6,9 @@ import HOF from './hof.svelte'
 import Workers from './workers.svelte'
 import ProjectIntro from './project.svelte'
 import Materials from './materials.svelte'
-import { githubicon,appqrcode } from './icons.js';
+import { githubicon } from './icons.js';
 import {Cachesname} from './constant.js'
-
+    import { generateECPolynomial } from 'qrcode/lib/core/polynomial.js';
 
 let show=0,clearcount=-1;
 const toggleshowsponsoring=()=>show=show==1?0:1;
@@ -55,20 +55,20 @@ class:selected={show==1} on:click={toggleshowsponsoring}>護持</span>
 {:else if show==5 && $showpunc!=='on'}
 <ProjectIntro/>
 {:else}
-<span class="logotitle">永樂藏 2023.8.18</span>
-<br/>Line <a href="https://lin.ee/1tmTKXi">官號</a>@dharmacloud
-<br/>WeChat: Sukhanika
-<br/>源代碼<a href="https://github.com/dharmacloud/swipegallery/" target=_new>{@html githubicon}</a>
-，若無特別聲明則採用
+<span class="logotitle">永樂藏 2023.8.18</span><a href="https://github.com/dharmacloud/swipegallery/" target=_new>源代碼{@html githubicon}</a>
+<br/>客服(LINE加好友) @fayunshi  
+<br/>Line官號<a href="https://lin.ee/1tmTKXi" target=_new>@dharmacloud</a>
+<br/>微信: Sukhanika
+<br/><a href="mailto:dharmacloudpublishing@gmail.com">dharmacloudpublishing@gmail.com</a>
+<br/>若無特別聲明則採用
 <br/><a target=_new href="https://creativecommons.org/publicdomain/zero/1.0/deed.zh">CC0 1.0 通用公共领域贡献</a>
-<div class="endmarker">分享此APP</div>
-<span>{@html appqrcode}</span>
+<br/>點紅色背景文字，複製及分享經文。
 <hr/>
 <Switch bind:value={$showpunc} label="顯示標點符號" design="slider" fontSize="24"/>
 <Switch bind:value={$newbie} label="啟動時顯示歡迎畫面" design="slider" fontSize="24"/>
 <Switch bind:value={$showsponsor} label="靜置時顯示功德芳名" design="slider" fontSize="24"/>
-<Switch bind:value={$showyoutube} label="顯示油管原始影片連結" design="slider" fontSize="24"/>
 
+<Switch bind:value={$showyoutube} label="顯示油管原始影片連結" design="slider" fontSize="24"/>
 {#if $showpunc=='off'}
 {#if clearcount>-1}已清除{clearcount}
 {:else}

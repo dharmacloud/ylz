@@ -47,3 +47,6 @@ const htmlcopy=async ()=>{
 
 <span>{@html qrcode}</span>
 {shareAddress()}
+<style>
+button {font-size:1.5em}
+</style>

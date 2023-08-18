@@ -11,11 +11,11 @@ let juans=[]; //find out all juan
 const m=$activefolioid.match(/([a-z]+)(\d+$)/);
 let currentjuan=m?parseInt(m[2])-1:0;
 let juan=[1,0];
-const gojuan=(idx)=>{
-    const juan=juans[idx].id;
+const gojuan=(juan)=>{
     const fid=$activefolioid;
     const newid=fid.replace(/\d+$/,juan);
     if (newid==fid) return;
+    console.log('juan',juan)
     loadFolio( newid,function(){
         activepb.set('1');
         tapmark.set(['1',0,0]);
@@ -29,7 +29,7 @@ const loadJuan=(folioid,loading)=>{
     if (!ptk || loading) return [];
     const m=folioid.match(/([a-z]+)(\d+$)/);
     if (!m) return [];
-    currentjuan=parseInt(m[2])-1;
+    currentjuan=parseInt(m[2]);
     juan[0]=currentjuan;
     return allJuan(ptk,folioid).map((it,idx)=>{
         return {caption:it, idx:parseInt(idx), id:(idx+1).toString() }

@@ -1,6 +1,6 @@
 <script>
 import { splitUTF32Char ,listExcerpts, parseOfftext, bsearchNumber} from 'ptk';
-import { leftmode, searchable,lefttextline, tofind} from './store.js'
+import { leftmode, searchable, tofind} from './store.js'
 import { goPtkLine } from './nav.js';
 import SearchHelp from './searchhelp.svelte'
 import Pager from './comps/pager.svelte';
@@ -119,14 +119,8 @@ const go=(idx)=>{
         const closest= allpostings[0][at];
         line=bsearchNumber(tlp, closest)-1;
     }
-    if (selecteditem==idx) { //second click to show folio
-        goPtkLine(ptk, line);
-        leftmode.set('folio')
-    } else {
-        // console.log('lefttext',line)
-        lefttextline.set(line);
-        leftmode.set('lefttext')
-    }
+    goPtkLine(ptk, line);
+    leftmode.set('folio')
     selecteditem=idx;
 }
 const onfocus=()=>{

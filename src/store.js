@@ -1,5 +1,5 @@
 import {updateSettings,settings} from './savestore.ts'
-import {bsearchNumber, usePtk,makeAddress, parseAddress,folioPosFromAddress} from 'ptk'
+import {bsearchNumber, usePtk,makeAddress} from 'ptk'
 import {derived, get,writable } from 'svelte/store';
 import {silence} from './mediaurls.js'
 import {addressFromUrl, updateUrl } from './urlhash.js';
@@ -29,7 +29,7 @@ export const searchable=writable('')
 export const leftmode=writable('folio');
 export const foliotext=writable(null);
 export const tofind=writable('');
-export const lefttextline=writable(0);//ptk line to be shown in vtext
+
 export let player
 export const setplayer=p=>player=p;
 // export const foliorawtexts=writable([]);

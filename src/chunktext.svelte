@@ -1,42 +1,57 @@
 <script>
 export let ptk ;
+import Slider from './3rd/rangeslider.svelte';
 import {tapmark,foliotext,loadingfolio,tapAddress} from  './store.js'
 import {updateUrl} from './urlhash.js'
 import {get} from 'svelte/store'
+import {debounce} from 'ptk'
 import ChunkNav from './chunknav.svelte'
 import {goPb} from './nav.js'
-let ck,loff, lines=[];
-export let ptkline;
+let ck,loff,alllines=[], lines=[],sutra=[0,0],sutras=[],minsutra=0,maxsutra=0;
+
 const loadChunkText=(mark,loading)=>{
     if (loading) return;
     const ft=get(foliotext);
     if (!ft||!ft.fromFolioPos) return;
     const {ckid,lineoff}=ft.fromFolioPos(mark);
     loff=lineoff;
+    sutras.length=0;
+    alllines=[];
     if (ck!==ckid) {
-        lines=ft.chunkText(ckid).split('\n');
+        alllines=ft.chunkText(ckid).split('\n');
     }
+    minsutra=0,maxsutra=0;
+    for (let i=0;i<alllines.length;i++) {
+        const m=alllines[i].match(/\^n(\d+)/);
+        if (m) {
+            const n=parseInt(m[1]);
+            if (minsutra==0 && n) {
+                minsutra=n;
+            }
+            maxsutra=n;
+            sutras.push(i);
+        }
+    }
+    updateText()
     ck=ckid;
 }
-const loadPtkLine=async ()=>{
-    const {id,bkid}=ptk.getHeading(ptkline);
-    const address='bk#'+bkid+'.ck#'+id;
-    const [start]=ptk.rangeOfAddress(address);
-    lines=await ptk.fetchAddress(address);
-    loff=ptkline-start;
-    setTimeout(()=>{
-        const ele=document.querySelector('.toctext .activeline');
-        if (!ele) return;
-        ele.parentElement.parentElement.scrollTop=ele.offsetTop-50;
-
-    },100);
+const updateText=()=>{
+    if (sutras.length) {
+        sutras.push(alllines.length-1);//has sutra
+        sutra[0]=0;
+        lines=alllines.slice( sutras[0], sutras[1]);
+    } else {
+        lines=alllines;
+    }
 }
-$: ptkline?loadPtkLine():loadChunkText($tapmark,$loadingfolio);
+
+$: loadChunkText($tapmark,$loadingfolio);
 
 const renderLine=line=>{
     return line.replace(/\^[a-z]#?[a-z\d]*/g,'');
 }
 const setAddress=(lineoff)=>{
+    /*
     if (ptkline) return;
     const ft=get(foliotext);
     if (!ft||!ft.fromFolioPos) return;
@@ -44,6 +59,7 @@ const setAddress=(lineoff)=>{
     goPb(pbid,ck,line);
     tapmark.set([pbid,line,ch]);
     updateUrl(tapAddress());
+    */
 }
 const goactiveline=()=>{
     const ele=document.querySelector('.toctext .activeline');
@@ -55,19 +71,28 @@ const gotop=()=>{
     if (!ele) return;
     ele.parentElement.parentElement.parentElement.scrollTop=0;
 }
+const setSutra=e=>{
+    const idx=e.detail[0];
+    lines=alllines.slice( sutras[idx], sutras[idx+1]);
+}
 </script>
 
 <div class="toctext">
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-{#if !ptkline}
+
 <span class="clickable gotop" on:click={gotop}>↑</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="clickable goactiveline" on:click={goactiveline}>▃</span>
 <ChunkNav {ptk}/>
-{/if}
 
+{#if sutras.length}
+<Slider bind:value={sutra} on:input={debounce(setSutra,100)} max={sutras.length-2} min={0} >
+    <span slot="caption" style="float:right">經{(minsutra+sutra[0]||0)}/{maxsutra}</span></Slider>
+{/if}
+<hr/>
 {#each lines as line,idx}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div on:click={()=>setAddress(idx)} class:activeline={loff==idx}>{@html renderLine(line)}</div>
 {/each}
+<div class="endmarker">※※※</div>
 </div>

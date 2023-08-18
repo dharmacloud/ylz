@@ -46,7 +46,7 @@
     self.addEventListener('fetch', function (event) {
         var request = event.request;
         // Always fetch non-GET requests from the network
-        if (request.method == 'HEAD') {
+        if (request.method == 'HEAD' && navigator.onLine) {
             event.respondWith(
                 fetch(request)
                     .catch(function () {
