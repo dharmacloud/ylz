@@ -10,7 +10,8 @@ export const online=writable(navigator.onLine);
 export const thezip=writable(null)
 export const activePtk=writable('dc');
 export const folioincache=writable({});
-export const loadingbook=writable(false);
+export const loadingfolio=writable(false);  //loadFolio done
+export const loadingzip=writable(false);  //load the folio zip
 export const autodict=writable(settings.autodict);
 export const activepb=writable('1');  
 export const activefolioid=writable(settings.activefolioid);
@@ -135,7 +136,7 @@ export const makeAddressFromFolioPos=(pbid,cx=0,cy=0)=>{
     const address=makeAddress('','bk#'+bookByFolio(get(activefolioid)) + '.ck#'+ckid, 0,0, lineoff,choff) ;
     return address;
 }
-export const tapAddress=derived(tapmark,(mark)=> makeAddressFromFolioPos(mark));
+export const tapAddress=()=>makeAddressFromFolioPos(get(tapmark));
 
 export const parallelFolios=(ptk,folioid)=>{
     folioid=folioid||get(activefolioid);

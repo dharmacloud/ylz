@@ -1,6 +1,6 @@
 <script>
 import {getParallelLines} from 'ptk/align/';
-import {activepb,activefolioid,activePtk,foliotext,tapmark,loadingbook} from './store.js'
+import {activepb,activefolioid,activePtk,foliotext,tapmark,loadingfolio} from './store.js'
 import { parseOfftext, bsearchNumber} from 'ptk';
 import SentenceNav from './sentencenav.svelte'
 import { loadFolio } from './nav.js';
@@ -52,7 +52,7 @@ const updateTranslation=async (mark,loading)=>{
     translations=await getParallelLines(ptk,cl.ptkline,null,{local:true,remote:false});//same ptk only
 
 }
-$: updateTranslation($tapmark,$loadingbook);
+$: updateTranslation($tapmark,$loadingfolio);
 </script>
 <div class="paralleltext">
 <SentenceNav {ptk}/>

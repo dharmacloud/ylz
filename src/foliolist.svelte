@@ -46,6 +46,9 @@ const getFolioId=nfolio=>{
     const folio=ptk.defines.folio;
     return folio.fields.id.values[nfolio]
 }
+const samesutra=(f1,f2)=>{
+    return f1.replace(/\d+$/,'')==f2.replace(/\d+$/,'')
+}
 $: folios=getFolioList(texttype);
 </script>
 <div class="tabs">
@@ -60,7 +63,7 @@ $: folios=getFolioList(texttype);
 {#each folios as [nfolio,folioid,pars]}
 <div class="book">
  <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class:dimmed={!$folioincache[folioid]} on:click={()=>selectfolio(nfolio)} class:selecteditem={$activefolioid==folioid} >{getFolioName(nfolio)}</span>
+<span class:dimmed={!$folioincache[folioid]} on:click={()=>selectfolio(nfolio)} class:selecteditem={samesutra($activefolioid,folioid)} >{getFolioName(nfolio)}</span>
 
 <Favoritebuttons {ptk} {folioid} {closePopup}/>
 {#each pars as par}

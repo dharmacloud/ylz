@@ -30,10 +30,10 @@ const setSearchable=t=>{
 }
 /*
 const copyaddress=async ele=>{
-    await navigator.clipboard.writeText($tapAddress);
+    await navigator.clipboard.writeText(tapAddress());
     ele.target.innerHTML='copied';
     setTimeout(()=>{
-        ele.target.innerHTML=$tapAddress;
+        ele.target.innerHTML=tapAddress();
     },2000)
 }
 */

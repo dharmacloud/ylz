@@ -1,16 +1,15 @@
 <script>
 import Slider from './3rd/rangeslider.svelte';
 import { bsearchNumber ,styledNumber,debounce} from "ptk";
-import {activepb,maxfolio,activefolioid,loadingbook, bookByFolio,foliotext} from './store.js';
+import {activepb,maxfolio,activefolioid,loadingfolio, bookByFolio,foliotext} from './store.js';
 import {goPbAt, loadFolio} from './nav.js'
 import Juan from './juan.svelte'
-let folio=[1,0];
-$: folio=[parseInt($activepb)]; 
+$: folio=[parseInt($activepb),0];
 export let ptk;
 export let closePopup;
-
 const setFolio=async (e)=>{
-    const v=((e.detail[0]||0)+1).toString();
+    if ($loadingfolio) return;
+    const v=((e.detail[0]||1)).toString();
     if ($activepb!==v) activepb.set(v);
 }
 
@@ -49,14 +48,14 @@ const getCk=(pb,loading)=>{
     const {ckid}=ft.fromFolioPos($activepb);
     return ckid;
 }
-$: tocitems=getTocItems($activefolioid,$loadingbook);
-$: cknow=getCk($activepb,$loadingbook);
+$: tocitems=getTocItems($activefolioid,$loadingfolio);
+$: cknow=getCk($activepb,$loadingfolio);
 </script>
 <div  class="toctext">
+{#if !$loadingfolio}
 <Juan {ptk} {closePopup}/>
-<Slider bind:value={folio} on:input={debounce(setFolio,300)} max={$maxfolio} min={1} >
+<Slider bind:value={folio} on:input={debounce(setFolio,800)} max={$maxfolio} min={1} >
     <span slot="caption" style="float:right">折{(folio[0]||1)}/{$maxfolio}</span></Slider>
-
 <div class="toc">
 {#each tocitems as item}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -64,8 +63,10 @@ $: cknow=getCk($activepb,$loadingbook);
 {/each}
 <div class="endmarker">※※※</div>
 </div>
+{:else}
+載入中
+{/if}
 </div>
-
 <style>
 
 .toc {overflow-y: auto;height:100%}

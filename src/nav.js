@@ -1,5 +1,5 @@
 import {foliotext,activefolioid ,audioid,tapmark,folioincache,tapAddress,
-    activepb,loadingbook,bookByFolio, stopAudio} from "./store.js";
+    activepb,loadingfolio,bookByFolio, stopAudio,loadingzip} from "./store.js";
 import {updateUrl} from './urlhash.js'
 import {get} from 'svelte/store'
 import {bsearchNumber} from 'ptk/utils'
@@ -12,7 +12,6 @@ export const goPb=(pbid,ck)=>{
         const ft=get(foliotext);
         const [pbid,cx,cy]=ft.toFolioPos(ck);
         tapmark.set([pbid,cx, cy]);
-        updateUrl(get(tapAddress));
     }
 }
 
@@ -31,22 +30,22 @@ export const loadFolio=(folioid,func)=>{
     else {
         stopAudio();
         audioid.set('')
-        //activepb.set('1');
-        loadingbook.set(true);
+        loadingfolio.set(true);
+        loadingzip.set(true);
         activefolioid.set(folioid);
-        //tapmark.set(['2',0,0]);
         timer=setInterval(()=>{
-            if (!get(loadingbook)) {
+            if (!get(loadingzip)) {
                 clearInterval(timer);
                 setTimeout(()=>{//wait for 
                     func&&func(folioid);
+                    loadingfolio.set(false);
+                    updateUrl(tapAddress());
                     setTimeout(()=>{
-                        
                         fetchFolioList(folioincache);//update cache
-                    },10);
-                },10); 
+                    },100);
+                },100); 
             }
-        },10);
+        },30);
     }
 }
 

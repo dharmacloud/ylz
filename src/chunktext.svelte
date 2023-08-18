@@ -1,6 +1,6 @@
 <script>
 export let ptk ;
-import {tapmark,foliotext,loadingbook,tapAddress} from  './store.js'
+import {tapmark,foliotext,loadingfolio,tapAddress} from  './store.js'
 import {updateUrl} from './urlhash.js'
 import {get} from 'svelte/store'
 import ChunkNav from './chunknav.svelte'
@@ -31,7 +31,7 @@ const loadPtkLine=async ()=>{
 
     },100);
 }
-$: ptkline?loadPtkLine():loadChunkText($tapmark,$loadingbook);
+$: ptkline?loadPtkLine():loadChunkText($tapmark,$loadingfolio);
 
 const renderLine=line=>{
     return line.replace(/\^[a-z]#?[a-z\d]*/g,'');
@@ -43,7 +43,7 @@ const setAddress=(lineoff)=>{
     const [pbid,line,ch]=ft.toFolioPos(ck,lineoff) ;
     goPb(pbid,ck,line);
     tapmark.set([pbid,line,ch]);
-    updateUrl($tapAddress);
+    updateUrl(tapAddress());
 }
 const goactiveline=()=>{
     const ele=document.querySelector('.toctext .activeline');

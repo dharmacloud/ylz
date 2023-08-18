@@ -13,7 +13,7 @@ import DownloadStatus from './downloadstatus.svelte'
 import {thezip,favortypes, landscape,foliotext,folioLines,isSidePaiji,tapAddress,
     folioChars,activePtk,activefolioid,activepb,favorites,audioid,showpunc,
 maxfolio,tapmark, playing, remainrollback, showyoutube,shareAddress,
-idlecount,showpaiji,loadingbook, selectmedia, preferaudio,folioHolderWidth,leftmode,mediaurls, downloading, sharing} from './store.js'
+idlecount,showpaiji,loadingzip, selectmedia, preferaudio,folioHolderWidth,leftmode,mediaurls, downloading, sharing} from './store.js'
 import { get } from 'svelte/store';
 import { fetchAudioList } from './mediaurls';
 import { updateUrl } from './urlhash';
@@ -48,7 +48,7 @@ const swipeConfig = {
 
 const loadZip=async ()=>{
     ready=false;
-    loadingbook.set(true);
+    loadingzip.set(true);
     let host='folio/';
     const ftext=new FolioText(ptk);//fetchFolioText(ptk,$activefolioid);
     await ftext.load($activefolioid)
@@ -72,7 +72,7 @@ const loadZip=async ()=>{
     ready=true;
     setTimeout(()=>{
         maxfolio.set(totalpages);
-        loadingbook.set(false);
+        loadingzip.set(false);
         setImages(imageIndex); 
         updateFolioText()
         fetchAudioList($activefolioid,mediaurls,$showyoutube=='on')
@@ -211,7 +211,7 @@ const onfoliopageclick=e=>{
         sharing.set(false)
         tapmark.set(newmark);
     }
-    updateUrl($tapAddress);
+    updateUrl(tapAddress());
     const ft=get(foliotext);
     let {choff,linetext}=ft.fromFolioPos($activepb,cx,cy);
     linetext=linetext.replace(/([。！？：、．；，「『（ ])/g,'　');
