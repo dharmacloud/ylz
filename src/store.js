@@ -193,6 +193,8 @@ export const paijitexts=[
     '中部全國供佛齋僧大會',
     '施主※陳碧吟',
     '施主※甯耀南',
+    '施主※葉雅柏',
+    '施主※李玉媚',
 ]
 export const isSidePaiji=()=>{
     const m=sideWidth().match(/width:(\d+)/);

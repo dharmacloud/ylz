@@ -7,8 +7,9 @@ import {get} from 'svelte/store'
 import {debounce} from 'ptk'
 import ChunkNav from './chunknav.svelte'
 import {goPb} from './nav.js'
-let ck,loff,alllines=[], lines=[],sutra=[0,0],sutras=[],minsutra=0,maxsutra=0;
-
+let ck,loff,displayline=0,
+alllines=[], lines=[],sutra=[0,0],sutras=[],minsutra=0,maxsutra=0;
+$: activeline=0;
 const loadChunkText=(mark,loading)=>{
     if (loading) return;
     const ft=get(foliotext);
@@ -17,9 +18,9 @@ const loadChunkText=(mark,loading)=>{
     loff=lineoff;
     sutras.length=0;
     alllines=[];
-    if (ck!==ckid) {
-        alllines=ft.chunkText(ckid).split('\n');
-    }
+    displayline=0;
+    
+    alllines=ft.chunkText(ckid).split('\n');
     minsutra=0,maxsutra=0;
     for (let i=0;i<alllines.length;i++) {
         const m=alllines[i].match(/\^n(\d+)/);
@@ -33,12 +34,20 @@ const loadChunkText=(mark,loading)=>{
         }
     }
     updateText()
+    if (ck==ckid) {
+        idx=sutra[0];
+        lines=alllines.slice( sutras[idx], sutras[idx+1]);
+        displayline=sutras[idx]||0;
+    } else {
+        sutra[0]=0; //select first sutra of this chunk
+        displayline=sutras[0]||0;
+        activeline=0;
+    }
     ck=ckid;
 }
 const updateText=()=>{
     if (sutras.length) {
         sutras.push(alllines.length-1);//has sutra
-        sutra[0]=0;
         lines=alllines.slice( sutras[0], sutras[1]);
     } else {
         lines=alllines;
@@ -51,15 +60,13 @@ const renderLine=line=>{
     return line.replace(/\^[a-z]#?[a-z\d]*/g,'');
 }
 const setAddress=(lineoff)=>{
-    /*
-    if (ptkline) return;
     const ft=get(foliotext);
     if (!ft||!ft.fromFolioPos) return;
     const [pbid,line,ch]=ft.toFolioPos(ck,lineoff) ;
     goPb(pbid,ck,line);
     tapmark.set([pbid,line,ch]);
+    activeline=lineoff-displayline;
     updateUrl(tapAddress());
-    */
 }
 const goactiveline=()=>{
     const ele=document.querySelector('.toctext .activeline');
@@ -74,7 +81,10 @@ const gotop=()=>{
 const setSutra=e=>{
     const idx=e.detail[0];
     lines=alllines.slice( sutras[idx], sutras[idx+1]);
+    displayline=sutras[idx];
+    activeline=0;
 }
+$: console.log('activeline',activeline)
 </script>
 
 <div class="toctext">
@@ -90,9 +100,11 @@ const setSutra=e=>{
     <span slot="caption" style="float:right">經{(minsutra+sutra[0]||0)}/{maxsutra}</span></Slider>
 {/if}
 <hr/>
+{#key activeline}
 {#each lines as line,idx}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div on:click={()=>setAddress(idx)} class:activeline={loff==idx}>{@html renderLine(line)}</div>
+<div on:click={()=>setAddress(displayline+idx)} class:activeline={activeline==idx}>{@html renderLine(line)}</div>
 {/each}
+{/key}
 <div class="endmarker">※※※</div>
 </div>

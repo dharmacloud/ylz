@@ -33,7 +33,7 @@ const loadJuan=(folioid,loading)=>{
     juan[0]=currentjuan;
     return allJuan(ptk,folioid).map((it,idx)=>{
         return {caption:it, idx:parseInt(idx), id:(idx+1).toString() }
-    });    
+    });
 }
 const gotojuan=e=>{
     const j=((e.detail[0]||1)).toString();

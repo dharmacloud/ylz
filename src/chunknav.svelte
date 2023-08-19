@@ -12,7 +12,7 @@ const loadChunks=()=>{
     const ft=$foliotext;
     if (!ft||!ft.fromFolioPos) return;
     const {ckid}=ft.fromFolioPos($tapmark);
-    if (ckid==chunks[cknow]?.ckid) return;
+    //if (ckid==chunks[cknow]?.ckid) return;
 
     const book=bookByFolio($activefolioid)
     const [from,to]=ptk.rangeOfAddress('bk#'+book);

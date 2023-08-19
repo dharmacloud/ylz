@@ -121,7 +121,7 @@ class:selected={media.aid==$audioid}>{media.performer}{idx&&media.aid==$audioid?
 
 
 <!-- svelte-ignore missing-declaration -->
-<br/>重播次數：{value[0]||'無限'}
+<br/>重播次數：{value[0]>0?value[0]:'無限'}
 {#if value[0]>0} { humanStoptime(value[0]*getDuration($audioid))}{/if}
 <Slider on:input={setRemain} bind:value min=0 max=10/>
 {#if ptk&&allJuan(ptk).length>1}

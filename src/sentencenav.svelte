@@ -22,7 +22,6 @@ const humancaption=()=>{
     linecount=cl.linecount||0;
     const styled=parseInt(cl.ckid).toString()==cl.ckid?styledNumber(parseInt(cl.ckid),'①'): (cl.ckid||'')+'.';
     caption= styled+ptk.caption(cl.at);
-    console.log(caption,linecount)
 }
 $: humancaption($tapmark);
 </script>
