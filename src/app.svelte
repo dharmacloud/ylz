@@ -91,6 +91,10 @@ const orientation=(ls)=>{
     showpopup=false;
     if (ls) shownewbie=false;
     idlecount.set(0)
+    if (app) {
+        app.style.height=window.innerHeight+'px';
+        app.style.width=window.innerWidth+'px';    
+    }
 }
 $: orientation($landscape)
 

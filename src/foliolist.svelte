@@ -2,7 +2,7 @@
 import Favoritebuttons from './favoritebuttons.svelte';
 import { loadFolio } from './nav.js';
 export let ptk,thetab;
-import {activefolioid, parallelFolios,stopAudio,folioincache,online} from './store.js';
+import {activefolioid, parallelFolios,stopAudio,folioincache,online, activepb} from './store.js';
 export let closePopup=function(){};
 let texttype=0;
 const texttypeOf=prefix=>{
@@ -33,6 +33,7 @@ const selectfolio=nfolio=>{
         stopAudio();
         loadFolio(folioid,function(){
             thetab='toc';
+            activepb.set('1');
         });
         closePopup();
     }

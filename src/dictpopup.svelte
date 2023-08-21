@@ -51,12 +51,12 @@ $: availableDict(nentry,entries);
 {/if}
 {#if wikipedia}
 {#if showing=='wikipedia'}
-<a target=_new href={wikilink(entry)}>Wiki</a>
+<a target=_new href={wikilink(entry)}>維基</a>
 {:else}
-<button on:click={setWikipedia}>Wiki</button>
+<button on:click={setWikipedia}>維基</button>
 {/if}
 {/if}
-<a target=_new href={googlelink(entry)}>Google</a>
+<a target=_new href={googlelink(entry)}>谷哥</a>
 <a target=_new href={baidulink(entry)}>百度</a>
 {/if}
 

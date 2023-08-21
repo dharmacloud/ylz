@@ -14,7 +14,7 @@ import {CURSORMARK} from './nav.js'
 export let tofind='';
 export let address='';
 export let closePopup;
-let thetab=get(landscape)?"textual":"dict";
+let thetab=(get(landscape)||!tofind)?"textual":"dict";
 let ptk ,entries=[];
 
 const onDict=(t)=>{
@@ -47,29 +47,29 @@ $: if ($sharing) thetab='dict';
 <div class="popup" style={ls?sideWidth(ls):''}>
     <div class="tabs">    
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="about"} on:click={()=>thetab="about"}>{#if !ls}{@html "&nbsp;"} {/if}🙏{#if ls}首頁{/if}</span>
+        <span class='clickable' class:selected={thetab=="about"} on:click={()=>thetab="about"}>{#if !ls}{@html "&nbsp;"} {/if}🙏{#if ls}首{/if}</span>
 
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="list"} on:click={()=>thetab="list"}>📚{#if ls}經卷{/if}</span>
+        <span class='clickable' class:selected={thetab=="list"} on:click={()=>thetab="list"}>📚{#if ls}卷{/if}</span>
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="toc"} on:click={()=>thetab="toc"}>🧭{#if ls}目錄{/if}</span>
+        <span class='clickable' class:selected={thetab=="toc"} on:click={()=>thetab="toc"}>🧭{#if ls}目{/if}</span>
         
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="textual"} on:click={()=>thetab="textual"}>📜{#if ls}文本{/if}</span>    
+        <span class='clickable' class:selected={thetab=="textual"} on:click={()=>thetab="textual"}>📜{#if ls}文{/if}</span>    
         <!-- svelte-ignore a11y-click-events-have-key-events -->
 
         <span class='clickable' class:selected={thetab=="dict"} on:click={()=>thetab="dict"}>
         {#if $sharing}    
-            🔗{#if ls}分享{/if}
+            🔗{#if ls}鏈{/if}
         {:else}
-            🔠{#if ls}字典{/if}
+            🔠{#if ls}詞{/if}
         {/if}
         
         </span>
 
         {#if $mediaurls.length>1}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="audio"} on:click={()=>thetab="audio"}>🎵{#if ls}讀誦{/if}</span>
+        <span class='clickable' class:selected={thetab=="audio"} on:click={()=>thetab="audio"}>🎵{#if ls}誦{/if}</span>
         {/if}
 
     </div>
