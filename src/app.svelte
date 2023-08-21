@@ -1,11 +1,12 @@
 <script>
-import { openPtk} from 'ptk'
+import { openPtk,addressFromUrl} from 'ptk'
 import SwipeZipImage from "./swipezipimage.svelte";
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import {downloadToCache} from 'ptk/platform/downloader.js'
 import { onDestroy, onMount } from "svelte";
 import {activefolioid,isAndroid,idlecount,showpaiji,leftmode,online,folioincache,showsponsor,sharing,
-    newbie,idletime,landscape,APPVER,CacheName} from './store.js'
+    newbie,idletime,landscape,APPVER} from './store.js'
+import {CacheName} from './constant.js'
 import {setTimestampPtk} from './mediaurls.js'
 import {fetchFolioList} from './folio.js'
 import TapText from './taptext.svelte'
@@ -16,7 +17,7 @@ import Notification from './notification.svelte';
 import { get } from 'svelte/store';
 import Left from './left.svelte'
 
-import { addressFromUrl } from './urlhash.js';
+
 import {loadAddress} from './nav.js'
 let ptk,tofind;
 registerServiceWorker();

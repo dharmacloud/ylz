@@ -1,10 +1,9 @@
 import {foliotext,activefolioid ,audioid,tapmark,folioincache,tapAddress,
     activepb,loadingfolio,bookByFolio, stopAudio,loadingzip} from "./store.js";
-import {updateUrl} from './urlhash.js'
 import {get} from 'svelte/store'
 import {bsearchNumber} from 'ptk/utils'
 import {fetchFolioList} from './folio.js'
-import {folioPosFromAddress} from 'ptk'
+import {folioPosFromAddress,updateUrl} from 'ptk'
 export const CURSORMARK='◆'
 export const goPb=(pbid,ck)=>{   
     activepb.set(pbid);

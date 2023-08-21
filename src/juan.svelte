@@ -1,9 +1,8 @@
 <script>
 import {activefolioid,loadingfolio,tapmark,activepb,tapAddress} from './store.js'
 import Pager from './comps/pager.svelte'
-import {updateUrl} from './urlhash.js'
 import { loadFolio,allJuan } from './nav.js';
-import {debounce} from 'ptk'
+import {updateUrl,debounce} from 'ptk'
 import Slider from './3rd/rangeslider.svelte';
 export let closePopup;
 export let ptk;

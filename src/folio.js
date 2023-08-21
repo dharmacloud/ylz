@@ -1,8 +1,8 @@
-import {Cachesname} from './constant.js'
+import {CacheName} from './constant.js'
 const url2folioid=(url)=>url.slice(url.indexOf('folio/')+6).replace('.zip','');
 
 export const fetchFolioList=async (store)=>{
-    const cache=await caches.open(Cachesname);
+    const cache=await caches.open(CacheName);
     const keys=await cache.keys();
     const out=keys.filter(it=>it.url.endsWith('.zip') && ~it.url.indexOf('folio/')).map(
         it=>url2folioid(it.url)

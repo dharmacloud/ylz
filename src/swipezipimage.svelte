@@ -6,17 +6,18 @@ import TapMark from './tapmark.svelte';
 import Swipe from './3rd/swipe.svelte';
 import SwipeItem from './3rd/swipeitem.svelte';
 import {downloadToCache} from 'ptk/platform/downloader.js'
-import {extractPuncPos,usePtk,FolioText, parseOfftext} from 'ptk'
+import {extractPuncPos,usePtk,FolioText, parseOfftext,updateUrl} from 'ptk'
 import { CURSORMARK} from './nav.js';
 import {ZipStore} from 'ptk/zip';
 import DownloadStatus from './downloadstatus.svelte'
+import {CacheName} from './constant.js'
 import {thezip,favortypes, landscape,foliotext,folioLines,isSidePaiji,tapAddress,
-    folioChars,activePtk,activefolioid,activepb,favorites,audioid,showpunc,CacheName,
+    folioChars,activePtk,activefolioid,activepb,favorites,audioid,showpunc,
 maxfolio,tapmark, playing, remainrollback, showyoutube,shareAddress,
 idlecount,showpaiji,loadingzip, selectmedia, preferaudio,folioHolderWidth,leftmode,mediaurls, downloading, sharing} from './store.js'
 import { get } from 'svelte/store';
 import { fetchAudioList } from './mediaurls';
-import { updateUrl } from './urlhash';
+
 export let src;
 
 let ptk=usePtk($activePtk)

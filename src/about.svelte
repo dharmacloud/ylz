@@ -7,9 +7,8 @@ import Workers from './workers.svelte'
 import ProjectIntro from './project.svelte'
 import Materials from './materials.svelte'
 import { githubicon } from './icons.js';
-import {Cachesname} from './constant.js'
-    import { generateECPolynomial } from 'qrcode/lib/core/polynomial.js';
-
+import {CacheName} from './constant.js'
+    
 let show=0,clearcount=-1;
 const toggleshowsponsoring=()=>show=show==1?0:1;
 const toggleshowdonors=()=>show=show==2?0:2;
@@ -18,7 +17,7 @@ const toggleshowmaterials=()=>show=show==4?0:4;
 const toggleshowproject=()=>show=show==5?0:5;
 
 const clearCache=async (ext)=>{
-    const cache=await caches.open(Cachesname);
+    const cache=await caches.open(CacheName);
     let keys=await cache.keys();
     keys=keys.filter(it=>!ext || it.url.endsWith(ext));
     clearcount=keys.length;

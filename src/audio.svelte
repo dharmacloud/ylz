@@ -1,6 +1,7 @@
 <script>
-import {online,player,audioid,activefolioid, playnextjuan, findByAudioId,CacheName,
+import {online,player,audioid,activefolioid, playnextjuan, findByAudioId,
      remainrollback,selectmedia,mediaurls, stopAudio, playing, showyoutube} from './store.js';
+import {CacheName} from './constant.js'
 import Slider from './3rd/rangeslider.svelte';
 import Switch from './3rd/switch.svelte';
 import {usePtk,parseOfftext, sleep,} from 'ptk'

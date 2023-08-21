@@ -2,8 +2,7 @@ import {updateSettings,settings} from './savestore.ts'
 import {bsearchNumber, usePtk,makeAddress} from 'ptk'
 import {derived, get,writable } from 'svelte/store';
 import {silence} from './mediaurls.js'
-export const CacheName='v1::ylz'
-export const APPVER = '23.8.21'
+export const APPVER = '23.8.22'
 //const folio=folioPosFromAddress(addressFromUrl());
 
 export const online=writable(navigator.onLine);
@@ -216,9 +215,9 @@ export const shareAddress=(addr)=>{
 export const addTofind=tf=>{
     if (!tf.trim()) return;
     tf=tf.slice(0,10);
-    const arr=get(tofindhistory);
+    let arr=get(tofindhistory);
     if (arr[0]==tf) return;
-    removeTofind(tf);
+    arr=removeTofind(tf);
     arr.unshift(tf);
     while (arr.length>10) arr.pop();
     tofindhistory.set(arr.slice(0,arr.length));
@@ -229,6 +228,7 @@ export const removeTofind=tf=>{
     const at=arr.indexOf(tf);
     if (~at) {
         arr.splice(at,1);
+        tofindhistory.set(arr.slice(0,arr.length));
     }
-    tofindhistory.set(arr.slice(0,arr.length));
+    return arr;
 }

@@ -2,9 +2,8 @@
 export let ptk ;
 import Slider from './3rd/rangeslider.svelte';
 import {tapmark,foliotext,loadingfolio,tapAddress} from  './store.js'
-import {updateUrl} from './urlhash.js'
 import {get} from 'svelte/store'
-import {debounce} from 'ptk'
+import {debounce,updateUrl} from 'ptk'
 import ChunkNav from './chunknav.svelte'
 import {goPb} from './nav.js'
 let ck,loff,displayline=0,
