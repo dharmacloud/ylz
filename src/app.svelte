@@ -2,9 +2,10 @@
 import { openPtk} from 'ptk'
 import SwipeZipImage from "./swipezipimage.svelte";
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
+import {downloadToCache} from 'ptk/platform/downloader.js'
 import { onDestroy, onMount } from "svelte";
 import {activefolioid,isAndroid,idlecount,showpaiji,leftmode,online,folioincache,showsponsor,sharing,
-    newbie,idletime,landscape,APPVER} from './store.js'
+    newbie,idletime,landscape,APPVER,CacheName} from './store.js'
 import {setTimestampPtk} from './mediaurls.js'
 import {fetchFolioList} from './folio.js'
 import TapText from './taptext.svelte'
@@ -14,7 +15,7 @@ import Paiji from './paiji.svelte';
 import Notification from './notification.svelte';
 import { get } from 'svelte/store';
 import Left from './left.svelte'
-import { downloadToCache } from './comps/downloader.js';
+
 import { addressFromUrl } from './urlhash.js';
 import {loadAddress} from './nav.js'
 let ptk,tofind;
@@ -36,15 +37,15 @@ onMount(async ()=>{
     app.style.width=window.innerWidth+'px';
 
     bootmessage='try to download ylz.ptk'
-    const resylz=await downloadToCache('ylz.ptk',msg=>{
+    const resylz=await downloadToCache(CacheName,'ylz.ptk',msg=>{
         bootmessage='dc.ptk '+msg;
     })    
     bootmessage='try to download ylz_sankrit.ptk'
-    const resylzsanskrit=await downloadToCache('ylz_sanskrit.ptk',msg=>{
+    const resylzsanskrit=await downloadToCache(CacheName,'ylz_sanskrit.ptk',msg=>{
         bootmessage='ylz_sanskrit.ptk '+msg;
     })
     bootmessage='try to download dc.ptk'
-    const resdc=await downloadToCache('dc.ptk',msg=>{
+    const resdc=await downloadToCache(CacheName,'dc.ptk',msg=>{
         bootmessage='dc.ptk '+msg;
     })  
 
@@ -92,8 +93,10 @@ const orientation=(ls)=>{
     if (ls) shownewbie=false;
     idlecount.set(0)
     if (app) {
-        app.style.height=window.innerHeight+'px';
-        app.style.width=window.innerWidth+'px';    
+        setTimeout(()=>{
+            app.style.height=window.innerHeight+'px';
+            app.style.width=window.innerWidth+'px';    
+        },1)
     }
 }
 $: orientation($landscape)
@@ -130,8 +133,9 @@ $: orientation($landscape)
 {:else}
 <span class="loading">
 系統版本：{APPVER} <a class="toctext" href="https://nissaya.cn/" target="_new">官網</a>
-<br/>如果停在此畫面沒有進度，表示瀏覽器不直持 ECMAscript 2015，無法運行本軟件。
-請改用 Chrome 瀏覽器訪問本頁面。iOS 須 13 版以上，並使用內建的 Safari 。
+<br/>如果停在此畫面沒有進度，表示瀏覽器不直持 ECMAScript 2015，無法運行本軟件。
+<br/>PC及安卓請改用 Chrome 瀏覽器訪問本頁面。
+<br/>iOS 須 13 版以上，並使用內建的 Safari 。
 </span>
 <br/><span class="toctext">{bootmessage}</span>
 {/if}

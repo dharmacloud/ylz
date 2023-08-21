@@ -36,7 +36,6 @@ $: availableDict(nentry,entries);
 <div class="dictpopup toctext">
 {#if entries.length}
 <span class="header">
-
 {#each entries as [distance,entry],idx}
 <span class:dictgroup={idx==nentry}>
 <label><input  type='radio' bind:group={nentry} name='dict' value={idx}/>{entry}</label>
@@ -47,7 +46,6 @@ $: availableDict(nentry,entries);
 {:else}
 <button on:click={setOneline}>一行</button>
 {/if}
-
 {/if}
 {#if wikipedia}
 {#if showing=='wikipedia'}
@@ -59,7 +57,6 @@ $: availableDict(nentry,entries);
 <a target=_new href={googlelink(entry)}>谷哥</a>
 <a target=_new href={baidulink(entry)}>百度</a>
 {/if}
-
 </span>
 {/each}
 </span>
@@ -67,6 +64,8 @@ $: availableDict(nentry,entries);
 {#if src}
 <iframe style="border:none" class="iframe" title="wiki" {src}></iframe>
 {/if}
+{:else}
+點要查的字。
 {/if}
 </div>
 <style>

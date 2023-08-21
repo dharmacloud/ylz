@@ -1,5 +1,5 @@
 <script>
-import {online,player,audioid,activefolioid, playnextjuan, findByAudioId,
+import {online,player,audioid,activefolioid, playnextjuan, findByAudioId,CacheName,
      remainrollback,selectmedia,mediaurls, stopAudio, playing, showyoutube} from './store.js';
 import Slider from './3rd/rangeslider.svelte';
 import Switch from './3rd/switch.svelte';
@@ -9,7 +9,7 @@ import { get } from 'svelte/store';
 import {audiofolder,fetchAudioList} from './mediaurls.js'
 import {allJuan} from './nav.js'
 import {downloadicon,youtubeicon} from './icons.js'
-import { downloadToCache } from './comps/downloader.js';
+import { downloadToCache } from 'ptk/platform/downloader.js';
 export let ptk;
 
 let value=[ $remainrollback,0] ;
@@ -65,7 +65,7 @@ const htmltext=s=>{
 let downloading='',progress='';
 const downloadit=async (aid)=>{
     downloading=aid;
-    await downloadToCache(audiofolder+aid+'.mp3',msg=>{
+    await downloadToCache(CacheName,audiofolder+aid+'.mp3',msg=>{
         progress=msg;
     });
     await sleep(1000); //wait for cache to sync

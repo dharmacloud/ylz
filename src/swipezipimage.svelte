@@ -5,13 +5,13 @@ import TapMark from './tapmark.svelte';
 //import Swipe from './newswiper.svelte'
 import Swipe from './3rd/swipe.svelte';
 import SwipeItem from './3rd/swipeitem.svelte';
-import {downloadToCache} from './comps/downloader.js'
+import {downloadToCache} from 'ptk/platform/downloader.js'
 import {extractPuncPos,usePtk,FolioText, parseOfftext} from 'ptk'
 import { CURSORMARK} from './nav.js';
 import {ZipStore} from 'ptk/zip';
 import DownloadStatus from './downloadstatus.svelte'
 import {thezip,favortypes, landscape,foliotext,folioLines,isSidePaiji,tapAddress,
-    folioChars,activePtk,activefolioid,activepb,favorites,audioid,showpunc,
+    folioChars,activePtk,activefolioid,activepb,favorites,audioid,showpunc,CacheName,
 maxfolio,tapmark, playing, remainrollback, showyoutube,shareAddress,
 idlecount,showpaiji,loadingzip, selectmedia, preferaudio,folioHolderWidth,leftmode,mediaurls, downloading, sharing} from './store.js'
 import { get } from 'svelte/store';
@@ -56,11 +56,10 @@ const loadZip=async ()=>{
 
     // const res=await fetch(host+src);
     
-    const res=await downloadToCache(host+src,msg=>{
-        downloading.set("progress "+msg+" "+host+src);
+    const res=await downloadToCache(CacheName,host+src,msg=>{
+        downloading.set(host+src+ " "+msg);
     });
     
-
     downloading.set('');
     const buf=await res.arrayBuffer();
     const zip=new ZipStore(buf);
