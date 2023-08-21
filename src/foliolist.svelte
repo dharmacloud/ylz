@@ -79,4 +79,4 @@ $: folios=getFolioList(texttype);
 {/each}
 </div>
 {/each}
-<div class="toctext">開啟過的經典可離線閱讀</div>
+<div class="toctext endmarker">※※※</div>

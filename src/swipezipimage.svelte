@@ -57,7 +57,7 @@ const loadZip=async ()=>{
     // const res=await fetch(host+src);
     
     const res=await downloadToCache(host+src,msg=>{
-        downloading.set(msg);
+        downloading.set("progress "+msg+" "+host+src);
     });
     
 
@@ -247,7 +247,7 @@ const confirmfavorite=()=>{
 }
 let cancellable=true;
 const favoritebtn=()=>{
-    if ($activePtk!=='dc') return;//only support chinese
+    if ($activePtk!=='ylz') return;//only support chinese
 
     clearTimeout(favoritetimer);
     favoritetimer=setTimeout(()=>{

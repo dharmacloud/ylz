@@ -1,5 +1,5 @@
 <script>
-import {newbie,showyoutube,showpunc,showsponsor,activefolioid} from './store.js'
+import {newbie,showyoutube,showpunc,showsponsor,activefolioid, APPVER} from './store.js'
 import Switch from './3rd/switch.svelte';
 import Sponsoring from './sponsoring.svelte';
 import HOF from './hof.svelte'
@@ -55,9 +55,9 @@ class:selected={show==1} on:click={toggleshowsponsoring}>護持</span>
 {:else if show==5 && $showpunc!=='on'}
 <ProjectIntro/>
 {:else}
-<span class="logotitle">永樂藏 2023.8.18</span><a href="https://github.com/dharmacloud/swipegallery/" target=_new>源代碼{@html githubicon}</a>
-<br/>客服(LINE加好友) @fayunshi  
-<br/>Line官號<a href="https://lin.ee/1tmTKXi" target=_new>@dharmacloud</a>
+<span class="logotitle">永樂藏 {APPVER}</span><a href="https://github.com/dharmacloud/swipegallery/" target=_new>源代碼{@html githubicon}</a>
+<br/>LINE加好友 @fayunshi (法雲知客室)
+<br/>官號<a href="https://lin.ee/1tmTKXi" target=_new>@dharmacloud</a>
 <br/>微信: Sukhanika
 <br/><a href="mailto:dharmacloudpublishing@gmail.com">dharmacloudpublishing@gmail.com</a>
 <br/>若無特別聲明則採用

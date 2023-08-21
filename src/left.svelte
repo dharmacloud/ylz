@@ -1,7 +1,8 @@
 <script>
-import Chunktext from './chunktext.svelte';
+
+import TofindHistory from './tofindhistory.svelte'
 import InputHelper from './inputhelper.svelte'
-import {leftmode,folioHolderWidth,landscape} from './store.js'
+import {leftmode,folioHolderWidth,landscape,tofind} from './store.js'
 export let ptk;
 </script>
 
@@ -9,6 +10,7 @@ export let ptk;
 {#if $leftmode=='input'}
 <InputHelper {ptk}/>
 {/if}
+
 </div>
 
 <style>

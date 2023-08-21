@@ -1,3 +1,8 @@
+<script>
+import TofindHistory from './tofindhistory.svelte'
+</script>
+<TofindHistory/>
+<hr/>
 <div class="toctext">
 點圖片任何一字，將短句帶入候選區，預設前三個字為關鍵字。
 <br/>點紅色背景的字，分享該段經文。

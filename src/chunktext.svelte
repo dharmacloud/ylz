@@ -84,7 +84,6 @@ const setSutra=e=>{
     displayline=sutras[idx];
     activeline=0;
 }
-$: console.log('activeline',activeline)
 </script>
 
 <div class="toctext">

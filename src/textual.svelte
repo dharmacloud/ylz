@@ -122,7 +122,7 @@ $: [externals,internals]=getLinks($activefolioid,$activepb);
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class='clickable' class:selected={thetab=="translations"} on:click={()=>selecttab("translations")}>別譯</span>
 {/if}
-{#if hasVariorum(ptk,bookByFolio($activefolioid))}
+{#if hasVariorum(bookByFolio($activefolioid))}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class='clickable' class:selected={thetab=="variorum"} on:click={()=>selecttab("variorum")}>集註</span>    
 {/if}
@@ -144,7 +144,7 @@ $: [externals,internals]=getLinks($activefolioid,$activepb);
 <div class="subtab-content" class:visible={thetab=='chunktext'}><ChunkText {ptk}  /></div>
 <div class="subtab-content" class:visible={thetab=='sourcetext'}><SourceText {ptk}/></div>
 <div class="subtab-content" class:visible={thetab=='translations'}><Translations {closePopup} {ptk}/></div>
-<div class="subtab-content" class:visible={thetab=='variorum'}><Variorum {closePopup} {ptk}/></div>
+<div class="subtab-content" class:visible={thetab=='variorum'}><Variorum {closePopup}/></div>
 {#each internals as internal,idx}
 <div class="subtab-content" class:visible={thetab=="link"+idx}><ParText {closePopup} caption={internal[0]} {ptk} address={internal[1]}/></div>
 {/each}

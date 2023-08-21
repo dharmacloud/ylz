@@ -2,7 +2,7 @@
 
 </script>
 <div>
-<img style="width:100%" alt="功德芳名" src="hof.png"/>
+<div>捐款記錄</div>
 <div>2023年</div>
 陳碧吟 1.12 美元 1,000
 <br/>甯耀南 5.21 台幣10,000

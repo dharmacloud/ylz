@@ -4,7 +4,7 @@ import SwipeZipImage from "./swipezipimage.svelte";
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import { onDestroy, onMount } from "svelte";
 import {activefolioid,isAndroid,idlecount,showpaiji,leftmode,online,folioincache,showsponsor,sharing,
-    newbie,idletime,landscape} from './store.js'
+    newbie,idletime,landscape,APPVER} from './store.js'
 import {setTimestampPtk} from './mediaurls.js'
 import {fetchFolioList} from './folio.js'
 import TapText from './taptext.svelte'
@@ -28,21 +28,42 @@ const handleConnection=()=>{
 
 window.addEventListener('online', handleConnection);
 window.addEventListener('offline', handleConnection);
-
-let loaded=false,timer,downloadmessage='';
+let app;
+let loaded=false,timer,bootmessage='啟動中';
 onDestroy(()=>clearInterval(timer))
 onMount(async ()=>{
-    const resdc=await downloadToCache('dc.ptk',msg=>{
-        downloadmessage='Downloading dc.ptk '+msg;
+    app.style.height=window.innerHeight+'px';
+    app.style.width=window.innerWidth+'px';
+
+    bootmessage='try to download ylz.ptk'
+    const resylz=await downloadToCache('ylz.ptk',msg=>{
+        bootmessage='dc.ptk '+msg;
     })    
-    const resdcsanskrit=await downloadToCache('dc_sanskrit.ptk');
-    downloadmessage='';
+    bootmessage='try to download ylz_sankrit.ptk'
+    const resylzsanskrit=await downloadToCache('ylz_sanskrit.ptk',msg=>{
+        bootmessage='ylz_sanskrit.ptk '+msg;
+    })
+    bootmessage='try to download dc.ptk'
+    const resdc=await downloadToCache('dc.ptk',msg=>{
+        bootmessage='dc.ptk '+msg;
+    })  
+
+    bootmessage='fetching foliolist from cache';
     await fetchFolioList(folioincache);
-    ptk=await openPtk("dc",new Uint8Array(await resdc.arrayBuffer()));
-    setTimestampPtk(ptk);
-    await openPtk("dc_sanskrit",new Uint8Array(await resdcsanskrit.arrayBuffer()));
+    bootmessage='open ylz.ptk';
+    ptk=await openPtk("ylz",new Uint8Array(await resylz.arrayBuffer()));
+    
+    bootmessage='open ylz_sanskrit.ptk';
+    await openPtk("ylz_sanskrit",new Uint8Array(await resylzsanskrit.arrayBuffer()));
+
+    bootmessage='open dc.ptk';
+    const dcptk=await openPtk("dc",new Uint8Array(await resdc.arrayBuffer()));
+    setTimestampPtk(dcptk);
+
+    bootmessage='load folio address from url';
     await loadAddress(ptk,addressFromUrl());
 
+    bootmessage='loaded';
     loaded=true;
     timer=setInterval(()=>{
         showpaiji.set($idlecount>=idletime);
@@ -74,12 +95,11 @@ const orientation=(ls)=>{
 $: orientation($landscape)
 
 // $: console.log(sidepaiji,idletime,$idlecount,$showpaiji,$playing,showpopup)
+
 </script>
 
-
-<div class="app">
+<div class="app" bind:this={app}>
 {#if loaded}
-
 {#if $showpaiji && !showpopup && !shownewbie && !$landscape && $showsponsor=='on'}
 <Paiji/>
 {/if}
@@ -105,13 +125,11 @@ $: orientation($landscape)
 <Notification/>
 {:else}
 <span class="loading">
-如果停在此畫面沒有進度，表示瀏覽器不直持 ECMAscript 2015，無法運行本軟件。
+系統版本：{APPVER} <a class="toctext" href="https://nissaya.cn/" target="_new">官網</a>
+<br/>如果停在此畫面沒有進度，表示瀏覽器不直持 ECMAscript 2015，無法運行本軟件。
 請改用 Chrome 瀏覽器訪問本頁面。iOS 須 13 版以上，並使用內建的 Safari 。
-<br/>{downloadmessage}
 </span>
-
-<a class="toctext" href="/" target="_new">官網</a>
+<br/><span class="toctext">{bootmessage}</span>
 {/if}
-
 </div>
 

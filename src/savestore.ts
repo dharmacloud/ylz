@@ -9,16 +9,19 @@ export const loadSettings=()=>{
     const showyoutube=localStorage.getItem(AppPrefix+'showyoutube')||'off';  
     let _favorites=localStorage.getItem(AppPrefix+'favorites')||'{}';
     let _preferaudio=localStorage.getItem(AppPrefix+'preferaudio')||'{}';
-    let favorites={},preferaudio={};
+    let _tofindhistory=localStorage.getItem(AppPrefix+'tofindhistory')||'[]';
+    
+    let favorites={},preferaudio={},tofindhistory=[];
     try {
         favorites=JSON.parse(_favorites);
         preferaudio=JSON.parse(_preferaudio);
+        tofindhistory=JSON.parse(_tofindhistory);
     } catch (e){
         console.log(e);
         favorites={};
         preferaudio={}
     }
-    return {activefolioid,showsponsor,showyoutube,autodict,newbie,favorites,playnextjuan,preferaudio,showpunc};
+    return {activefolioid,tofindhistory,showsponsor,showyoutube,autodict,newbie,favorites,playnextjuan,preferaudio,showpunc};
 }
 
 export const saveSettings=()=>{ //immediate save

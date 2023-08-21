@@ -58,7 +58,7 @@
         var accept=request.headers.get('Accept')
         // For HTML requests, try the network first, fall back to the cache, finally the offline page
         
-        if (~accept.indexOf('text/') || request.url.endsWith('.js')) { //html, css , js, try to fetch updates
+        if (~accept.indexOf('text/') || request.url.endsWith('.js')|| request.url.endsWith('.css')) { //html, css , js, try to fetch updates
             // Fix for Chrome bug: https://code.google.com/p/chromium/issues/detail?id=573937
             if (request.mode != 'navigate') {
                 request = new Request(request.url, {

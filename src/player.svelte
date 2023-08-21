@@ -15,7 +15,7 @@ const seekToPb=(pbid,audioid)=>{
     const t=timestamp[line];
     setTimeout(()=>{ //allow audio to initialized
         if (player) player.currentTime=t;
-    },30)
+    },100)
 }
 $: seekToPb($activepb,$audioid);
 </script>

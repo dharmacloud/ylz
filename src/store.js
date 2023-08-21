@@ -2,13 +2,13 @@ import {updateSettings,settings} from './savestore.ts'
 import {bsearchNumber, usePtk,makeAddress} from 'ptk'
 import {derived, get,writable } from 'svelte/store';
 import {silence} from './mediaurls.js'
-import {addressFromUrl, updateUrl } from './urlhash.js';
 
+export const APPVER = '23.8.21'
 //const folio=folioPosFromAddress(addressFromUrl());
 
 export const online=writable(navigator.onLine);
 export const thezip=writable(null)
-export const activePtk=writable('dc');
+export const activePtk=writable('ylz');
 export const folioincache=writable({});
 export const loadingfolio=writable(false);  //loadFolio done
 export const loadingzip=writable(false);  //load the folio zip
@@ -29,6 +29,7 @@ export const searchable=writable('')
 export const leftmode=writable('folio');
 export const foliotext=writable(null);
 export const tofind=writable('');
+export const tofindhistory=writable(settings.tofindhistory);
 
 export let player
 export const setplayer=p=>player=p;
@@ -53,7 +54,7 @@ export const bookByFolio=(fid,ptk)=>{
 export const audioid=writable('');
 
 export const folioLines=function(_fid){
-    const ptk=usePtk('dc');
+    const ptk=usePtk('ylz');
     const fid=_fid||get(activefolioid);
     const at=ptk.defines.folio.fields.id?.values.indexOf(fid);
     if (~at) {
@@ -82,6 +83,7 @@ showsponsor.subscribe((showsponsor)=>updateSettings({showsponsor}));
 showyoutube.subscribe((showyoutube)=>updateSettings({showyoutube}));
 favorites.subscribe((favorites)=>updateSettings({favorites}));
 preferaudio.subscribe((preferaudio)=>updateSettings({preferaudio}));
+tofindhistory.subscribe((tofindhistory)=>updateSettings({tofindhistory}));
 
 export const findByAudioId=(id,column='timestamp')=>{
     const ptk=usePtk('dc');
@@ -98,7 +100,7 @@ export const stopAudio=()=>{
 
 export const booknameOf=folioid=>{
     const bkid=bookByFolio(folioid)
-    const ptk=usePtk('dc');//assuming sanskrit text always has chinese correspond
+    const ptk=usePtk('ykz');//assuming sanskrit text always has chinese correspond
     const bk=ptk.defines.bk;
     const at=bk.fields.id.values.indexOf(bkid);
     return bk.innertext.get(at);
@@ -106,13 +108,14 @@ export const booknameOf=folioid=>{
 
 export const idletime=30;
 
-export const hasVariorum=(ptk,bkid)=>{
+export const hasVariorum=(bkid)=>{
+    const ptk=usePtk('ylz_sanskrit');
     const at=bkid.indexOf('_')
     if (~at) bkid=bkid.slice(0,at);
     return ~ptk.defines.bk.fields.id.values.indexOf(bkid+'_variorum');
 }
 export const hasSanskrit=bkid=>{
-    const ptk=usePtk('dc_sanskrit');
+    const ptk=usePtk('ylz_sanskrit');
     const at=bkid.indexOf('_')
     if (~at) bkid=bkid.slice(0,at);
     const at2=ptk.defines.bk.fields.id.values.indexOf(bkid);
@@ -208,4 +211,22 @@ export const favortypes=['♡','🤍','❤️', '💚', '💙','💜','🖤'];
 export const shareAddress=(addr)=>{
     if (!addr) addr= makeAddressFromFolioPos(get(tapmark));
     return location.origin+location.pathname+'#'+addr;
+}
+
+export const addTofind=tf=>{
+    if (!tf.trim()) return;
+    const arr=get(tofindhistory);
+    if (arr[0]==tf) return;
+    removeTofind(tf);
+    arr.unshift(tf);
+    tofindhistory.set(arr.slice(0,arr.length));
+}
+
+export const removeTofind=tf=>{
+    const arr=get(tofindhistory);
+    const at=arr.indexOf(tf);
+    if (~at) {
+        arr.splice(at,1);
+    }
+    tofindhistory.set(arr.slice(0,arr.length));
 }

@@ -2,6 +2,8 @@ body{
   overflow:hidden;
   font-family:"Tahoma","San-Serif" , "Microsoft Yahei UI Light";
   margin: 0px;
+  height:100%;
+  width:100%;
 }
 @media (orientation: portrait) {
   body {
@@ -14,6 +16,7 @@ body{
   body {
     font-size:12px;
   }
+  button {font-size:1em}
 }
 
 
@@ -27,11 +30,15 @@ body{
 .popup { position:absolute;top:0;left:0;width:100%;height:100%;
   background:var(--appbackground);overflow:hidden;z-index: 99}
 .sidepaiji {position:absolute;overflow:hidden;top:0;height:100%}
-.tabs {--webkit-user-select: none;overflow:hidden  ; font-size:2em;
+.tabs {--webkit-user-select: none;overflow:hidden  ; font-size:2.5em;
   user-select: none;padding-left: 0.05em; background:var(--menubar-color);color:gold}
 
 .loading {font-size:2em}
-.app {height:100vh;top:0px;background-color: rgb(243, 208, 160); } /* splitpane divider need this */
+.app {width:100%;height:100%;
+  margin:0;padding:0;
+  box-sizing:border-box;
+  display:fixed;
+  top:0px;background-color: rgb(243, 208, 160); } /* splitpane divider need this */
 .closepopup {padding-right:0.3em;cursor:pointer;z-index:999;font-size:2em;position:absolute;right:0;top:0;color:black;font-weight: bold;}
 
 select {font-size:2em}
@@ -132,7 +139,7 @@ select {font-size:2em}
   font-size:1em;
 }
 .pagenumber {position:absolute ; bottom:0.5em;font-size: 2em;left:0.5em;z-index: 99;color:brown;pointer-events: none;}
-.playbtn {cursor:pointer; position:absolute ; bottom:0.1em; right:0.1em;font-size: 4em;z-index: 99;color:brown;opacity: 0.7;}
+.playbtn {cursor:pointer; position:absolute ; bottom:1em; right:0.1em;font-size: 4em;z-index: 99;color:brown;opacity: 0.7;}
 .favoritebtn {cursor:pointer; position:absolute ; top:0px;font-size: 3em;right:0.1em;z-index: 99;color:brown;opacity: 0.7;}
 .favoriteitem {cursor:pointer;padding-right:0.3em;padding-left:0.3em}
 @keyframes blinker {
@@ -254,9 +261,13 @@ a {color:#f99008}
 .uncache {color:gray}
 .bankaccount {color:brown;font-weight: bold;}
 .hof {color:brown;font-weight: bold;font-size:1.5em}
-.downloading {z-index:1000;display:flex;justify-content:center;align-items: center;height: 100vh;width:100vw;font-size:3em}
+.downloading {z-index:1000;display:flex;height: 100vh;width:100vw;font-size:3em}
 .logotitle{font-size:125%; color:brown}
 .notification {position:absolute;
   animation: favorblinker 2s linear infinite;
   top:10vh;left:5vw;height:1.2em;background:#d27700;
   z-index:1999;width:90vw;font-size:2em}
+
+  .deceased {border:1px solid black}
+
+  .delete {color:red}

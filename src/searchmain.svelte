@@ -1,6 +1,6 @@
 <script>
 import { splitUTF32Char ,listExcerpts, parseOfftext, bsearchNumber} from 'ptk';
-import { leftmode, searchable, tofind} from './store.js'
+import { addTofind, leftmode, searchable, tofind} from './store.js'
 import { goPtkLine } from './nav.js';
 import SearchHelp from './searchhelp.svelte'
 import Pager from './comps/pager.svelte';
@@ -12,6 +12,7 @@ let scopes=[];
 let allexcerpts=[], allchunkhits=[], allpostings=[];
 let now=0;
 const PERPAGE=10;
+let rangecaption='';
 const makeSearchable=t=>{
     items.length=0;
     const chars=splitUTF32Char(t);
@@ -61,11 +62,14 @@ const dosearch=()=>{
 }
 
 // add 本卷(本經)
-const setScope=async (idx)=>{
+const setScope=async (idx,range)=>{
     selected=idx;
     pagecount=0;
     const at=Math.floor(idx/2);
-    const {lines,chunks,postings}=await listExcerpts(ptk,tf, scopes[at].scope);
+    if (!range) {
+        rangecaption='';
+    }
+    const {lines,chunks,postings}=await listExcerpts(ptk,tf, range||scopes[at].scope);
     allpostings=postings;
     if (selected%2==0) {
         allchunkhits=chunks.map(it=>{
@@ -109,24 +113,33 @@ const gopage=async idx=>{
     now=idx;
 }
 
-const go=(idx)=>{
-    let line=allexcerpts[idx][0];
-    if (selected%2==0) { //goto first hit of the chunk
-        //todo , click chunk hit to show excepts
-        const tlp = ptk.inverted.tokenlinepos;
-        const chunktokenpos=tlp[allchunkhits[idx].ck.line];        
-        const at=bsearchNumber(allpostings[0],chunktokenpos);
-        const closest= allpostings[0][at];
-        line=bsearchNumber(tlp, closest)-1;
-    }
+const goLine=(line)=>{
     goPtkLine(ptk, line);
     leftmode.set('folio')
+    addTofind(value);
+}
+const go=(idx)=>{
+    let line=allexcerpts[idx][0];
+    goLine(line);
     selecteditem=idx;
 }
+const gock=(idx)=>{
+    const chit=chunkhits[idx]
+    const line=chit.ck.line;
+    goLine(line);
+    selecteditem=idx;
+}
+const setChunkScope=(ck)=>{
+    const rangeaddr='bk#'+ck.bk.id+'.ck#'+ck.id;
+    rangecaption=(ck.bk?.caption||'')+'/'+ck.caption;
+    setScope(selected*2+1,rangeaddr);
+}
+
 const onfocus=()=>{
     activeidx=-1;
     leftmode.set('input')
 }
+
 const onblur=()=>{
     setTimeout(()=>{
         leftmode.set('folio')
@@ -154,7 +167,7 @@ on:focus={onfocus} on:blur={onblur} on:input={onchange} bind:value id="tofind"/>
 {/each}
 </div>
 <div class="pager">
-<Pager count={pagecount} bind:now onselect={gopage} let:idx let:caption let:active>
+<Pager caption={rangecaption} count={pagecount} bind:now onselect={gopage} let:idx let:caption let:active>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <span on:click={()=>gopage(idx)} class="clickable" class:selected={active}>{caption}</span>
 </Pager>
@@ -165,26 +178,23 @@ on:focus={onfocus} on:blur={onblur} on:input={onchange} bind:value id="tofind"/>
 {#each excerpts as excerpt,idx}
 <div class="excerptline" class:oddline={idx%2==0}>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class="excerptseq clickable" class:selected={selecteditem==idx} on:click={go(idx+(now*PERPAGE))}>{idx+(now*PERPAGE)+1}←</span>
-{excerpt.puretext}</div>
+<span class="excerptseq clickable" class:selected={selecteditem==idx} on:click={()=>go(idx+(now*PERPAGE))}>{idx+(now*PERPAGE)+1}
+{excerpt.puretext}</span></div>
 {/each}
 
 {#each chunkhits as chit,idx}
 <div class="excerptline" class:oddline={idx%2==0}>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class="excerptseq clickable" class:selected={selecteditem==idx} on:click={go(idx+(now*PERPAGE))}>{idx+(now*PERPAGE)+1}←</span>
-{chit.ck.bk?.caption}/{chit.ck.caption}<span class="hit">{" "+chit.hits}</span></div>
+<span class="excerptseq clickable" class:selected={selecteditem==idx} on:click={()=>gock(idx)}>{idx+(now*PERPAGE)+1}
+{chit.ck.bk?.caption}/{chit.ck.caption}</span>
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<span on:click={()=>setChunkScope(chit.ck)} class="clickable hit">{" "+chit.hits}</span></div>
 {/each}
 
 
 </div>
 
-<div class="pager">
-<Pager count={pagecount} bind:now  onselect={gopage} let:idx let:caption let:active>
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <span on:click={()=>gopage(idx)} class="clickable" class:selected={active}>{caption}</span>
-</Pager>
-</div>
+
 
 {/if}
 <style>

@@ -112,7 +112,7 @@ class:selected={media.aid==$audioid}>{media.performer}{idx&&media.aid==$audioid?
 {:else}
 {#if $online}
 <span class="uncache">{media.performer+" "}</span><span class="clickable" on:click={()=>!downloading&&downloadit(media.aid)}>{@html downloadicon}</span>
-{#if downloading==media.aid}Downloading {progress}{/if}
+{#if downloading==media.aid}{progress}{/if}
 {#if $audioid==media.vid&& $audioid}{humanDuration(getDuration($audioid))}{/if}
 <br/>
 {/if}

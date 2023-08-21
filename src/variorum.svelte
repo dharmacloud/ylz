@@ -1,10 +1,12 @@
 <script>
-import { parseAddress,parseAction, styledNumber} from "ptk";
+import {parseAddress,parseAction, styledNumber, usePtk} from "ptk";
 import SentenceNav from "./sentencenav.svelte";
 import {tapAddress,loadingfolio} from './store.js'
-export let ptk;
+
 let text='';
+
 const updateVariorum=async (address,loading)=>{
+    const ptk=usePtk("dc");
     const r=ptk.defines.r;
     if (!r || loading) return ;
     const addr=parseAddress(address);
@@ -34,10 +36,10 @@ $: updateVariorum(tapAddress(),$loadingfolio)
 </script>
 
 <div class="toctext">
-<SentenceNav {ptk} />
+<SentenceNav ptk={usePtk('dc')} />
 {@html text}
 
-<SentenceNav {ptk}/>
+<SentenceNav ptk={usePtk('dc')} />
 <div class="endmarker">※※※</div>
 </div>
 
