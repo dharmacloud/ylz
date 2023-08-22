@@ -1,24 +1,3 @@
-body{
-  overflow:hidden;
-  font-family:"Tahoma","San-Serif" , "Microsoft Yahei UI Light";
-  margin: 0px;
-  height:100%;
-  width:100%;
-}
-@media (orientation: portrait) {
-  body {
-    font-size:12px;
-  }
-  button {font-size:1em}
-}
-
-@media (orientation: landscape) {
-  body {
-    font-size:12px;
-  }
-  button {font-size:1em}
-}
-
 
 :root{
   --pinmark : rgba(247, 4, 4, 0.4);
@@ -26,19 +5,29 @@ body{
   --menubar-color:rgb(143, 81, 0);
   --n:rgba(233, 233, 233, 0.7);
   --appbackground:rgba(255, 235, 164);
+  --doc-height:100%;
 }
+
+body{
+  overflow:hidden;
+  font-family:"Tahoma","San-Serif" , "Microsoft Yahei UI Light";
+  margin: 0;
+  padding:0;
+  height: 100vh; /* fallback for Js load */
+  height: var(--doc-height);
+  min-height: 100vh;
+}
+
+
 .popup { position:absolute;top:0;left:0;width:100%;height:100%;
   background:var(--appbackground);overflow:hidden;z-index: 99}
 .sidepaiji {position:absolute;overflow:hidden;top:0;height:100%}
-.tabs {--webkit-user-select: none;overflow:hidden  ; font-size:2.5em;
+.tabs {--webkit-user-select: none;overflow:hidden  ; font-size:2.2em;
   user-select: none;padding-left: 0.05em; background:var(--menubar-color);color:gold}
 
 .loading {font-size:2em}
-.app {width:100%;height:100%;
-  margin:0;padding:0;
-  box-sizing:border-box;
-  display:fixed;
-  top:0px;background-color: rgb(243, 208, 160); } /* splitpane divider need this */
+.app {background-color: rgb(243, 208, 160); } /* splitpane divider need this */
+
 .closepopup {padding-right:0.3em;cursor:pointer;z-index:999;font-size:2em;position:absolute;right:0;top:0;color:black;font-weight: bold;}
 
 select {font-size:2em}

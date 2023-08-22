@@ -29,7 +29,7 @@ export const leftmode=writable('folio');
 export const foliotext=writable(null);
 export const tofind=writable('');
 export const tofindhistory=writable(settings.tofindhistory);
-
+export const heightratio=writable(settings.heightratio);
 export let player
 export const setplayer=p=>player=p;
 // export const foliorawtexts=writable([]);
@@ -83,6 +83,7 @@ showyoutube.subscribe((showyoutube)=>updateSettings({showyoutube}));
 favorites.subscribe((favorites)=>updateSettings({favorites}));
 preferaudio.subscribe((preferaudio)=>updateSettings({preferaudio}));
 tofindhistory.subscribe((tofindhistory)=>updateSettings({tofindhistory}));
+heightratio.subscribe((heightratio)=>updateSettings({heightratio}));
 
 export const findByAudioId=(id,column='timestamp')=>{
     const ptk=usePtk('dc');
@@ -232,3 +233,4 @@ export const removeTofind=tf=>{
     }
     return arr;
 }
+

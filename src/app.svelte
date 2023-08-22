@@ -34,9 +34,6 @@ let app;
 let loaded=false,timer,bootmessage='啟動中';
 onDestroy(()=>clearInterval(timer))
 onMount(async ()=>{
-    app.style.height=window.innerHeight+'px';
-    app.style.width=window.innerWidth+'px';
-
     bootmessage='try to download ylz.ptk'
     const resylz=await downloadToCache(CacheName,'ylz.ptk',msg=>{
         bootmessage='dc.ptk '+msg;
@@ -93,12 +90,6 @@ const orientation=(ls)=>{
     showpopup=false;
     if (ls) shownewbie=false;
     idlecount.set(0)
-    if (app) {
-        setTimeout(()=>{
-            app.style.height=window.innerHeight+'px';
-            app.style.width=window.innerWidth+'px';    
-        },1)
-    }
 }
 $: orientation($landscape)
 

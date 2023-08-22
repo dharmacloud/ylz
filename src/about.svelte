@@ -1,5 +1,5 @@
 <script>
-import {newbie,showyoutube,showpunc,showsponsor,activefolioid, APPVER} from './store.js'
+import {newbie,showyoutube,showpunc,showsponsor,activefolioid,heightratio, APPVER} from './store.js'
 import Switch from './3rd/switch.svelte';
 import Sponsoring from './sponsoring.svelte';
 import HOF from './hof.svelte'
@@ -8,8 +8,10 @@ import ProjectIntro from './project.svelte'
 import Materials from './materials.svelte'
 import { githubicon } from './icons.js';
 import {CacheName} from './constant.js'
-    
-let show=0,clearcount=-1;
+import Slider from './3rd/rangeslider.svelte';
+import {debounce} from 'ptk'
+import { documentHeight } from './fullscreen.js';
+let show=0,clearcount=-1, hratio=[ Math.floor((($heightratio*100)-90)*10) ,0];
 const toggleshowsponsoring=()=>show=show==1?0:1;
 const toggleshowdonors=()=>show=show==2?0:2;
 const toggleshowworkers=()=>show=show==3?0:3;
@@ -23,7 +25,11 @@ const clearCache=async (ext)=>{
     clearcount=keys.length;
     keys.forEach(key=>cache.delete(key))
 }
-
+const setRatio=e=>{
+    const j=((e.detail[0]||100));
+    heightratio.set( (j/10 + 90)/100 );
+    documentHeight();
+}
 </script>
 
 <div class="tabs">
@@ -63,6 +69,10 @@ class:selected={show==1} on:click={toggleshowsponsoring}>護持</span>
 <br/><a target=_new href="https://creativecommons.org/publicdomain/zero/1.0/deed.zh">CC0 1.0 通用公共领域贡献</a>
 <br/>點紅色背景文字，複製及分享經文。
 <hr/>
+<Slider bind:value={hratio} on:input={debounce(setRatio,300)} max={100} min={1} >
+<span slot="caption">縮減全屏高度{hratio[0]}</span>
+</Slider>
+<br/>
 <Switch bind:value={$showpunc} label="顯示標點符號" design="slider" fontSize="24"/>
 <Switch bind:value={$newbie} label="啟動時顯示歡迎畫面" design="slider" fontSize="24"/>
 <Switch bind:value={$showsponsor} label="靜置時顯示功德芳名" design="slider" fontSize="24"/>

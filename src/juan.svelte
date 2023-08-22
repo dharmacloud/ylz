@@ -8,7 +8,7 @@ export let closePopup;
 export let ptk;
 let juans=[]; //find out all juan
 const m=$activefolioid.match(/([a-z]+)(\d+$)/);
-let currentjuan=m?parseInt(m[2])-1:0;
+let currentjuan=m?parseInt(m[2]):1;
 let juan=[1,0];
 const gojuan=(juan)=>{
     const fid=$activefolioid;
@@ -43,9 +43,9 @@ $: juans=loadJuan($activefolioid,$loadingfolio);
 {#if juans.length==0}
 <span></span>
 {:else if juans.length<10}
-<Pager pages={juans} caption="卷" now={currentjuan} let:active let:caption  let:idx onselect={gojuan}>
+<Pager pages={juans} caption="卷" now={currentjuan-1} let:active let:caption  let:id  onselect={idx=>gojuan(idx+1)}>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <span on:click={()=>gojuan(idx)} class="clickable" class:selected={active}>{caption}</span>
+    <span on:click={()=>gojuan(id)} class="clickable" class:selected={active}>{caption}</span>
     </Pager>  
 {:else}
 <Slider bind:value={juan} on:input={debounce(gotojuan,300)} max={juans.length} min={1} >

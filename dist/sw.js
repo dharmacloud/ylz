@@ -7,9 +7,10 @@
     // Update 'version' if you need to refresh the cache
     var staticCacheName = 'ylz';
     var version = 'v1::';
+    var CacheName=version + staticCacheName;
     // Store core files in a cache (including a page to display when offline)
     async function updateStaticCache() {
-        const cache = await caches.open(version + staticCacheName);
+        const cache = await caches.open(CacheName);
         return await cache.addAll([
             'index.html',
             'index.css',
@@ -29,17 +30,17 @@
     self.addEventListener('activate', function (event) {
         event.waitUntil(
             caches.keys()
-                .then(function (keys) {
-                    // Remove caches whose name is no longer valid
-                    return Promise.all(keys
-                        .filter(function (key) {
-                          return key.indexOf(version) !== 0;
-                        })
-                        .map(function (key) {
-                          return caches.delete(key);
-                        })
-                    );
-                })
+            .then(function (keys) {
+                // Remove caches whose name is no longer valid
+                return Promise.all(keys
+                    .filter(function (key) {
+                        return key.indexOf(version) !== 0;
+                    })
+                    .map(function (key) {
+                        return cache.delete(key);
+                    })
+                );
+            })
         );
     });
 
@@ -49,8 +50,9 @@
         if (request.method == 'HEAD' && navigator.onLine) {
             event.respondWith(
                 fetch(request)
-                    .catch(function () {
-                        return caches.match('/offline.html');
+                    .catch(async function () {
+                        const cache = await caches.open(CacheName);
+                        return await cache.match('offline.html');
                     })
             );
             return;
@@ -72,19 +74,22 @@
             event.respondWith(
                 fetch(request) //try online first
                     .then(function (response) {
-                        // Stash a copy of this page in the cache
                         var copy = response.clone();
-                        caches.open(version + staticCacheName)
+                        if (response.ok) {
+                            caches.open(CacheName)
                             .then(function (cache) {
                                 cache.put(request, copy);
                             });
+                        }
                         return response;
                     })
                     .catch(function () { //use cache when offline
-                        return caches.match(request)
+                        caches.open(CacheName).then(
+                            cache=>cache.match(request)
                             .then(function (response) {
-                                return response || caches.match('/offline.html');
+                                return response || cache.match('/offline.html');
                             })
+                        )
                     })
             );
             return;
@@ -94,15 +99,13 @@
             let pos = Number(/^bytes\=(\d+)\-$/g.exec(event.request.headers.get('range'))[1]);
             // console.log('Range request for', event.request.url, ', starting position:', pos);
             event.respondWith(
-              caches.open(version + staticCacheName)
+              caches.open(CacheName)
               .then(function(cache) {
                 return cache.match(event.request.url);
-              }).then(function(res) {
+              }).then(async function(res) {
                 if (!res) {
-                  return fetch(r) //delegate to real fetch
-                  .then(res => {
-                    return res.arrayBuffer();  //from cache
-                  });
+                    const res_1 = await fetch(r); //delegate to real fetch
+                    return await res_1.arrayBuffer();
                 }
                 return res.arrayBuffer();
               }).then(function(ab) {

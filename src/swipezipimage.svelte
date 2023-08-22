@@ -335,9 +335,9 @@ folioLines={folioLines()} frame={imageFrame} />
 {/if}
 {/key}
 <style>
-img { height:100%}
+img {height:100%}
 .swipe-holder{
-    height: 100%;
+    height: var(--doc-height);
     /* width:100%; */
 }
 .swipe {position:absolute;} 
