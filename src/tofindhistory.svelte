@@ -1,5 +1,5 @@
 <script>
-import {tofindhistory,removeTofind} from './store.js'
+import {tofindhistory,removeTofind,tofind} from './store.js'
 $:items = $tofindhistory.slice(0,$tofindhistory.length);
 
 export const setTofind=tf=>{

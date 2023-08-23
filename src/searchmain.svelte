@@ -1,5 +1,5 @@
 <script>
-import { splitUTF32Char ,listExcerpts, parseOfftext, bsearchNumber} from 'ptk';
+import { splitUTF32Char ,listExcerpts, parseOfftext} from 'ptk';
 import { addTofind, leftmode, searchable, tofind} from './store.js'
 import { goPtkLine } from './nav.js';
 import SearchHelp from './searchhelp.svelte'
@@ -147,6 +147,7 @@ const onblur=()=>{
 }
 $: makeSearchable($searchable)
 $: dosearch( value, activeidx,$searchable)
+$: value=$tofind;
 </script>
 <div class="bodytext">
 <input class="tofind" placeholder="輸入區" size={8} class:diminput={activeidx>-1} bind:this={theinput} 

@@ -11,7 +11,7 @@ export const loadSettings=()=>{
     const textsize=parseInt(localStorage.getItem(AppPrefix+'textsize')||'150') ||150;
     let _favorites=localStorage.getItem(AppPrefix+'favorites')||'{}';
     let _preferaudio=localStorage.getItem(AppPrefix+'preferaudio')||'{}';
-    let _tofindhistory=localStorage.getItem(AppPrefix+'tofindhistory')||'[]';
+    let _tofindhistory=localStorage.getItem(AppPrefix+'tofindhistory')||'["淨信",""]';
     
     let favorites={},preferaudio={},tofindhistory=[];
     try {

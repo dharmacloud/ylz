@@ -65,7 +65,7 @@ $: availableDict(nentry,entries);
 <iframe style="border:none" class="iframe" title="wiki" {src}></iframe>
 {/if}
 {:else}
-點要查的字。重覆點同一處，顯示分享網址及二維碼。
+點要查的字詞。重覆點同一處，顯示分享網址及二維碼。
 {/if}
 </div>
 <style>

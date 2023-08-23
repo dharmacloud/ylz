@@ -221,7 +221,7 @@ export const shareAddress=(addr)=>{
 
 export const addTofind=tf=>{
     if (!tf.trim()) return;
-    tf=tf.slice(0,10);
+    tf=tf.slice(0,20);
     let arr=get(tofindhistory);
     if (arr[0]==tf) return;
     arr=removeTofind(tf);
