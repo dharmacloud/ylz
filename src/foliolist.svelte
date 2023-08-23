@@ -80,4 +80,4 @@ $: folios=getFolioList(texttype);
 {/each}
 </div>
 {/each}
-<div class="toctext endmarker">※※※</div>
+<div class="endmarker">※※※</div>

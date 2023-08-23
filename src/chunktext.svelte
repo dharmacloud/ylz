@@ -68,12 +68,12 @@ const setAddress=(lineoff)=>{
     updateUrl(tapAddress());
 }
 const goactiveline=()=>{
-    const ele=document.querySelector('.toctext .activeline');
+    const ele=document.querySelector('.bodytext .activeline');
     if (!ele) return;
     ele.parentElement.parentElement.parentElement.scrollTop=ele.offsetTop;
 }
 const gotop=()=>{
-    const ele=document.querySelector('.toctext .activeline');
+    const ele=document.querySelector('.bodytext .activeline');
     if (!ele) return;
     ele.parentElement.parentElement.parentElement.scrollTop=0;
 }
@@ -85,7 +85,7 @@ const setSutra=e=>{
 }
 </script>
 
-<div class="toctext">
+<div class="bodytext">
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 
 <span class="clickable gotop" on:click={gotop}>↑</span>

@@ -13,7 +13,7 @@ const gofolio=()=>{
 }
 $: fetchContent(address);
 </script>
-<div class="toctext">
+<div class="bodytext">
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="clickable" on:click={gofolio}>←{caption}</span>
 {#each lines as line}

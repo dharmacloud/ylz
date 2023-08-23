@@ -19,7 +19,7 @@ const puretext=(_text)=>{
 $: updateParallels($tapmark,$loadingfolio);
 </script>
 
-<div class="paralleltext"> 
+<div class="bodytext"> 
     <SentenceNav {ptk}/>
     {#each sourcetexts as item}
     <!-- svelte-ignore a11y-click-events-have-key-events -->

@@ -35,7 +35,7 @@ const updateVariorum=async (address,loading)=>{
 $: updateVariorum(tapAddress(),$loadingfolio)
 </script>
 
-<div class="toctext">
+<div class="bodytext">
 <SentenceNav ptk={usePtk('dc')} />
 {@html text}
 

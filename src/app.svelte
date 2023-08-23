@@ -7,6 +7,7 @@ import { onDestroy, onMount } from "svelte";
 import {activefolioid,isAndroid,idlecount,showpaiji,leftmode,online,folioincache,showsponsor,sharing,
     newbie,idletime,landscape,APPVER} from './store.js'
 import {CacheName} from './constant.js'
+import {documentHeight} from './fullscreen.js'
 import {setTimestampPtk} from './mediaurls.js'
 import {fetchFolioList} from './folio.js'
 import TapText from './taptext.svelte'
@@ -34,6 +35,7 @@ let app;
 let loaded=false,timer,bootmessage='啟動中';
 onDestroy(()=>clearInterval(timer))
 onMount(async ()=>{
+    documentHeight();
     bootmessage='try to download ylz.ptk'
     const resylz=await downloadToCache(CacheName,'ylz.ptk',msg=>{
         bootmessage='dc.ptk '+msg;
@@ -64,6 +66,7 @@ onMount(async ()=>{
 
     bootmessage='loaded';
     loaded=true;
+    
     timer=setInterval(()=>{
         showpaiji.set($idlecount>=idletime);
         if (!shownewbie && !showpopup && $showsponsor=='on') {
@@ -123,13 +126,15 @@ $: orientation($landscape)
 <Player/>
 <Notification/>
 {:else}
-<span class="loading">
-系統版本：{APPVER} <a class="toctext" href="https://nissaya.cn/" target="_new">官網</a>
-<br/>如果停在此畫面沒有進度，表示瀏覽器不直持 ECMAScript 2015，無法運行本軟件。
+<div class="bodytext">
+永樂藏 {APPVER} <a href="https://nissaya.cn/" target="_new">官網</a>
+<a href="mailto:dharmacloudpublishing@gmail.com" target="_new">回報錯誤</a>
+<br/>{bootmessage}
 <br/>PC及安卓請改用 Chrome 瀏覽器訪問本頁面。
 <br/>iOS 須 13 版以上，並使用內建的 Safari 。
-</span>
-<br/><span class="toctext">{bootmessage}</span>
+<br/>如果停在此畫面沒有進度，表示瀏覽器不直持 ECMAScript 2015，無法運行本軟件。
+
+</div>
 {/if}
 </div>
 

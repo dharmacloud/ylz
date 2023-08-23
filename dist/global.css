@@ -5,7 +5,8 @@
   --menubar-color:rgb(143, 81, 0);
   --n:rgba(233, 233, 233, 0.7);
   --appbackground:rgba(255, 235, 164);
-  --doc-height:100%;
+  --doc-height:100vh;
+  --textsize:2em;
 }
 
 body{
@@ -22,10 +23,10 @@ body{
 .popup { position:absolute;top:0;left:0;width:100%;height:100%;
   background:var(--appbackground);overflow:hidden;z-index: 99}
 .sidepaiji {position:absolute;overflow:hidden;top:0;height:100%}
-.tabs {--webkit-user-select: none;overflow:hidden  ; font-size:2.2em;
+.tabs {--webkit-user-select: none;overflow:hidden  ; font-size:var(--textsize);
   user-select: none;padding-left: 0.05em; background:var(--menubar-color);color:gold}
 
-.loading {font-size:2em}
+
 .app {background-color: rgb(243, 208, 160); } /* splitpane divider need this */
 
 .closepopup {padding-right:0.3em;cursor:pointer;z-index:999;font-size:2em;position:absolute;right:0;top:0;color:black;font-weight: bold;}
@@ -67,15 +68,16 @@ select {font-size:2em}
   position:relative
 }
 
-.book {font-size:2em;cursor:pointer}
+.bodytext {font-size:var(--textsize)}
+
+.book {font-size:var(--textsize);cursor:pointer}
 .refer {text-decoration: underline;}
 .clickable {cursor:pointer;}
 
 .author {border:gray solid 1px ;border-radius: 0.25em;}
 .selecteditem {background:rgb(255, 173, 42)}
 .hr {height: 1px ;background:black}
-.paralleltext {font-size:2em;}
-.toctext {font-size:2.3em;}
+
 
 .tocitem{margin-left: 0.5em;cursor: pointer;}
 .endmarker {width:100%;text-align: center;height: 3em;}
@@ -215,10 +217,10 @@ select {font-size:2em}
   position:absolute;
   padding-left:0.5em;
   line-height: 100%;
-  padding-top:60vh;
+  padding-top:55vh;
 } 
 .sidesponsortext2{
-  font-size:3.8vh;
+  font-size:3.5vh;
   width:1em;
   position:absolute;
   padding-left:2em;
@@ -239,7 +241,6 @@ a {color:#f99008}
 
 .hitbtn {padding-left:0.2em;padding-right:0.5em;color:red;cursor:pointer;user-select: none}
 .scopebtn {padding-left:0.3em;cursor:pointer;user-select: none;}
-.pager {font-size:2.5em}
 
 .hit {color:red}
 .oddline{background:#fbf4cc}

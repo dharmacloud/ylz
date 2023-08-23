@@ -20,7 +20,7 @@ const showmessage=(_msg)=>{
     clearTimeout(timer);
 }
 const excerptcopy=async ()=>{
-    const text=shareAddress()+'「'+linetext+'」《'+title+'》'+caption;
+    const text=shareAddress()+'\t「'+linetext+'」《'+title+'》'+caption;
     await navigator.clipboard.writeText(text);
     showmessage('已複製經文及連結到剪貼薄');
 }
@@ -39,12 +39,11 @@ const htmlcopy=async ()=>{
     showmessage('已複製HTML格式到剪貼薄');
 }
 </script>
-<div class="toctext">{msg}<br/>{linetext}《{title}》{caption}</div>
+<div class="bodytext">{msg}<br/>{linetext}《{title}》{caption}</div>
 <button on:click={copylink}>複製連結</button>
 <button on:click={excerptcopy}>複製經文及連結</button>
 <button on:click={htmlcopy}>HTML格式連結</button>
 <button on:click={markdowncopy}>MarkDown格式連結</button>
-
 <span>{@html qrcode}</span>
 {shareAddress()}
 <style>

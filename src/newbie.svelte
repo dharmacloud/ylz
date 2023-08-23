@@ -9,7 +9,7 @@ onDestroy(()=>{
 });
 </script>
 <div class="popup">
-<div class="toctext">
+<div class="bodytext">
 <span class="welcome">永樂藏 {APPVER}</span>
 <br/>全屏模式安裝步驟
 <br/>安卓：右上角⋮ →安裝應用程式

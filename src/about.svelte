@@ -1,5 +1,5 @@
 <script>
-import {newbie,showyoutube,showpunc,showsponsor,activefolioid,heightratio, APPVER} from './store.js'
+import {newbie,showyoutube,showpunc,showsponsor,activefolioid,heightratio, APPVER,textsize} from './store.js'
 import Switch from './3rd/switch.svelte';
 import Sponsoring from './sponsoring.svelte';
 import HOF from './hof.svelte'
@@ -11,7 +11,9 @@ import {CacheName} from './constant.js'
 import Slider from './3rd/rangeslider.svelte';
 import {debounce} from 'ptk'
 import { documentHeight } from './fullscreen.js';
-let show=0,clearcount=-1, hratio=[ Math.floor((($heightratio*100)-90)*10) ,0];
+let show=0,clearcount=-1;
+let hratio=[ Math.floor((($heightratio*100)-90)*10) ,0];
+let textsz=[ $textsize ,0];
 const toggleshowsponsoring=()=>show=show==1?0:1;
 const toggleshowdonors=()=>show=show==2?0:2;
 const toggleshowworkers=()=>show=show==3?0:3;
@@ -29,6 +31,10 @@ const setRatio=e=>{
     const j=((e.detail[0]||100));
     heightratio.set( (j/10 + 90)/100 );
     documentHeight();
+}
+const setTextsize=e=>{
+    const j=((e.detail[0]||100));
+    textsize.set(j);
 }
 </script>
 
@@ -48,7 +54,7 @@ class:selected={show==1} on:click={toggleshowsponsoring}>護持</span>
 {/if}
 
 </div>
-<div class="toctext">
+<div class="bodytext">
 {#if show==1}
 <Sponsoring/>
 {:else if show==2}
@@ -60,24 +66,24 @@ class:selected={show==1} on:click={toggleshowsponsoring}>護持</span>
 {:else if show==5 && $showpunc!=='on'}
 <ProjectIntro/>
 {:else}
-<span class="logotitle">永樂藏 {APPVER}</span><a href="https://github.com/dharmacloud/swipegallery/" target=_new>源代碼{@html githubicon}</a>
-<br/>LINE加好友 @fayunshi (法雲知客室)
-<br/>官號<a href="https://lin.ee/1tmTKXi" target=_new>@dharmacloud</a>
-<br/>微信: Sukhanika
-<br/><a href="mailto:dharmacloudpublishing@gmail.com">dharmacloudpublishing@gmail.com</a>
-<br/>若無特別聲明則採用
-<br/><a target=_new href="https://creativecommons.org/publicdomain/zero/1.0/deed.zh">CC0 1.0 通用公共领域贡献</a>
-<br/>點紅色背景文字，複製及分享經文。
+<span class="logotitle">永樂藏</span>
+<br/>版本 <a href="https://github.com/dharmacloud/swipegallery/" target=_new>{APPVER}{@html githubicon}</a>
+<br/>法雲印經會官號<a href="https://lin.ee/1tmTKXi" target=_new>@dharmacloud</a>
+<br/>微信 Sukhanika
+<br/><a href="mailto:dharmacloudpublishing@gmail.com">dharmacloudpublishing[at]gmail</a>
 <hr/>
+<Slider bind:value={textsz} on:input={debounce(setTextsize,300)} max={250} min={80} >
+    <span slot="caption"　style="float:right">{textsz[0]}% 字體大小</span>
+</Slider>
+<br/>    
 <Slider bind:value={hratio} on:input={debounce(setRatio,300)} max={100} min={1} >
-<span slot="caption">縮減全屏高度{hratio[0]}</span>
+<span slot="caption" style="float:right">{hratio[0]}% 全屏高度</span>
 </Slider>
 <br/>
 <Switch bind:value={$showpunc} label="顯示標點符號" design="slider" fontSize="24"/>
+<Switch bind:value={$showsponsor} label="靜置時顯示芳名" design="slider" fontSize="24"/>
+<Switch bind:value={$showyoutube} label="顯示油管影片連結" design="slider" fontSize="24"/>
 <Switch bind:value={$newbie} label="啟動時顯示歡迎畫面" design="slider" fontSize="24"/>
-<Switch bind:value={$showsponsor} label="靜置時顯示功德芳名" design="slider" fontSize="24"/>
-
-<Switch bind:value={$showyoutube} label="顯示油管原始影片連結" design="slider" fontSize="24"/>
 {#if $showpunc=='off'}
 {#if clearcount>-1}已清除{clearcount}
 {:else}

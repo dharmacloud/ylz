@@ -51,7 +51,7 @@ const getCk=(pb,loading)=>{
 $: tocitems=getTocItems($activefolioid,$loadingfolio);
 $: cknow=getCk($activepb,$loadingfolio);
 </script>
-<div  class="toctext">
+<div  class="bodytext">
 {#if !$loadingfolio}
 <Juan {ptk} {closePopup}/>
 <Slider bind:value={folio} on:input={debounce(setFolio,800)} max={$maxfolio} min={1} >

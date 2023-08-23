@@ -33,7 +33,7 @@ const availableDict=(n)=>{
 $: availableDict(nentry,entries);
 
 </script>
-<div class="dictpopup toctext">
+<div class="dictpopup bodytext">
 {#if entries.length}
 <span class="header">
 {#each entries as [distance,entry],idx}
@@ -65,7 +65,7 @@ $: availableDict(nentry,entries);
 <iframe style="border:none" class="iframe" title="wiki" {src}></iframe>
 {/if}
 {:else}
-點要查的字。
+點要查的字。重覆點同一處，顯示分享網址及二維碼。
 {/if}
 </div>
 <style>

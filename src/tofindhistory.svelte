@@ -6,7 +6,7 @@ export const setTofind=tf=>{
     tofind.set(tf);
 }
 </script>
-<div class="toctext">
+<div class="bodytext">
 {#each items as item}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span on:click={()=>setTofind(item)}>{item}</span><!-- svelte-ignore a11y-click-events-have-key-events --><span 

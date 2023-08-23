@@ -45,7 +45,7 @@ $: loadfavorites($favorites);
 </script>
 
 {#if items.length}
-<div class="toctext">本卷♥第
+<div class="bodytext">本卷♥第
 {#each items as item}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="favoriteitem" on:click={()=>gofavorite(item+1)}>{item+1}</span>
@@ -57,7 +57,7 @@ $: loadfavorites($favorites);
 {/if}
 <hr/>
 {#if others.length}
-<div class="toctext">
+<div class="bodytext">
 {#each others as [folioid,count]}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span on:click={()=>gootherfavorite(folioid)}>{booknameOf(folioid)}♥{count}個　</span>

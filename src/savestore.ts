@@ -8,6 +8,7 @@ export const loadSettings=()=>{
     const showsponsor=localStorage.getItem(AppPrefix+'showsponsor')||'off';  
     const showyoutube=localStorage.getItem(AppPrefix+'showyoutube')||'off';  
     const heightratio=parseFloat(localStorage.getItem(AppPrefix+'heightratio')||'1') || 1;   
+    const textsize=parseInt(localStorage.getItem(AppPrefix+'textsize')||'150') ||150;
     let _favorites=localStorage.getItem(AppPrefix+'favorites')||'{}';
     let _preferaudio=localStorage.getItem(AppPrefix+'preferaudio')||'{}';
     let _tofindhistory=localStorage.getItem(AppPrefix+'tofindhistory')||'[]';
@@ -22,7 +23,7 @@ export const loadSettings=()=>{
         favorites={};
         preferaudio={}
     }
-    return {activefolioid,heightratio,tofindhistory,showsponsor,showyoutube,autodict,newbie,favorites,playnextjuan,preferaudio,showpunc};
+    return {activefolioid,heightratio,tofindhistory,textsize,showsponsor,showyoutube,autodict,newbie,favorites,playnextjuan,preferaudio,showpunc};
 }
 
 export const saveSettings=()=>{ //immediate save

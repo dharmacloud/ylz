@@ -148,7 +148,7 @@ const onblur=()=>{
 $: makeSearchable($searchable)
 $: dosearch( value, activeidx,$searchable)
 </script>
-<div class="toctext">
+<div class="bodytext">
 <input class="tofind" placeholder="輸入區" size={8} class:diminput={activeidx>-1} bind:this={theinput} 
 on:focus={onfocus} on:blur={onblur} on:input={onchange} bind:value id="tofind"/>
 {#each items as item,idx}
@@ -160,7 +160,7 @@ on:focus={onfocus} on:blur={onblur} on:input={onchange} bind:value id="tofind"/>
 {#if value=='' && activeidx==-1}
 <SearchHelp/>
 {:else}
-<div class="toctext">
+<div class="bodytext">
 {#each scopes as scope,idx}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="scopebtn" on:click={()=>setScope(idx*2)} class:selected={idx*2==selected}>{scope.caption}</span><!-- svelte-ignore a11y-click-events-have-key-events --><span class="hitbtn" on:click={()=>setScope(idx*2+1)} class:selected={1+idx*2==selected}>{scope.count}</span>
@@ -172,7 +172,7 @@ on:focus={onfocus} on:blur={onblur} on:input={onchange} bind:value id="tofind"/>
     <span on:click={()=>gopage(idx)} class="clickable" class:selected={active}>{caption}</span>
 </Pager>
 </div>
-<div class="toctext">
+<div class="bodytext">
 
 
 {#each excerpts as excerpt,idx}

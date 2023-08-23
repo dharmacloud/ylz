@@ -96,7 +96,7 @@ const goyoutube=id=>{
     window.open("https://youtube.com/watch?v="+id,"_blank");
 }
 </script>
-<div class="toctext">
+<div class="bodytext">
 
 {#each $mediaurls as media,idx}
 {#if idx&& !$playing && media.youtube}

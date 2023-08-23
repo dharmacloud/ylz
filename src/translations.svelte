@@ -54,7 +54,7 @@ const updateTranslation=async (mark,loading)=>{
 }
 $: updateTranslation($tapmark,$loadingfolio);
 </script>
-<div class="paralleltext">
+<div class="bodytext">
 <SentenceNav {ptk}/>
 <div class="hr"/>
 {#each translations as item}
