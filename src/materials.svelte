@@ -1,11 +1,10 @@
 基於以下公開素材：
 <br/>永樂北藏、南藏圖檔(山東省圖書館)
-<br/>金剛經集註(朱棣)
-<br/>梵文原典 
-<br/>1.<a target=_new href="https://www.dsbcproject.org/">Digital Sanskrit Buddhist Canon</a>
-<br/>2.<a target=_new href="https://ancient-buddhist-texts.net">Ancient Buddhist Texts</a>
 <br/>經文及新式標點(CBETA)
+<br/>金剛經集註(朱棣)
+<br/>梵文原典 <a target=_new href="https://www.dsbcproject.org/">Digital Sanskrit Buddhist Canon</a>
 <br/>梵漢佛經對勘叢書(黃寶生，中國社會科學出版社)
+<br/>四部阿含相似經文對照表<a target=_new href="https://suttacentral.net/">SuttaCentral</a>
 <br/>一行佛學詞典之詞條
 <br/>油管公開誦經影片
 <hr/>

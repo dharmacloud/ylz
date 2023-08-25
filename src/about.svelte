@@ -45,7 +45,7 @@ const setTextsize=e=>{
 <span class="clickable" 
 class:selected={show==1} on:click={toggleshowsponsoring}>護持</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class:selected={show==2}  class="clickable" on:click={toggleshowdonors}>芳名</span>
+<span class:selected={show==2}  class="clickable" on:click={toggleshowdonors}>檀越</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class:selected={show==3}  class="clickable" on:click={toggleshowworkers}>伙伴</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -74,14 +74,15 @@ class:selected={show==1} on:click={toggleshowsponsoring}>護持</span>
 
 <span class="logotitle">永樂藏</span>
 <br/>版本 <a href="https://github.com/dharmacloud/swipegallery/" target=_new>{APPVER}{@html githubicon}</a>
-<br/>法雲印經會官號<a href="https://lin.ee/1tmTKXi" target=_new>@dharmacloud</a>
+<br/>LINE官號<a href="https://lin.ee/1tmTKXi" target=_new>@dharmacloud</a>
 <br/>微信 Sukhanika
 <br/><a href="mailto:dharmacloudpublishing@gmail.com">dharmacloudpublishing[at]gmail</a>
+<br/>點焦點文字（紅色背景）分享
 <hr/>
 <Slider bind:value={textsz} on:input={debounce(setTextsize,300)} max={250} min={80} >
     <span slot="caption"　style="float:right">{textsz[0]}% 字體大小</span>
 </Slider>
-<br/>看不到圖版最底下的行才需要調整。
+<br/>看不到圖版最底下的行才需要調整
 <Slider bind:value={hratio} on:input={debounce(setRatio,300)} max={100} min={1} >
 <span slot="caption" style="float:right">{hratio[0]}% 全屏高度</span>
 </Slider>
