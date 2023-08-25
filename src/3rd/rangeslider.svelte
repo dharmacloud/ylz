@@ -47,25 +47,29 @@
     right: ${(100 - Math.max(pos[0], (range ? pos[1] : pos[0])) * 100)||100}%;
   `;
 
- 
-
   function clamp() {
     setPos(value);
     setValue(pos);
   }
+  function adjust(e){
+    if (e.target.classList[0]=='progress') { //left
+      setPos([(value[0]||min)-step,value[1]]);
+      setValue(pos)
+    } else if ((e.target.classList[0]=='track')) {  //right
+      setPos([(value[0]||min)+step,value[1]]);
+      setValue(pos)
+    }
+  }
 </script>
 
-<style>
-  input {
-    display: none;
-  }
-
-</style>
 <div>
 <input type="number" value={value[0]} name={name[0]} />
-<div class="track">
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
+
+<div class="track" on:click={adjust}>
   <div
     class="progress"
+    
     style={progress} />
   <Thumb bind:pos={pos[0]} on:active={({ detail: v }) => active = v}>
     <slot name="left">
@@ -77,3 +81,33 @@
   <slot name="caption"/>
 </div>
 </div>
+
+<style>
+.track {
+  margin: 0.2em 1em;
+  position: relative;
+  height: 1em;
+  width: calc(100% - 2em);
+  border-radius: 0.6em;
+  background: var(--track-bg, #fffdf6);
+}
+.progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 100vh;
+  opacity:0.7;
+  background: var(--progress-bg, #fef1a6);
+}
+input {
+    display: none;
+  }
+.thumb {
+  width: 1.2em;
+  height: 1.2em;
+  border-radius: 0.6em;
+  background: var(--thumb-bg, #d27700);
+}
+</style>

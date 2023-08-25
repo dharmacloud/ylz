@@ -51,6 +51,7 @@ const samesutra=(f1,f2)=>{
     return f1.replace(/\d+$/,'')==f2.replace(/\d+$/,'')
 }
 $: folios=getFolioList(texttype);
+
 </script>
 <div class="tabs">
     <!-- svelte-ignore a11y-click-events-have-key-events -->

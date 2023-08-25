@@ -6,7 +6,7 @@ import Variorum from './variorum.svelte'
 import SearchMain from  './searchmain.svelte'
 import Externals from './externals.svelte'
 import ParText from './partext.svelte'
-import {parseAction, toChineseNumber} from 'ptk'
+import {usePtk,parseAction, toChineseNumber} from 'ptk'
 import {activefolioid,activepb, leftmode,hasVariorum,hasTranslation,hasSanskrit,bookByFolio, tapmark,foliotext} from './store.js'
 export let ptk;
 export let closePopup;
@@ -34,6 +34,7 @@ const humanAddress=addr=>{
 }
 const getLinks=folioid=>{
     //todo 更精準地定位 經 ，目前是以頁首，有時是上一經
+    const dcptk=usePtk("dc");
     const [from,to]=ptk.rangeOfAddress('folio#'+folioid+'.pb#'+($activepb));
     const externals=[],internals=[];
     const agmsjuan=folioid.match(/agms(\d+)$/);
@@ -47,7 +48,7 @@ const getLinks=folioid=>{
         caption='雜'+key+'導讀';
         url='https://buddhaspace.org/agama/'+agmsjuan[1]+'.html#'+toChineseNumber(key);
         externals.push([ caption, url]);
-        col=ptk.columns['par_agms'];
+        col=dcptk.columns['par_agms'];
     }
 
     const agmssjuan=folioid.match(/agmss(\d+)$/);
@@ -55,7 +56,7 @@ const getLinks=folioid=>{
         const at=ptk.nearestTag( to+1 ,'n') -1 ;
         const n=ptk.defines.n;
         key=parseInt(n.fields.id.values[at]);
-        col=ptk.columns['par_agmss'];
+        col=dcptk.columns['par_agmss'];
     }
    
     const agmdjuan=folioid.match(/agmd(\d+)$/);
@@ -67,7 +68,7 @@ const getLinks=folioid=>{
             key=cl.ckid;
             externals.push([ caption, url]);
         }
-        col=ptk.columns['par_agmd']
+        col=dcptk.columns['par_agmd']
     }
     const agmmjuan=folioid.match(/agmm(\d+)$/);
     if (agmmjuan) {
@@ -78,11 +79,11 @@ const getLinks=folioid=>{
             url='https://buddhaspace.org/agama2/sub/'+cl.ckid+'.html';
             externals.push([ caption, url]);
         }
-        col=ptk.columns['par_agmm']
+        col=dcptk.columns['par_agmm']
     }
     const agmujuan=folioid.match(/agmu(\d+)$/);
     if (agmujuan) {
-        col=ptk.columns['par_agmu']
+        col=dcptk.columns['par_agmu']
         const cl=ft.fromFolioPos($tapmark);
         if (cl&&cl.ckid) {
             key=cl.ckid;

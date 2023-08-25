@@ -6,14 +6,19 @@ import {get} from 'svelte/store'
 import {debounce,updateUrl} from 'ptk'
 import ChunkNav from './chunknav.svelte'
 import {goPb} from './nav.js'
-let ck,loff,displayline=0,
+let ck,loff,displayline=0,settingaddress=false,
 alllines=[], lines=[],sutra=[0,0],sutras=[],minsutra=0,maxsutra=0;
 $: activeline=0;
 const loadChunkText=(mark,loading)=>{
-    if (loading) return;
+    if (loading ) return;
     const ft=get(foliotext);
     if (!ft||!ft.fromFolioPos) return;
+    let nsutra=0;
     const {ckid,lineoff}=ft.fromFolioPos(mark);
+    if (settingaddress&&ck==ckid) {
+        settingaddress=false;
+        return ;
+    }
     loff=lineoff;
     sutras.length=0;
     alllines=[];
@@ -29,10 +34,14 @@ const loadChunkText=(mark,loading)=>{
                 minsutra=n;
             }
             maxsutra=n;
+            if (i<lineoff) nsutra=sutras.length;
             sutras.push(i);
         }
     }
-    updateText()
+    if (nsutra!==sutra[0]) sutra[0]=nsutra;
+    activeline=lineoff-sutras[nsutra];
+    updateText();
+    
     if (ck==ckid) {
         idx=sutra[0];
         lines=alllines.slice( sutras[idx], sutras[idx+1]);
@@ -40,7 +49,6 @@ const loadChunkText=(mark,loading)=>{
     } else {
         sutra[0]=0; //select first sutra of this chunk
         displayline=sutras[0]||0;
-        activeline=0;
     }
     ck=ckid;
 }
@@ -63,6 +71,7 @@ const setAddress=(lineoff)=>{
     if (!ft||!ft.fromFolioPos) return;
     const [pbid,line,ch]=ft.toFolioPos(ck,lineoff) ;
     goPb(pbid,ck,line);
+    settingaddress=true;
     tapmark.set([pbid,line,ch]);
     activeline=lineoff-displayline;
     updateUrl(tapAddress());

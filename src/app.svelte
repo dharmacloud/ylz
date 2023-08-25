@@ -38,7 +38,7 @@ onMount(async ()=>{
     documentHeight();
     bootmessage='try to download ylz.ptk'
     const resylz=await downloadToCache(CacheName,'ylz.ptk',msg=>{
-        bootmessage='dc.ptk '+msg;
+        bootmessage='ylz.ptk '+msg;
     })    
     bootmessage='try to download ylz_sankrit.ptk'
     const resylzsanskrit=await downloadToCache(CacheName,'ylz_sanskrit.ptk',msg=>{
@@ -128,12 +128,7 @@ $: orientation($landscape)
 {:else}
 <div class="bodytext">
 永樂藏 {APPVER} <a href="https://nissaya.cn/" target="_new">官網</a>
-<a href="mailto:dharmacloudpublishing@gmail.com" target="_new">回報錯誤</a>
 <br/>{bootmessage}
-<br/>PC及安卓請改用 Chrome 瀏覽器訪問本頁面。
-<br/>iOS 須 13 版以上，並使用內建的 Safari 。
-<br/>如果停在此畫面沒有進度，表示瀏覽器不直持 ECMAScript 2015，無法運行本軟件。
-
 </div>
 {/if}
 </div>

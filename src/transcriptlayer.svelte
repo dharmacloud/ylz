@@ -81,14 +81,14 @@ const stripstyle=(i,strip)=>{
         playnext();
     }
     const playertime=player?.currentTime;
-    let timedelta=playertime-timestamp[line];//player 跑得比較快。（因換頁動畫時間），需修正
+    let timedelta=playertime-timestamp[line]/100;//player 跑得比較快。（因換頁動畫時間），需修正
     if (Math.abs(timedelta)>3 ) { //不會差這麼多，是快速滑輪造成。getCurrentTime 未切到
         timedelta=0.02;
     }
 
     if (i==0) { //翻頁timer
-        const lastlinet=timestamp[line+fl] || timestamp[timestamp.length-1];
-        const nextpagetime= ( lastlinet - timestamp[line] -timedelta)*1000;
+        const lastlinet=timestamp[line+fl]/100 || timestamp[timestamp.length-1]/100;
+        const nextpagetime= ( lastlinet - timestamp[line]/100 -timedelta)*1000;
         timers.push( setTimeout(()=>{
             if ( parseInt(get(activepb))<totalpages) { 
                 continueplay.set(true); //auto swipe , do not trigger 
@@ -101,7 +101,7 @@ const stripstyle=(i,strip)=>{
             }
         },nextpagetime));
     }
-    let delay=(timestamp[line+i]  - timestamp[line] - timedelta )*1000 ;
+    let delay=(timestamp[line+i]/100  - timestamp[line]/100 - timedelta )*1000 ;
     if (i==0&&delay<30) delay=30;// too small value  cause immediate trigger fire
     // console.log(i,'delay',delay)
     const fire=(function(){
@@ -115,9 +115,9 @@ const stripstyle=(i,strip)=>{
     
     timers.push(setTimeout( fire,  delay)); 
 
-    duration=timestamp[line+i+1]-timestamp[line+i];
+    duration=timestamp[line+i+1]/100-timestamp[line+i]/100;
     if (duration==0 && i+1 <fl) {//empty line , try next line
-        duration=timestamp[line+i+2]-timestamp[line+i];
+        duration=timestamp[line+i+2]/100-timestamp[line+i]/100;
     }
     out.push('transition:height '+duration+'s  linear'); //
 

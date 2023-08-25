@@ -50,7 +50,7 @@ $: if ($sharing) thetab='dict';
         <span class='clickable' class:selected={thetab=="about"} on:click={()=>thetab="about"}>{#if !ls}{@html "&nbsp;"} {/if}🙏{#if ls}首{/if}</span>
 
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="list"} on:click={()=>thetab="list"}>📚{#if ls}卷{/if}</span>
+        <span class='clickable' class:selected={thetab=="list"} on:click={()=>thetab="list"}>📚{#if ls}錄{/if}</span>
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="toc"} on:click={()=>thetab="toc"}>🧭{#if ls}次{/if}</span>
         

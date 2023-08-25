@@ -15,21 +15,21 @@ const listCandidate=(tf)=>{
 }
 $: listCandidate($tofind)
 </script>
-<div class="toctext">
+<div class="bodytext">
 {#each starts as i}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="clickable" on:click={()=>searchable.set(entries.get(i))}>{entries.get(i)+" "}</span>
 {/each}
 </div>
 <hr/>
-<div class="toctext">
+<div class="bodytext">
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 {#each ends as i}
 <span class="clickable" on:click={()=>searchable.set(entries.get(i))}>{entries.get(i)+" "}</span>
 {/each}
 </div>
 <hr/>
-<div class="toctext">
+<div class="bodytext">
 {#each middles as i}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="clickable" on:click={()=>searchable.set(entries.get(i))}>{entries.get(i)+" "}</span>

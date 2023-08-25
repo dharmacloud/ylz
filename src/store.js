@@ -2,7 +2,7 @@ import {updateSettings,settings} from './savestore.ts'
 import {bsearchNumber, usePtk,makeAddress} from 'ptk'
 import { get,writable } from 'svelte/store';
 import {silence} from './mediaurls.js'
-export const APPVER = '23.8.23'
+export const APPVER = '23.8.25'
 //const folio=folioPosFromAddress(addressFromUrl());
 
 export const online=writable(navigator.onLine);
@@ -151,11 +151,12 @@ export const parallelFolios=(ptk,folioid)=>{
     folioid=folioid||get(activefolioid);
     const folio=ptk.defines.folio;
     const at=folioid.indexOf('_');
-    const prefix=~at?folioid.slice(0,at ):folioid;
+    const prefix=(~at?folioid.slice(0,at ):folioid).replace(/1$/,'');//only accept juan 1
     const out=[],idarr=folio.fields.id.values;
-    for (let i=0;i<idarr.length;i++) {
+    for (let i=0;i<idarr.length;i++) {        
         if (~idarr[i].indexOf('_variorum')) continue;
-        if (idarr[i].startsWith(prefix+'_') && idarr[i]!==folioid) {
+        if (idarr[i].startsWith(prefix+'_') && idarr[i]!==folioid
+        && !idarr[i].replace(/1$/,'').match(/\d$/) ) { //only accept juan 1
             out.push(i)
         }
     }

@@ -5,6 +5,7 @@ import Sponsoring from './sponsoring.svelte';
 import HOF from './hof.svelte'
 import Workers from './workers.svelte'
 import ProjectIntro from './project.svelte'
+import StyleIntro from './styleintro.svelte'
 import Materials from './materials.svelte'
 import { githubicon } from './icons.js';
 import {CacheName} from './constant.js'
@@ -18,6 +19,7 @@ const toggleshowsponsoring=()=>show=show==1?0:1;
 const toggleshowdonors=()=>show=show==2?0:2;
 const toggleshowworkers=()=>show=show==3?0:3;
 const toggleshowmaterials=()=>show=show==4?0:4;
+const toggleshowstyle=()=>show=show==6?0:6;
 const toggleshowproject=()=>show=show==5?0:5;
 
 const clearCache=async (ext)=>{
@@ -45,14 +47,15 @@ class:selected={show==1} on:click={toggleshowsponsoring}>護持</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class:selected={show==2}  class="clickable" on:click={toggleshowdonors}>芳名</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
+<span class:selected={show==3}  class="clickable" on:click={toggleshowworkers}>伙伴</span>
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class:selected={show==4}  class="clickable" on:click={toggleshowmaterials}>素材</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class:selected={show==3}  class="clickable" on:click={toggleshowworkers}>伙伴</span>
-{#if $showpunc!=='on'}
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class:selected={show==5}  class="clickable" on:click={toggleshowproject}>項目</span>
+{#if $showpunc=='on'}
+<span class:selected={show==5}  class="clickable" on:click={toggleshowproject}>關於</span>
+{:else}
+<span class:selected={show==6}  class="clickable" on:click={toggleshowstyle}>項目</span>
 {/if}
-
 </div>
 <div class="bodytext">
 {#if show==1}
@@ -63,9 +66,12 @@ class:selected={show==1} on:click={toggleshowsponsoring}>護持</span>
 <Workers/>
 {:else if show==4}
 <Materials/>
-{:else if show==5 && $showpunc!=='on'}
+{:else if show==5}
+<StyleIntro/>
+{:else if show==6}
 <ProjectIntro/>
 {:else}
+
 <span class="logotitle">永樂藏</span>
 <br/>版本 <a href="https://github.com/dharmacloud/swipegallery/" target=_new>{APPVER}{@html githubicon}</a>
 <br/>法雲印經會官號<a href="https://lin.ee/1tmTKXi" target=_new>@dharmacloud</a>
@@ -75,7 +81,7 @@ class:selected={show==1} on:click={toggleshowsponsoring}>護持</span>
 <Slider bind:value={textsz} on:input={debounce(setTextsize,300)} max={250} min={80} >
     <span slot="caption"　style="float:right">{textsz[0]}% 字體大小</span>
 </Slider>
-<br/>    
+<br/>看不到圖版最底下的行才需要調整。
 <Slider bind:value={hratio} on:input={debounce(setRatio,300)} max={100} min={1} >
 <span slot="caption" style="float:right">{hratio[0]}% 全屏高度</span>
 </Slider>
@@ -85,15 +91,18 @@ class:selected={show==1} on:click={toggleshowsponsoring}>護持</span>
 <Switch bind:value={$showyoutube} label="顯示油管影片連結" design="slider" fontSize="24"/>
 <Switch bind:value={$newbie} label="啟動時顯示歡迎畫面" design="slider" fontSize="24"/>
 {#if $showpunc=='off'}
+
 {#if clearcount>-1}已清除{clearcount}
 {:else}
 <span class="danger">清除離線文件</span>
 {/if}
+
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="clickable" on:click={()=>clearCache(".ptk")}>數據庫</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="clickable" on:click={()=>clearCache($activefolioid+".zip")}>本卷圖檔</span>
 {/if}
+
 <div class="endmarker">※※※</div>
 
 {/if}
