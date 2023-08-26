@@ -88,7 +88,7 @@ class:selected={show==1} on:click={toggleshowsponsoring}>護持</span>
 </Slider>
 <br/>
 <Switch bind:value={$showpunc} label="顯示標點符號" design="slider" fontSize="24"/>
-<Switch bind:value={$showsponsor} label="靜置時顯示芳名" design="slider" fontSize="24"/>
+<Switch bind:value={$showsponsor} label="靜置時顯示施主" design="slider" fontSize="24"/>
 <Switch bind:value={$showyoutube} label="顯示油管影片連結" design="slider" fontSize="24"/>
 <Switch bind:value={$newbie} label="啟動時顯示歡迎畫面" design="slider" fontSize="24"/>
 {#if $showpunc=='off'}

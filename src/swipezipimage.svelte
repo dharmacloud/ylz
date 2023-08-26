@@ -281,7 +281,7 @@ const toggleplaybtn=()=>{
     if (!get(audioid)) {
         if ($mediaurls.length<2) return;
         const pick=  Math.floor(Math.random()*($mediaurls.length-1))+1;
-        const vid= $preferaudio[$activefolioid] || $mediaurls[pick]?.vid;
+        const vid= $preferaudio[$activefolioid] || $mediaurls[pick||1]?.vid;
         selectmedia(vid);
     } else {
         selectmedia('');
