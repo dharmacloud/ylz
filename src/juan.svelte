@@ -49,6 +49,6 @@ $: juans=loadJuan($activefolioid,$loadingfolio);
     </Pager>  
 {:else}
 <Slider bind:value={juan} on:input={debounce(gotojuan,300)} max={juans.length} min={1} >
-    <span slot="caption" style="float:right">錄{(juan[0]||1)}/{juans.length}</span></Slider>
+    <span slot="caption" style="float:right">卷{(juan[0]||1)}/{juans.length}</span></Slider>
 
 {/if}
