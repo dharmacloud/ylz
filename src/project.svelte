@@ -1,5 +1,5 @@
 <div>
-<a href="https://docs.google.com/document/d/16m-DGbSTMpM67WSWHaojbRRWtUi2FfovgkdeWhFitKk/edit?usp=sharing">補版計劃</a>
+<a target=_new href="https://docs.google.com/document/d/16m-DGbSTMpM67WSWHaojbRRWtUi2FfovgkdeWhFitKk/edit?usp=sharing">補版計劃</a>
 佛法是中華文明的三大組成部份(儒釋道)中唯一的非原生文明，佛經的翻譯和編修是大規模的文化交流工程，其在文明史的地位，不亞於阿拉伯的百年翻譯運動。
 <br/>因此，以佛法為依托的文化符號，能夠將中華文明以較小的阻力，散播至儒家文化圈以外。
 <br/>漢傳佛教徒素有勇於嘗試新科技的傳統，公元868年（唐咸通九年），在雕版印刷術萌芽之初，印行了金剛經（敦煌唐刻本），比歐洲早五百年。
