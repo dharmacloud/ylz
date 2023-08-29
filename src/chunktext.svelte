@@ -64,7 +64,7 @@ const updateText=()=>{
 $: loadChunkText($tapmark,$loadingfolio);
 
 const renderLine=line=>{
-    return line.replace(/\^[a-z]#?[a-z\d]*/g,'');
+    return line.replace(/\^[a-z_]#?[a-z\d]*/g,'');
 }
 const setAddress=(lineoff)=>{
     const ft=get(foliotext);

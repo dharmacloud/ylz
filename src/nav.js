@@ -55,7 +55,7 @@ export const loadFolio=(folioid,func)=>{
 export const allJuan=(ptk,folioid)=>{
     folioid=folioid||get(activefolioid);
     const arrfolioid=ptk.defines.folio.fields.id.values;
-    const m=folioid.match(/([a-z]+)(\d+$)/);
+    const m=folioid.match(/([a-z\_]+)(\d+$)/);
     const juans=[]
     if (!m) return [];
     for (let i=0;i<arrfolioid.length;i++) {

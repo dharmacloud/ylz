@@ -7,14 +7,13 @@ import Slider from './3rd/rangeslider.svelte';
 export let closePopup;
 export let ptk;
 let juans=[]; //find out all juan
-const m=$activefolioid.match(/([a-z]+)(\d+$)/);
+const m=$activefolioid.match(/([a-z_]+)(\d+$)/);
 let currentjuan=m?parseInt(m[2]):1;
 let juan=[1,0];
 const gojuan=(juan)=>{
     const fid=$activefolioid;
     const newid=fid.replace(/\d+$/,juan);
     if (newid==fid) return;
-    console.log('juan',juan)
     loadFolio( newid,function(){
         activepb.set('1');
         tapmark.set(['1',0,0]);
@@ -26,13 +25,13 @@ const gojuan=(juan)=>{
 
 const loadJuan=(folioid,loading)=>{
     if (!ptk || loading) return [];
-    const m=folioid.match(/([a-z]+)(\d+$)/);
+    const m=folioid.match(/([a-z_]+)(\d+$)/);
     if (!m) return [];
-    currentjuan=parseInt(m[2]);
     juan[0]=currentjuan;
-    return allJuan(ptk,folioid).map((it,idx)=>{
+    const juans=allJuan(ptk,folioid).map((it,idx)=>{
         return {caption:it, idx:parseInt(idx), id:(idx+1).toString() }
     });
+    return juans;
 }
 const gotojuan=e=>{
     const j=((e.detail[0]||1)).toString();

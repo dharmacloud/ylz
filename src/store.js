@@ -2,7 +2,7 @@ import {updateSettings,settings} from './savestore.ts'
 import {bsearchNumber, usePtk,makeAddress} from 'ptk'
 import { get,writable } from 'svelte/store';
 import {silence} from './mediaurls.js'
-export const APPVER = '23.8.27'
+export const APPVER = '23.8.29'
 //const folio=folioPosFromAddress(addressFromUrl());
 
 export const online=writable(navigator.onLine);
