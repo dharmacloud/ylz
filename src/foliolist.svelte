@@ -6,8 +6,9 @@ import {activefolioid, parallelFolios,stopAudio,folioincache,online, activepb} f
 export let closePopup=function(){};
 let texttype=0;
 const texttypeOf=prefix=>{
-    if (prefix.slice(0,3)=='agm') return 1; //聲聞經
-    if (prefix=='lastword') return 1; //聲聞經
+    if (prefix.slice(0,3)=='agm'||prefix=='lastword') return 1; //聲聞經
+    if (prefix.slice(0,5)=='vnybs') return 4; //大乘律
+    if (prefix.slice(0,3)=='vny') return 3; //聲聞律
     return 2;//大乘經
 }
 const getFolioList=(texttype=0)=>{
@@ -56,11 +57,13 @@ $: folios=getFolioList(texttype);
 </script>
 <div class="tabs">
     <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
     <span class="clickable" class:selected={texttype==1}  on:click={()=>texttype=texttype==1?0:1}>聲聞經</span>
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <span  class="clickable" class:selected={texttype==3}  on:click={()=>texttype=texttype==3?0:3}>聲聞律</span>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <span  class="clickable" class:selected={texttype==2}  on:click={()=>texttype=texttype==2?0:2}>大乘經</span>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <span  class="clickable" class:selected={texttype==4}  on:click={()=>texttype=texttype==4?0:4}>大乘律</span>
 </div>
     
 {#each folios as [nfolio,folioid,pars]}

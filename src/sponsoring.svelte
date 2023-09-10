@@ -2,7 +2,7 @@
 </script>
 <hr/>
 台灣第一銀行(007)東勢分行
-<br/>帳號：<span class="bankaccount">4215020663</span> 
+<br/>帳號：<span class="bankaccount">42150203663</span> 
 <br/>戶名：<span class="bankaccount">王宗景</span>
 <hr/>
 LINE Pay：請用id加好友 <a href="https://line.me/ti/p/n1m_j-z2AC" target=_new>@fayunshi</a>（法雲知客室）進聊天室，右下角＋→手機轉帳。

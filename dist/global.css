@@ -10,6 +10,7 @@
   --track-bg: #fffdf6;
   --progress-bg: #fef1a6;
   --thumb-bg: #d27700;
+  --hyperlink:#f99008
 }
 
 body{
@@ -211,7 +212,8 @@ select {font-size:2em}
 .dictgroup {background:#ffb85b}
 
 
-a {color:#f99008}
+a {var(--hyperlink)}
+.hyperlink {color:var(--hyperlink)}
 
 .parallelfolio {font-size:90% ; padding-left:0.1em;padding-right:0.1em;border-radius: 5px;border:#d27700 1px dotted}
 

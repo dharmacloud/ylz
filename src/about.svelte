@@ -12,13 +12,14 @@ import {CacheName} from './constant.js'
 import Slider from './3rd/rangeslider.svelte';
 import {debounce} from 'ptk'
 import { documentHeight } from './fullscreen.js';
+import CheckUpdate from './checkupdate.svelte';
 let show=0,clearcount=-1;
-let hratio=[ Math.floor((($heightratio*100)-90)*10) ,0];
+let hratio=[ Math.floor((($heightratio*100)-90)*10) ,0]; 
 let textsz=[ $textsize ,0];
 const toggleshowsponsoring=()=>show=show==1?0:1;
 const toggleshowdonors=()=>show=show==2?0:2;
 const toggleshowworkers=()=>show=show==3?0:3;
-const toggleshowmaterials=()=>show=show==4?0:4;
+const toggleshowmaterials=()=>show=show==4?0:4; 
 const toggleshowstyle=()=>show=show==6?0:6;
 const toggleshowproject=()=>show=show==5?0:5;
 
@@ -73,6 +74,7 @@ class:selected={show==1} on:click={toggleshowsponsoring}>護持</span>
 {:else}
 
 <span class="logotitle">永樂藏</span>
+<CheckUpdate/>
 <br/>版本 <a href="https://github.com/dharmacloud/swipegallery/" target=_new>{APPVER}{@html githubicon}</a>
 <br/>LINE官號<a href="https://lin.ee/1tmTKXi" target=_new>@dharmacloud</a>
 <br/>微信 Sukhanika

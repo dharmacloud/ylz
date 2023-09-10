@@ -65,7 +65,7 @@
 <div>
 <input type="number" value={value[0]} name={name[0]} />
   <!-- svelte-ignore a11y-click-events-have-key-events -->
-
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="track" on:click={adjust}>
   <div
     class="progress"

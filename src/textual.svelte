@@ -13,7 +13,7 @@ export let closePopup;
 
 const humanAddress=addr=>{
     const act=parseAction(addr);
-    let out='';
+    let out='',isNikaya=false;
     for (let i=0;i<act.length;i++) {
         const [tagname,v]=act[i];
         if (tagname=='bk') {
@@ -22,10 +22,27 @@ const humanAddress=addr=>{
             else if (v=='agmss') out+='別';
             else if (v=='agmd') out+='長';
             else if (v=='agmu') out+='增';
+            
+        } else if (tagname=='ak') {
+            if (v=='mn') out+='中部';
+            else if (v=='dn') out+='長部';
+            else if (v=='an') out+='增支';
+            else if (v=='sn') out+='相應';
+            isNikaya=!!v.match(/[dmsa]n/);
         } else if (tagname=='ck') {
-            const [start]=ptk.rangeOfAddress(addr);
-            const ck=ptk.nearestChunk(start);
-            out+=ck?.caption.replace(/\d+$/g,'')||''; //remove tailing number
+            if (isNikaya) {
+                if (out=='相應') {
+                    out=v.slice(1)+out;
+                } else if (out=='增支') {
+                    out+=v.slice(1)+'集';
+                } else {
+                    out+=v.slice(1)+'經';
+                }
+            } else {
+                const [start]=ptk.rangeOfAddress(addr);
+                const ck=ptk.nearestChunk(start);
+                out+=ck?.caption.replace(/\d+$/g,'')||''; //remove tailing number
+            }
         } else if (tagname=='n') {
             out+=v+'經';
         }
@@ -89,10 +106,23 @@ const getLinks=folioid=>{
             key=cl.ckid;
         }
     }
+
+    
     if (col && key) {
         const at2=col.keys.indexOf(key.toString());
         const pars=(col.parallels[at2]||'').split(',');
-        internals.push(... pars.map(par=>[humanAddress(par),par]));
+        
+        for (let i=0;i<pars.length;i++) {
+            const par=pars[i];
+            if (par.match(/ak#[dmsa]n/)) {
+                const host=location.host.replace('5000','5080');
+                const url=location.protocol+'//'+host+location.pathname.replace('ylz','sz')+'#'+par;
+                externals.push([humanAddress(par),url]);
+            } else {
+                internals.push([humanAddress(par),par]);
+            }
+        }
+        
     }
     if (thetab.startsWith('link')) {
         thetab='chunktext'
@@ -134,10 +164,10 @@ $: [externals,internals]=getLinks($activefolioid,$activepb);
 {/each}
 
 
-{#if externals.length}
+{#key externals}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <Externals {closePopup} links={externals}/>
-{/if}
+{/key}
 
 
 </div>

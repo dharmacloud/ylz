@@ -1,11 +1,11 @@
 <script>
-import { openPtk,addressFromUrl} from 'ptk'
+import { openPtk,addressFromUrl, usePtk} from 'ptk'
 import SwipeZipImage from "./swipezipimage.svelte";
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import {downloadToCache} from 'ptk/platform/downloader.js'
 import { onDestroy, onMount } from "svelte";
 import {activefolioid,isAndroid,idlecount,showpaiji,leftmode,online,folioincache,showsponsor,sharing,
-    newbie,idletime,landscape,APPVER} from './store.js'
+    newbie,idletime,landscape,APPVER,ptks} from './store.js'
 import {CacheName} from './constant.js'
 import {documentHeight} from './fullscreen.js'
 import {setTimestampPtk} from './mediaurls.js'
@@ -34,33 +34,30 @@ window.addEventListener('offline', handleConnection);
 let app;
 let loaded=false,timer,bootmessage='啟動中';
 onDestroy(()=>clearInterval(timer))
+
+
+const openptk=async name=>{
+    bootmessage='try to download '+name+'.ptk'
+    const res=await downloadToCache(CacheName,name+'.ptk',msg=>{
+        bootmessage=name+'.ptk '+msg;
+    })
+    const buf=await res.arrayBuffer();
+    const ptk=await openPtk(name,new Uint8Array(buf));
+    return ptk;
+}
+
 onMount(async ()=>{
     documentHeight();
-    bootmessage='try to download ylz.ptk'
-    const resylz=await downloadToCache(CacheName,'ylz.ptk',msg=>{
-        bootmessage='ylz.ptk '+msg;
-    })    
-    bootmessage='try to download ylz_sankrit.ptk'
-    const resylzsanskrit=await downloadToCache(CacheName,'ylz_sanskrit.ptk',msg=>{
-        bootmessage='ylz_sanskrit.ptk '+msg;
-    })
-    bootmessage='try to download dc.ptk'
-    const resdc=await downloadToCache(CacheName,'dc.ptk',msg=>{
-        bootmessage='dc.ptk '+msg;
-    })  
+    for (let i=0;i<ptks.length;i++) {
+        const ptk=await openptk(ptks[i])
+        bootmessage='open ptk '+ptks[i];
+        if (ptks[i]=='ylz') console.log(ptk)
+    }
 
     bootmessage='fetching foliolist from cache';
     await fetchFolioList(folioincache);
-    bootmessage='open ylz.ptk';
-    ptk=await openPtk("ylz",new Uint8Array(await resylz.arrayBuffer()));
-    
-    bootmessage='open ylz_sanskrit.ptk';
-    await openPtk("ylz_sanskrit",new Uint8Array(await resylzsanskrit.arrayBuffer()));
 
-    bootmessage='open dc.ptk';
-    const dcptk=await openPtk("dc",new Uint8Array(await resdc.arrayBuffer()));
-    setTimestampPtk(dcptk);
-
+    ptk=usePtk('ylz');
     bootmessage='load folio address from url';
     await loadAddress(ptk,addressFromUrl());
 

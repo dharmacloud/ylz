@@ -2,7 +2,7 @@ import {updateSettings,settings} from './savestore.ts'
 import {bsearchNumber, usePtk,makeAddress} from 'ptk'
 import { get,writable } from 'svelte/store';
 import {silence} from './mediaurls.js'
-export const APPVER = '23.8.29'
+export const APPVER = '23.9.9'
 //const folio=folioPosFromAddress(addressFromUrl());
 
 export const online=writable(navigator.onLine);
@@ -74,6 +74,7 @@ export const remainrollback=writable(-1);//infinite
 export const newbie=writable(settings.newbie);
 export const idlecount=writable(0);
 export const showpaiji=writable(false);
+export const ptks=['ylz','ylz_sanskrit','dc'];
 
 activefolioid.subscribe((activefolioid)=>updateSettings({activefolioid}));
 autodict.subscribe((autodict)=>updateSettings({autodict}));
@@ -200,7 +201,6 @@ export const folioHolderWidth=(ls,ratio=1,_swiper)=>{
 }
 
 export const paijitexts=[
-    '中部全國供佛齋僧大會',
     '施主※陳碧吟',
     '施主※甯耀南',
     '施主※葉雅柏',
