@@ -1,10 +1,11 @@
 <script>
-import {ptks} from './store.js'
+import {ptks,tosim} from './store.js'
 import {onMount} from 'svelte'
 import {isLatest,downloadToCache} from 'ptk/platform/downloader.js'
 import {poolDel,openPtk,usePtk} from 'ptk'
 
 import { CacheName } from './constant.js';
+    import { _ } from './textout.js';
 $: updatestatus=ptks.map(it=>[it, 'checking']);
 let needupdate=ptks.length;
 onMount(async ()=>{
@@ -45,4 +46,4 @@ const updateptk=async idx=>{
 {/if}
 {/each}
 {downloadmsg}
-{#if needupdate<1}所有數據皆是最新版{/if}
+{#if needupdate<1}{_("已安裝最新數據",$tosim)}{/if}

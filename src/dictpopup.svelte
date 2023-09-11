@@ -1,4 +1,6 @@
 <script>
+import { _ } from "./textout.ts";
+
 export let entries=[],ptk,wikipedia,fgdzd,dfb;
 let nentry=0;
 let src='',showing='';
@@ -65,7 +67,7 @@ $: availableDict(nentry,entries);
 <iframe style="border:none" class="iframe" title="wiki" {src}></iframe>
 {/if}
 {:else}
-點要查的字詞。
+{_("點要查的字詞。")}
 {/if}
 </div>
 <style>

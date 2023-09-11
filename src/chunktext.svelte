@@ -5,7 +5,9 @@ import {tapmark,foliotext,loadingfolio,tapAddress} from  './store.js'
 import {get} from 'svelte/store'
 import {debounce,updateUrl} from 'ptk'
 import ChunkNav from './chunknav.svelte'
+import Endmarker from './endmarker.svelte';
 import {goPb} from './nav.js'
+import {_} from './textout.ts'
 let ck,loff,displayline=0,settingaddress=false,
 alllines=[], lines=[],sutra=[0,0],sutras=[],minsutra=0,maxsutra=0;
 $: activeline=0;
@@ -64,7 +66,7 @@ const updateText=()=>{
 $: loadChunkText($tapmark,$loadingfolio);
 
 const renderLine=line=>{
-    return line.replace(/\^[a-z_]#?[a-z\d]*/g,'');
+    return _(line.replace(/\^[a-z_]#?[a-z\d]*/g,''));
 }
 const setAddress=(lineoff)=>{
     const ft=get(foliotext);
@@ -113,5 +115,5 @@ const setSutra=e=>{
 <div on:click={()=>setAddress(displayline+idx)} class:activeline={activeline==idx}>{@html renderLine(line)}</div>
 {/each}
 {/key}
-<div class="endmarker">※※※</div>
+<Endmarker/>
 </div>

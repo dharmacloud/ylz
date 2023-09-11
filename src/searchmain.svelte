@@ -1,9 +1,13 @@
 <script>
 import { splitUTF32Char ,listExcerpts, parseOfftext} from 'ptk';
-import { addTofind, leftmode, searchable, tofind} from './store.js'
+import { addTofind, leftmode, searchable, tofind,tosim} from './store.js'
+
 import { goPtkLine } from './nav.js';
 import SearchHelp from './searchhelp.svelte'
 import Pager from './comps/pager.svelte';
+import {_} from './textout.ts'
+import Endmarker from './endmarker.svelte';
+import { fromSim } from 'lossless-simplified-chinese';
 export let ptk;
 let items=[], theinput, activeidx=-1, value='',
 excerpts=[],chunkhits=[],
@@ -150,27 +154,28 @@ $: dosearch( value, activeidx,$searchable)
 $: value=$tofind;
 </script>
 <div class="bodytext">
-<input class="tofind" placeholder="輸入區" size={8} class:diminput={activeidx>-1} bind:this={theinput} 
+<input class="tofind" placeholder={_("輸入區")} size={8} class:diminput={activeidx>-1} bind:this={theinput} 
 on:focus={onfocus} on:blur={onblur} on:input={onchange} bind:value id="tofind"/>
 {#each items as item,idx}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class="searchable" class:selectedsearchable={idx<=activeidx} on:click={()=>setInput(idx)}>{item}</span>
+<span class="searchable" class:selectedsearchable={idx<=activeidx} on:click={()=>setInput(idx)}>{_(item)}</span>
 {/each}
-{#if !items.length}【候選區】{/if}
+{#if !items.length}【{_("候選區")}】{/if}
 </div>
 {#if value=='' && activeidx==-1}
 <SearchHelp/>
+<Endmarker/>
 {:else}
 <div class="bodytext">
 {#each scopes as scope,idx}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class="scopebtn" on:click={()=>setScope(idx*2)} class:selected={idx*2==selected}>{scope.caption}</span><!-- svelte-ignore a11y-click-events-have-key-events --><span class="hitbtn" on:click={()=>setScope(idx*2+1)} class:selected={1+idx*2==selected}>{scope.count}</span>
+<span class="scopebtn" on:click={()=>setScope(idx*2)} class:selected={idx*2==selected}>{_(scope.caption)}</span><!-- svelte-ignore a11y-click-events-have-key-events --><span class="hitbtn" on:click={()=>setScope(idx*2+1)} class:selected={1+idx*2==selected}>{scope.count}</span>
 {/each}
 </div>
 <div class="pager">
 <Pager caption={rangecaption} count={pagecount} bind:now onselect={gopage} let:idx let:caption let:active>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <span on:click={()=>gopage(idx)} class="clickable" class:selected={active}>{caption}</span>
+    <span on:click={()=>gopage(idx)} class="clickable" class:selected={active}>{_(caption)}</span>
 </Pager>
 </div>
 <div class="bodytext">
@@ -180,19 +185,19 @@ on:focus={onfocus} on:blur={onblur} on:input={onchange} bind:value id="tofind"/>
 <div class="excerptline" class:oddline={idx%2==0}>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="excerptseq clickable" class:selected={selecteditem==idx} on:click={()=>go(idx+(now*PERPAGE))}>{idx+(now*PERPAGE)+1}
-{excerpt.puretext}</span></div>
+{_(excerpt.puretext)}</span></div>
 {/each}
 
 {#each chunkhits as chit,idx}
 <div class="excerptline" class:oddline={idx%2==0}>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="excerptseq clickable" class:selected={selecteditem==idx} on:click={()=>gock(idx)}>{idx+(now*PERPAGE)+1}
-{chit.ck.bk?.caption}/{chit.ck.caption}</span>
+{_(chit.ck.bk?.caption)}/{_(chit.ck.caption)}</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span on:click={()=>setChunkScope(chit.ck)} class="clickable hit">{" "+chit.hits}</span></div>
 {/each}
 
-
+<Endmarker/>
 </div>
 
 

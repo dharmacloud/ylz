@@ -1,7 +1,8 @@
 <script>
 import {parseOfftext} from 'ptk'
 import QRCode from 'qrcode'
-import {shareAddress, foliotext,tapmark} from './store.js'
+import {shareAddress, foliotext,tapmark,tosim} from './store.js'
+import {_} from './textout.ts'
 import { onMount } from 'svelte';
 /* TODO  add more sentence */
 const copylinkmsg='已複製連結到剪貼薄'
@@ -39,11 +40,12 @@ const htmlcopy=async ()=>{
     showmessage('已複製HTML格式到剪貼薄');
 }
 </script>
-<div class="bodytext">{msg}<br/>{linetext}《{title}》{caption}</div>
-<button on:click={copylink}>複製連結</button>
-<button on:click={excerptcopy}>複製經文及連結</button>
-<button on:click={htmlcopy}>HTML格式連結</button>
-<button on:click={markdowncopy}>MarkDown格式連結</button>
+
+<div class="bodytext">{_(msg)}<br/>{_(linetext)}《{_(title)}》{_(caption)}</div>
+<button on:click={copylink}>{_("複製連結")}</button>
+<button on:click={excerptcopy}>{_("複製經文及連結")}</button>
+<button on:click={htmlcopy}>{_("HTML格式連結")}</button>
+<button on:click={markdowncopy}>{_("MarkDown格式連結")}</button>
 <span>{@html qrcode}</span>
 {shareAddress()}
 <style>

@@ -6,8 +6,9 @@ import Variorum from './variorum.svelte'
 import SearchMain from  './searchmain.svelte'
 import Externals from './externals.svelte'
 import ParText from './partext.svelte'
+import {_} from './textout'
 import {usePtk,parseAction, toChineseNumber} from 'ptk'
-import {activefolioid,activepb, leftmode,hasVariorum,hasTranslation,hasSanskrit,bookByFolio, tapmark,foliotext} from './store.js'
+import {tosim,activefolioid,activepb, leftmode,hasVariorum,hasTranslation,hasSanskrit,bookByFolio, tapmark,foliotext} from './store.js'
 export let ptk;
 export let closePopup;
 
@@ -62,7 +63,7 @@ const getLinks=folioid=>{
         const at=ptk.nearestTag( to+1 ,'n') -1 ;
         const n=ptk.defines.n;
         key=parseInt(n.fields.id.values[at]);
-        caption='雜'+key+'導讀';
+        caption=_('雜')+key+_('導讀');
         url='https://buddhaspace.org/agama/'+agmsjuan[1]+'.html#'+toChineseNumber(key);
         externals.push([ caption, url]);
         col=dcptk.columns['par_agms'];
@@ -80,7 +81,7 @@ const getLinks=folioid=>{
     if (agmdjuan) {
         const cl=ft.fromFolioPos($tapmark);
         if (cl&&cl.ckid) {
-            caption='長'+parseInt(cl.ckid)+'導讀';
+            caption='長'+parseInt(cl.ckid)+_('導讀');
             url='https://buddhaspace.org/agama3/'+parseInt(cl.ckid)+'.html';
             key=cl.ckid;
             externals.push([ caption, url]);
@@ -92,7 +93,7 @@ const getLinks=folioid=>{
         const cl=ft.fromFolioPos($tapmark);
         if (cl&&cl.ckid) {
             key=cl.ckid;
-            caption='中'+parseInt(cl.ckid)+'導讀';
+            caption='中'+parseInt(cl.ckid)+_('導讀');
             url='https://buddhaspace.org/agama2/sub/'+cl.ckid+'.html';
             externals.push([ caption, url]);
         }
@@ -140,7 +141,7 @@ $: [externals,internals]=getLinks($activefolioid,$activepb);
 <div class="tabs">    
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class='clickable' class:selected={thetab=="search"} on:click={()=>selecttab("search")}>搜尋</span>    
+<span class='clickable' class:selected={thetab=="search"} on:click={()=>selecttab("search")}>{_("搜尋",$tosim)}</span>    
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class='clickable' class:selected={thetab=="chunktext"} on:click={()=>selecttab("chunktext")}>全文</span>    
@@ -151,11 +152,11 @@ $: [externals,internals]=getLinks($activefolioid,$activepb);
 {/if}
 {#if hasTranslation(ptk,bookByFolio($activefolioid))}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class='clickable' class:selected={thetab=="translations"} on:click={()=>selecttab("translations")}>別譯</span>
+<span class='clickable' class:selected={thetab=="translations"} on:click={()=>selecttab("translations")}>{_("別譯",$tosim)}</span>
 {/if}
 {#if hasVariorum(bookByFolio($activefolioid))}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class='clickable' class:selected={thetab=="variorum"} on:click={()=>selecttab("variorum")}>集註</span>    
+<span class='clickable' class:selected={thetab=="variorum"} on:click={()=>selecttab("variorum")}>{_("集註",$tosim)}</span>    
 {/if}
 
 {#each internals as internal,idx}

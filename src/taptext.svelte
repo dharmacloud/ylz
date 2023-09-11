@@ -7,7 +7,8 @@ import Textual from './textual.svelte'
 import { get } from 'svelte/store';
 import Sharing from './sharing.svelte'
 import Toc from "./toc.svelte"
-import {activePtk, landscape,sideWidth,searchable,mediaurls,sharing} from './store.js'
+import {_} from './textout.ts'
+import {activePtk, landscape,sideWidth,searchable,mediaurls,sharing,tosim} from './store.js'
 import { usePtk} from "ptk";
 import {CURSORMARK} from './nav.js'
 
@@ -47,10 +48,10 @@ $: if ($sharing) thetab='dict';
 <div class="popup" style={ls?sideWidth(ls):''}>
     <div class="tabs">    
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="about"} on:click={()=>thetab="about"}>{#if !ls}{@html "&nbsp;"} {/if}🙏{#if ls}首{/if}</span>
+        <span class='clickable' class:selected={thetab=="about"} on:click={()=>thetab="about"}>{#if !ls}{@html "&nbsp;"} {/if}⚙️{#if ls}首{/if}</span>
 
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="list"} on:click={()=>thetab="list"}>📚{#if ls}錄{/if}</span>
+        <span class='clickable' class:selected={thetab=="list"} on:click={()=>thetab="list"}>📚{#if ls}{_("錄",$tosim)}{/if}</span>
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="toc"} on:click={()=>thetab="toc"}>🧭{#if ls}次{/if}</span>
         
@@ -60,16 +61,16 @@ $: if ($sharing) thetab='dict';
 
         <span class='clickable' class:selected={thetab=="dict"} on:click={()=>thetab="dict"}>
         {#if $sharing}    
-            🔗{#if ls}鏈{/if}
+            🔗{#if ls}{_("鏈",$tosim)}{/if}
         {:else}
-            🔠{#if ls}詞{/if}
+            🔠{#if ls}{_("詞",$tosim)}{/if}
         {/if}
         
         </span>
 
         {#if $mediaurls.length>1}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="audio"} on:click={()=>thetab="audio"}>🎵{#if ls}誦{/if}</span>
+        <span class='clickable' class:selected={thetab=="audio"} on:click={()=>thetab="audio"}>🎵{#if ls}{_("誦",$tosim)}{/if}</span>
         {/if}
 
     </div>

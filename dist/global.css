@@ -244,3 +244,7 @@ a {var(--hyperlink)}
   .deceased {border:1px solid black}
 
   .delete {color:red}
+  .statebutton{ user-select: none; cursor:pointer;fill:var(--button-selected);padding-right:0.2em}
+.statebutton.disabled {cursor:auto;fill:none;stroke:var(--button-unselected) }
+.statebutton.unselected {color:gray}
+.statebutton.disabled:hover {fill:none; stroke: var(--button-unselected)}

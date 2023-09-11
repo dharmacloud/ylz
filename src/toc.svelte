@@ -1,8 +1,10 @@
 <script>
 import Slider from './3rd/rangeslider.svelte';
 import { bsearchNumber ,styledNumber,debounce} from "ptk";
-import {activepb,maxfolio,activefolioid,loadingfolio, bookByFolio,foliotext} from './store.js';
+import {tosim,activepb,maxfolio,activefolioid,loadingfolio, bookByFolio,foliotext} from './store.js';
 import {goPbAt, loadFolio} from './nav.js'
+import Endmarker from './endmarker.svelte';
+import {_} from './textout.ts'
 import Juan from './juan.svelte'
 $: folio=[parseInt($activepb),0];
 export let ptk;
@@ -57,11 +59,14 @@ $: cknow=getCk($activepb,$loadingfolio);
 <Slider bind:value={folio} on:input={debounce(setFolio,800)} max={$maxfolio} min={1} >
     <span slot="caption" style="float:right">折{(folio[0]||1)}/{$maxfolio}</span></Slider>
 <div class="toc">
+{#key $tosim}
 {#each tocitems as item}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div on:click={()=>goBookPb(ptk,item.at)} class="tocitem" class:selecteditem={cknow==item.id}>{styledNumber(item.id,'①') + item.caption}</div>
+<div on:click={()=>goBookPb(ptk,item.at)} class="tocitem" 
+    class:selecteditem={cknow==item.id}>{styledNumber(item.id,'①') + _(item.caption)}</div>
 {/each}
-<div class="endmarker">※※※</div>
+{/key}
+<Endmarker/>
 </div>
 {:else}
 載入中

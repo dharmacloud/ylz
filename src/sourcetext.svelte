@@ -4,7 +4,8 @@ export let ptk
 import {getParallelLines} from 'ptk/align/';
 import {tapmark,foliotext,loadingfolio} from './store.js'
 import { parseOfftext } from 'ptk/offtext';
-
+import {_} from './textout.ts'
+    import Endmarker from './endmarker.svelte';
 let sourcetexts=[];
 const updateParallels=async (mark,loading)=>{
     if (loading) return;
@@ -23,7 +24,9 @@ $: updateParallels($tapmark,$loadingfolio);
     <SentenceNav {ptk}/>
     {#each sourcetexts as item}
     <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <div>{puretext(item.linetext)}</div>
+    <div>{_(puretext(item.linetext))}</div>
     <div class="hr"/>
     {/each}
+    <Endmarker/>
 </div>
+

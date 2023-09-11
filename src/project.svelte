@@ -1,3 +1,6 @@
+<script>
+import Endmarker from "./endmarker.svelte";
+</script>
 <div>
 <a target=_new href="https://docs.google.com/document/d/16m-DGbSTMpM67WSWHaojbRRWtUi2FfovgkdeWhFitKk/edit?usp=sharing">補版計劃</a>
 佛法是中華文明的三大組成部份(儒釋道)中唯一的非原生文明，佛經的翻譯和編修是大規模的文化交流工程，其在文明史的地位，不亞於阿拉伯的百年翻譯運動。
@@ -33,5 +36,5 @@
 <br/>三）使用者點擊的圖檔任何一處、立即由軟體換算為對應的文字，可搜尋、查字典、連結原文、誦讀、顯示相關的開示錄影等。
 <br/>四）取得諸山長老的祝福，我們的目標是只要會按手機，都可以悠遊法海。
 <br/>五）由於沒有版權的限制，可以將此成果與置入商品平板電腦，贈與經濟欠發達地區的僧人，以做為國際文化交流的拌手禮。
-<div class="endmarker">※※※</div>
+<Endmarker/>
 </div>

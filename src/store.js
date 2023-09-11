@@ -2,7 +2,7 @@ import {updateSettings,settings} from './savestore.ts'
 import {bsearchNumber, usePtk,makeAddress} from 'ptk'
 import { get,writable } from 'svelte/store';
 import {silence} from './mediaurls.js'
-export const APPVER = '23.9.9'
+export const APPVER = '23.9.11'
 //const folio=folioPosFromAddress(addressFromUrl());
 
 export const online=writable(navigator.onLine);
@@ -31,6 +31,9 @@ export const tofind=writable('');
 export const tofindhistory=writable(settings.tofindhistory);
 export const heightratio=writable(settings.heightratio);
 export const textsize=writable(settings.textsize);
+export const vip=writable(settings.vip);
+export const tosim=writable(settings.tosim);
+export const palitrans=writable(0)
 export let player
 export const setplayer=p=>player=p;
 // export const foliorawtexts=writable([]);
@@ -86,12 +89,13 @@ favorites.subscribe((favorites)=>updateSettings({favorites}));
 preferaudio.subscribe((preferaudio)=>updateSettings({preferaudio}));
 tofindhistory.subscribe((tofindhistory)=>updateSettings({tofindhistory}));
 heightratio.subscribe((heightratio)=>updateSettings({heightratio}));
+tosim.subscribe((tosim)=>updateSettings({tosim}));
 textsize.subscribe((textsize)=>{
     const tsz=(textsize/100).toFixed(2)+'em'
     document.documentElement.style.setProperty('--textsize',tsz);
     updateSettings({textsize})
 });
-
+vip.subscribe((vip)=>updateSettings({vip}));
 export const findByAudioId=(id,column='timestamp')=>{
     const ptk=usePtk('dc');
     if (!ptk.columns[column]) return null;
@@ -240,4 +244,3 @@ export const removeTofind=tf=>{
     }
     return arr;
 }
-

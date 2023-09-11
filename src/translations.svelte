@@ -4,6 +4,8 @@ import {activepb,activefolioid,activePtk,foliotext,tapmark,loadingfolio} from '.
 import { parseOfftext, bsearchNumber} from 'ptk';
 import SentenceNav from './sentencenav.svelte'
 import { loadFolio } from './nav.js';
+import {_} from './textout.ts'
+import Endmarker from './endmarker.svelte';
 export let closePopup=function(){};
 export let ptk;
 let translations=[];
@@ -62,11 +64,11 @@ $: updateTranslation($tapmark,$loadingfolio);
 {#if !~item.heading?.bkid?.indexOf('_variorum')}
 <div class:selecteditem={item.heading?.bkid==$activefolioid}>
 <span  on:click={()=>goFolioByLine(item.ptk,item.line)} 
-    class="clickable author">{getBookTitle(item.ptk,item.heading?.bk?.at)}
-    {hasfolio(item.ptk)?'←':' '}</span>{puretext(item.linetext)}</div>
+    class="clickable author">{_(getBookTitle(item.ptk,item.heading?.bk?.at))}
+    {hasfolio(item.ptk)?'←':' '}</span>{_(puretext(item.linetext))}</div>
 {/if}
 <div class="hr"/>
 {/each}
-<div class="endmarker">※※※</div>
+<Endmarker/>
 </div>
 

@@ -1,5 +1,6 @@
 <script>
-import {newbie,showyoutube,showpunc,showsponsor,activefolioid,heightratio, APPVER,textsize} from './store.js'
+import {newbie,showyoutube,showpunc,showsponsor,vip,heightratio,tosim, APPVER,textsize} from './store.js'
+import {_} from './textout.ts'
 import Switch from './3rd/switch.svelte';
 import Sponsoring from './sponsoring.svelte';
 import HOF from './hof.svelte'
@@ -8,12 +9,14 @@ import ProjectIntro from './project.svelte'
 import StyleIntro from './styleintro.svelte'
 import Materials from './materials.svelte'
 import { githubicon } from './icons.js';
-import {CacheName} from './constant.js'
 import Slider from './3rd/rangeslider.svelte';
 import {debounce} from 'ptk'
 import { documentHeight } from './fullscreen.js';
 import CheckUpdate from './checkupdate.svelte';
-let show=0,clearcount=-1;
+import StateBtn from './comps/statebutton.svelte'
+import Endmarker from './endmarker.svelte';
+    import { getVip } from './vip.js';
+let show=0,vipcode=$vip;
 let hratio=[ Math.floor((($heightratio*100)-90)*10) ,0]; 
 let textsz=[ $textsize ,0];
 const toggleshowsponsoring=()=>show=show==1?0:1;
@@ -22,14 +25,14 @@ const toggleshowworkers=()=>show=show==3?0:3;
 const toggleshowmaterials=()=>show=show==4?0:4; 
 const toggleshowstyle=()=>show=show==6?0:6;
 const toggleshowproject=()=>show=show==5?0:5;
-
+/*
 const clearCache=async (ext)=>{
     const cache=await caches.open(CacheName);
     let keys=await cache.keys();
     keys=keys.filter(it=>!ext || it.url.endsWith(ext));
     clearcount=keys.length;
     keys.forEach(key=>cache.delete(key))
-}
+}*/
 const setRatio=e=>{
     const j=((e.detail[0]||100));
     heightratio.set( (j/10 + 90)/100 );
@@ -39,12 +42,24 @@ const setTextsize=e=>{
     const j=((e.detail[0]||100));
     textsize.set(j);
 }
+let timer=0;
+const onkeyup=(e)=>{
+    const ele=e.target;
+    const start = ele.selectionStart;
+    const  end = ele.selectionEnd;
+    ele.value = ele.value.toUpperCase();
+    ele.setSelectionRange(start, end);
+    clearTimeout(timer)
+    timer=setTimeout(()=>{
+        vip.set(ele.value);
+    },1000);
+}
 </script>
-
 <div class="tabs">
 <!-- svelte-ignore a11y-click-events-have-key-events -->
+{#key $tosim}
 <span class="clickable" 
-class:selected={show==1} on:click={toggleshowsponsoring}>護持</span>
+class:selected={show==1} on:click={toggleshowsponsoring}>{_("護持")}</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class:selected={show==2}  class="clickable" on:click={toggleshowdonors}>檀越</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -52,11 +67,12 @@ class:selected={show==1} on:click={toggleshowsponsoring}>護持</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class:selected={show==4}  class="clickable" on:click={toggleshowmaterials}>素材</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-{#if $showpunc=='on'}
-<span class:selected={show==5}  class="clickable" on:click={toggleshowproject}>關於</span>
+{#if $vip}
+<span class:selected={show==6}  class="clickable" on:click={toggleshowstyle}>{_("項目")}</span>
 {:else}
-<span class:selected={show==6}  class="clickable" on:click={toggleshowstyle}>項目</span>
+<span class:selected={show==5}  class="clickable" on:click={toggleshowproject}>{_("關於")}</span>
 {/if}
+{/key}
 </div>
 <div class="bodytext">
 {#if show==1}
@@ -73,43 +89,36 @@ class:selected={show==1} on:click={toggleshowsponsoring}>護持</span>
 <ProjectIntro/>
 {:else}
 
-<span class="logotitle">永樂藏</span>
+<span class="logotitle">{_("永樂藏",$tosim)}</span>
 <CheckUpdate/>
+{#key $tosim}
+<br/>{_("VIP碼")}<input 
+placeholder={_("沒有也可正常使用")} size=12 type="text" on:keyup={onkeyup} bind:value={vipcode}/>
+{getVip('title',$vip)||($vip?_("查無此碼"):"")}
 <br/>版本 <a href="https://github.com/dharmacloud/swipegallery/" target=_new>{APPVER}{@html githubicon}</a>
-<br/>LINE官號<a href="https://lin.ee/1tmTKXi" target=_new>@dharmacloud</a>
 <br/>微信 Sukhanika
 <br/><a href="mailto:dharmacloudpublishing@gmail.com">dharmacloudpublishing[at]gmail</a>
-<br/>點焦點文字（紅色背景）分享
+<br/>LINE官號<a href="https://lin.ee/1tmTKXi" target=_new>@dharmacloud</a>
+<br/>{_("點焦點文字（紅色背景）分享")}
+{/key}
 <hr/>
+
 <Slider bind:value={textsz} on:input={debounce(setTextsize,300)} max={250} min={80} >
-    <span slot="caption"　style="float:right">{textsz[0]}% 字體大小</span>
+    <span slot="caption"　style="float:right">{textsz[0]}% {_("字體大小",$tosim)}</span>
 </Slider>
-<br/>看不到圖版最底下的行才需要調整
+<br/>{_("看不到圖版最底下的行才需要調整",$tosim)}
 <Slider bind:value={hratio} on:input={debounce(setRatio,300)} max={100} min={1} >
 <span slot="caption" style="float:right">{hratio[0]}% 全屏高度</span>
 </Slider>
 <br/>
-<Switch bind:value={$showpunc} label="顯示標點符號" design="slider" fontSize="24"/>
-<Switch bind:value={$showsponsor} label="靜置時顯示施主" design="slider" fontSize="24"/>
-<Switch bind:value={$showyoutube} label="顯示油管影片連結" design="slider" fontSize="24"/>
-<Switch bind:value={$newbie} label="啟動時顯示歡迎畫面" design="slider" fontSize="24"/>
-{#if $showpunc=='off'}
-
-{#if clearcount>-1}已清除{clearcount}
-{:else}
-<span class="danger">清除離線文件</span>
-{/if}
-
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class="clickable" on:click={()=>clearCache(".ptk")}>數據庫</span>
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class="clickable" on:click={()=>clearCache($activefolioid+".zip")}>本卷圖檔</span>
-{/if}
-
-<div class="endmarker">※※※</div>
+{#key $tosim}
+{_("漢字顯示")}：<StateBtn states={{0:"原樣",1:"简體",2:"简体"}} storeid={tosim}/>。
+<Switch bind:value={$showpunc} label={_("顯示標點符號")} design="slider" fontSize="24"/>
+<Switch bind:value={$showsponsor} label={_("靜置時顯示施主")} design="slider" fontSize="24"/>
+<Switch bind:value={$showyoutube} label={_("顯示油管影片連結")} design="slider" fontSize="24"/>
+<Switch bind:value={$newbie} label={_("啟動時顯示歡迎畫面")} design="slider" fontSize="24"/>
+{/key}
+<Endmarker/>
 
 {/if}
 </div>
-<style>
-.danger {background:red;color:yellow}
-</style>

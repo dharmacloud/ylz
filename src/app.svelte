@@ -52,6 +52,7 @@ onMount(async ()=>{
         const ptk=await openptk(ptks[i])
         bootmessage='open ptk '+ptks[i];
         if (ptks[i]=='ylz') console.log(ptk)
+        if (ptks[i]=='dc') setTimestampPtk(ptk)
     }
 
     bootmessage='fetching foliolist from cache';
@@ -129,4 +130,3 @@ $: orientation($landscape)
 </div>
 {/if}
 </div>
-

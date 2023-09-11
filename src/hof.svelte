@@ -1,13 +1,15 @@
 <script>
-
+    import Endmarker from './endmarker.svelte';
+import {_} from './textout.ts'
 </script>
 <div>
-<div>捐款記錄</div>
+<div>{_("捐獻記錄。祈願施主以此印經功德，獲得無量世出世間的利益。")}</div>
 <div>2023年</div>
 陳碧吟 1.12 美元 1,000
 <br/>甯耀南 5.21 台幣10,000
-<br/><span class="deceased">葉雅柏</span> 8.19 泰銖40,000 
-<br/>李玉媚 8.19 馬幣 5,000
+<br/><span class="deceased">{_("葉雅柏")}</span> 8.19 {_("泰銖")}40,000 
+<br/>李玉媚 8.19 {_("馬幣")} 5,000
 <br/>林嘉雯 8.27 台幣 1,000
 <br/>法王講堂 9.9 台幣 50,000
+<Endmarker/>
 </div>

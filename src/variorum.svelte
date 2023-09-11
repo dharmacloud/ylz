@@ -2,7 +2,8 @@
 import {parseAddress,parseAction, styledNumber, usePtk} from "ptk";
 import SentenceNav from "./sentencenav.svelte";
 import {tapAddress,loadingfolio} from './store.js'
-
+import Endmarker from "./endmarker.svelte";
+import {_} from './textout.ts'
 let text='';
 
 const updateVariorum=async (address,loading)=>{
@@ -37,9 +38,9 @@ $: updateVariorum(tapAddress(),$loadingfolio)
 
 <div class="bodytext">
 <SentenceNav ptk={usePtk('dc')} />
-{@html text}
+{@html _(text)}
 
 <SentenceNav ptk={usePtk('dc')} />
-<div class="endmarker">※※※</div>
+<Endmarker/>
 </div>
 

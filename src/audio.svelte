@@ -11,6 +11,8 @@ import {audiofolder,fetchAudioList} from './mediaurls.js'
 import {allJuan} from './nav.js'
 import {downloadicon,youtubeicon} from './icons.js'
 import { downloadToCache } from 'ptk/platform/downloader.js';
+import {_} from './textout.ts'
+    import Endmarker from './endmarker.svelte';
 export let ptk;
 
 let value=[ $remainrollback,0] ;
@@ -108,11 +110,11 @@ const goyoutube=id=>{
 
 {#if media.incache || !media.aid}
 <span class="clickable" on:click={()=>!downloading&&selectmedia(media.aid,true)} 
-class:selected={media.aid==$audioid}>{media.performer}{idx&&media.aid==$audioid?'♫':''}</span>
+class:selected={media.aid==$audioid}>{_(media.performer)}{idx&&media.aid==$audioid?'♫':''}</span>
     <br/>
 {:else}
 {#if $online}
-<span class="uncache">{media.performer+" "}</span><span class="clickable" on:click={()=>!downloading&&downloadit(media.aid)}>{@html downloadicon}</span>
+<span class="uncache">{_(media.performer)+" "}</span><span class="clickable" on:click={()=>!downloading&&downloadit(media.aid)}>{@html downloadicon}</span>
 {#if downloading==media.aid}{progress}{/if}
 {#if $audioid==media.vid&& $audioid}{humanDuration(getDuration($audioid))}{/if}
 <br/>
@@ -122,15 +124,16 @@ class:selected={media.aid==$audioid}>{media.performer}{idx&&media.aid==$audioid?
 
 
 <!-- svelte-ignore missing-declaration -->
-<br/>重播次數：{value[0]>0?value[0]:'無限'}
+<br/>{_('重播次數')}：{value[0]>0?value[0]:_('無限')}
 {#if value[0]>0} { humanStoptime(value[0]*getDuration($audioid))}{/if}
 <Slider on:input={setRemain} bind:value min=0 max=10/>
 {#if ptk&&allJuan(ptk).length>1}
-<Switch label='自動播放下一卷' design="slider" fontSize="24" bind:value={$playnextjuan}></Switch>
+<Switch label={_('自動播放下一卷')} design="slider" fontSize="24" bind:value={$playnextjuan}></Switch>
 {/if}
 
 <hr/>
 <div class="subtitle">{@html htmltext(subtitle2)}</div>
 <div class="subtitle">{@html htmltext(subtitle)}</div>
 
+<Endmarker/>
 </div>

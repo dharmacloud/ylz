@@ -4,7 +4,7 @@ import Pager from './comps/pager.svelte';
 import { styledNumber } from 'ptk';
 import { bookByFolio,activefolioid,tapmark,foliotext } from './store.js';
 import { goChunk} from './nav.js';
-
+import {_} from './textout.ts'
 let cknow=0;
 const chunks=[];
 
@@ -43,5 +43,5 @@ $: loadChunks($tapmark);
 
 <Pager onselect={gochunk} pages={chunks} nextitems={2} now={cknow} let:active let:caption let:idx>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span on:click={()=>gochunk(idx)} class="clickable" class:selected={active}>{caption}</span>
+<span on:click={()=>gochunk(idx)} class="clickable" class:selected={active}>{_(caption)}</span>
 </Pager>

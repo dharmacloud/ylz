@@ -2,7 +2,9 @@
 import Favoritebuttons from './favoritebuttons.svelte';
 import { loadFolio } from './nav.js';
 export let ptk,thetab;
-import {activefolioid, parallelFolios,stopAudio,folioincache,online, activepb} from './store.js';
+import {activefolioid, tosim,parallelFolios,stopAudio,folioincache,online, activepb} from './store.js';
+import Endmarker from './endmarker.svelte';
+import {_} from './textout.ts'
 export let closePopup=function(){};
 let texttype=0;
 const texttypeOf=prefix=>{
@@ -25,7 +27,6 @@ const getFolioList=(texttype=0)=>{
             out.push([i, id, parallelFolios(ptk,id)]);
         }
     }
-    console.log(out)
     return out;
 }
 const selectfolio=nfolio=>{
@@ -43,7 +44,7 @@ const selectfolio=nfolio=>{
 
 const getFolioName=nfolio=>{
     const folio=ptk.defines.folio;
-    return folio.innertext.get(nfolio); 
+    return _(folio.innertext.get(nfolio),$tosim); 
 }
 const getFolioId=nfolio=>{
     const folio=ptk.defines.folio;
@@ -57,19 +58,21 @@ $: folios=getFolioList(texttype);
 </script>
 <div class="tabs">
     <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <span class="clickable" class:selected={texttype==1}  on:click={()=>texttype=texttype==1?0:1}>聲聞經</span>
+    <span class="clickable" class:selected={texttype==1}  on:click={()=>texttype=texttype==1?0:1}>{_("聲聞經",$tosim)}</span>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <span  class="clickable" class:selected={texttype==3}  on:click={()=>texttype=texttype==3?0:3}>聲聞律</span>
+    <span  class="clickable" class:selected={texttype==3}  on:click={()=>texttype=texttype==3?0:3}>{_("聲聞律",$tosim)}</span>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <span  class="clickable" class:selected={texttype==2}  on:click={()=>texttype=texttype==2?0:2}>大乘經</span>
+    <span  class="clickable" class:selected={texttype==2}  on:click={()=>texttype=texttype==2?0:2}>{_("大乘經",$tosim)}</span>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <span  class="clickable" class:selected={texttype==4}  on:click={()=>texttype=texttype==4?0:4}>大乘律</span>
 </div>
     
 {#each folios as [nfolio,folioid,pars]}
 <div class="book">
+{#key $tosim}
  <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class:dimmed={!$folioincache[folioid]} on:click={()=>selectfolio(nfolio)} class:selecteditem={samesutra($activefolioid,folioid)} >{getFolioName(nfolio)}</span>
+<span class:dimmed={!$folioincache[folioid]} on:click={()=>selectfolio(nfolio)} 
+    class:selecteditem={samesutra($activefolioid,folioid)} >{getFolioName(nfolio)}</span>
 
 <Favoritebuttons {ptk} {folioid} {closePopup}/>
 {#each pars as par}
@@ -83,6 +86,9 @@ $: folios=getFolioList(texttype);
 {/if}
 
 {/each}
+{/key}
 </div>
 {/each}
-<div class="endmarker">※※※</div>
+<div class="bodytext">
+<Endmarker/>
+</div>

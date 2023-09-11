@@ -2,6 +2,7 @@
 import { styledNumber} from "ptk";
 import { foliotext,tapmark, activepb} from "./store.js";
 export let ptk;
+import {_} from './textout.ts'
 import Pager from './comps/pager.svelte'
 let sentnow=0;
 
@@ -27,7 +28,7 @@ $: humancaption($tapmark);
 </script>
 <Pager {caption} count={linecount} nextitems={5} previtems={4} now={sentnow} onselect={gosent} let:active let:caption let:idx>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <span on:click={()=>gosent(idx)} class="clickable" class:selected={active}>{caption}</span>
+    <span on:click={()=>gosent(idx)} class="clickable" class:selected={active}>{_(caption)}</span>
 </Pager>
 
 <!-- {#key humanaddr}
