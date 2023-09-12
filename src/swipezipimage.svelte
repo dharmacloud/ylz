@@ -6,14 +6,14 @@ import TapMark from './tapmark.svelte';
 import Swipe from './3rd/swipe.svelte';
 import SwipeItem from './3rd/swipeitem.svelte';
 import {downloadToCache} from 'ptk/platform/downloader.js'
-import {extractPuncPos,usePtk,FolioText, parseOfftext,updateUrl} from 'ptk'
+import {extractPuncPos,usePtk,FolioText, parseOfftext,updateUrl,addressFromUrl} from 'ptk'
 import { CURSORMARK} from './nav.js';
 import {ZipStore} from 'ptk/zip';
 import DownloadStatus from './downloadstatus.svelte'
 import {CacheName} from './constant.js'
 import {thezip,favortypes, landscape,foliotext,folioLines,isSidePaiji,tapAddress,
     folioChars,activePtk,activefolioid,activepb,favorites,audioid,showpunc,
-maxfolio,tapmark, playing, remainrollback, showyoutube,shareAddress,
+maxfolio,tapmark, playing, remainrollback, showyoutube,shareAddress,makeAddressFromFolioPos,
 idlecount,showpaiji,loadingzip, selectmedia, preferaudio,folioHolderWidth,leftmode,mediaurls, downloading, sharing} from './store.js'
 import { get } from 'svelte/store';
 import { fetchAudioList } from './mediaurls';
@@ -56,7 +56,11 @@ const loadZip=async ()=>{
     foliotext.set(ftext);
 
     // const res=await fetch(host+src);
-    
+
+    const validateaddress=makeAddressFromFolioPos($tapmark);
+    if (addressFromUrl()!==validateaddress) {
+        updateUrl(validateaddress);
+    }
     const res=await downloadToCache(CacheName,host+src,msg=>{
         downloading.set(host+src+ " "+msg);
     });

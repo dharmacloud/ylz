@@ -11,9 +11,9 @@ const updateVariorum=async (address,loading)=>{
     const r=ptk.defines.r;
     if (!r || loading) return ;
     const addr=parseAddress(address);
-    const act=parseAction(addr.action);
-    
-    const id=act[act.length-1][1]+':'+addr.highlightline;
+    const obj=parseAction(addr.action,true);
+    if (!obj)return;
+    const id=obj.ck+':'+addr.highlightline;
     
     let at=r.fields.id.values.indexOf(id);
     if (~at) {

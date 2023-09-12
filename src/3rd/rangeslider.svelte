@@ -15,6 +15,7 @@
   let order = false;
 
   function setValue(pos) {
+    console.log('setvalue',pos)
     if (!pos||pos.length!==2||!Array.isArray(pos)) {
       pos=[min,max];
     }
@@ -47,12 +48,13 @@
   $: if (active) setValue(pos);
   $: if (!active) setPos(value);
   $: if (range && order && active) pos = checkPos(pos);
-  $: min, max, clamp();
+  
   $: progress = `
     left: ${range ? Math.min(pos[0], pos[1]) * 100 : 0}%;
     right: ${(100 - Math.max(pos[0], (range ? pos[1] : pos[0])) * 100)||100}%;
   `;
 
+// $: min, max, clamp(); , causing pb changed when initial
   function clamp() {
     setPos(value);
     setValue(pos);

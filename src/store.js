@@ -3,7 +3,6 @@ import {bsearchNumber, usePtk,makeAddress} from 'ptk'
 import { get,writable } from 'svelte/store';
 import {silence} from './mediaurls.js'
 export const APPVER = '23.9.12'
-//const folio=folioPosFromAddress(addressFromUrl());
 
 export const online=writable(navigator.onLine);
 export const thezip=writable(null)
@@ -80,6 +79,7 @@ export const newbie=writable(settings.newbie);
 export const idlecount=writable(0);
 export const showpaiji=writable(false);
 export const ptks=['ylz','ylz_sanskrit','dc'];
+
 
 activefolioid.subscribe((activefolioid)=>updateSettings({activefolioid}));
 autodict.subscribe((autodict)=>updateSettings({autodict}));

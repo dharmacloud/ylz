@@ -4,8 +4,8 @@ import SwipeZipImage from "./swipezipimage.svelte";
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import {downloadToCache} from 'ptk/platform/downloader.js'
 import { onDestroy, onMount } from "svelte";
-import {activefolioid,isAndroid,idlecount,showpaiji,leftmode,online,folioincache,showsponsor,sharing,
-    newbie,idletime,landscape,APPVER,ptks} from './store.js'
+import {activefolioid,isAndroid,idlecount,showpaiji,leftmode,online,folioincache,showsponsor,tapmark,
+    newbie,idletime,landscape,APPVER,ptks, activepb} from './store.js'
 import {CacheName} from './constant.js'
 import {documentHeight} from './fullscreen.js'
 import {setTimestampPtk} from './mediaurls.js'
@@ -17,8 +17,6 @@ import Paiji from './paiji.svelte';
 import Notification from './notification.svelte';
 import { get } from 'svelte/store';
 import Left from './left.svelte'
-
-
 import {loadAddress} from './nav.js'
 let ptk,tofind;
 registerServiceWorker();
@@ -61,7 +59,7 @@ onMount(async ()=>{
     ptk=usePtk('ylz');
     bootmessage='load folio address from url';
     await loadAddress(ptk,addressFromUrl());
-
+   
     bootmessage='loaded';
     loaded=true;
     
