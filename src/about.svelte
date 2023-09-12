@@ -47,7 +47,7 @@ const onkeyup=(e)=>{
     const ele=e.target;
     const start = ele.selectionStart;
     const  end = ele.selectionEnd;
-    ele.value = ele.value.toUpperCase();
+    ele.value = ele.value.toUpperCase().replace(/[^a-zA-Z\d]/g,'');
     ele.setSelectionRange(start, end);
     clearTimeout(timer)
     timer=setTimeout(()=>{
@@ -67,7 +67,7 @@ class:selected={show==1} on:click={toggleshowsponsoring}>{_("護持")}</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class:selected={show==4}  class="clickable" on:click={toggleshowmaterials}>素材</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-{#if $vip}
+{#if $vip && getVip("title")}
 <span class:selected={show==6}  class="clickable" on:click={toggleshowstyle}>{_("項目")}</span>
 {:else}
 <span class:selected={show==5}  class="clickable" on:click={toggleshowproject}>{_("關於")}</span>
@@ -92,17 +92,16 @@ class:selected={show==1} on:click={toggleshowsponsoring}>{_("護持")}</span>
 <span class="logotitle">{_("永樂藏",$tosim)}</span>
 <CheckUpdate/>
 {#key $tosim}
+<br/>{_("漢字顯示")}：<StateBtn states={{0:"原貌",1:_("简體（「乾後發」等不變）"),2:"简体"}} storeid={tosim}/>
+<br/>版本 {APPVER}{getVip('title',$vip)||($vip?_("查無此碼"):"")}
 <br/>{_("VIP碼")}<input 
 placeholder={_("沒有也可正常使用")} size=12 type="text" on:keyup={onkeyup} bind:value={vipcode}/>
-{getVip('title',$vip)||($vip?_("查無此碼"):"")}
-<br/>版本 <a href="https://github.com/dharmacloud/swipegallery/" target=_new>{APPVER}{@html githubicon}</a>
 <br/>微信 Sukhanika
 <br/><a href="mailto:dharmacloudpublishing@gmail.com">dharmacloudpublishing[at]gmail</a>
 <br/>LINE官號<a href="https://lin.ee/1tmTKXi" target=_new>@dharmacloud</a>
 <br/>{_("點焦點文字（紅色背景）分享")}
 {/key}
 <hr/>
-
 <Slider bind:value={textsz} on:input={debounce(setTextsize,300)} max={250} min={80} >
     <span slot="caption"　style="float:right">{textsz[0]}% {_("字體大小",$tosim)}</span>
 </Slider>
@@ -112,12 +111,12 @@ placeholder={_("沒有也可正常使用")} size=12 type="text" on:keyup={onkeyu
 </Slider>
 <br/>
 {#key $tosim}
-{_("漢字顯示")}：<StateBtn states={{0:"原樣",1:"简體",2:"简体"}} storeid={tosim}/>。
 <Switch bind:value={$showpunc} label={_("顯示標點符號")} design="slider" fontSize="24"/>
 <Switch bind:value={$showsponsor} label={_("靜置時顯示施主")} design="slider" fontSize="24"/>
 <Switch bind:value={$showyoutube} label={_("顯示油管影片連結")} design="slider" fontSize="24"/>
 <Switch bind:value={$newbie} label={_("啟動時顯示歡迎畫面")} design="slider" fontSize="24"/>
 {/key}
+
 <Endmarker/>
 
 {/if}

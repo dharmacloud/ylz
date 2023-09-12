@@ -1,5 +1,5 @@
 <script>
-import {ptks,tosim} from './store.js'
+import {ptks,tosim,hasupdate} from './store.js'
 import {onMount} from 'svelte'
 import {isLatest,downloadToCache} from 'ptk/platform/downloader.js'
 import {poolDel,openPtk,usePtk} from 'ptk'
@@ -14,6 +14,7 @@ onMount(async ()=>{
         updatestatus[i][1]=same?'':'hasupdate';
         if (same) needupdate--;
     }
+    hasupdate.set(needupdate>0);
     updatestatus=updatestatus;
 })
 
@@ -35,15 +36,16 @@ const updateptk=async idx=>{
     updatestatus=updatestatus;
     downloadmsg='';
     needupdate--;
+    hasupdate.set(needupdate>0);
 }
 </script>
 {#each updatestatus as [ptkname,status],idx}
 {#if status=='hasupdate'} 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<span class="clickable hyperlink" on:click={()=>updateptk(idx)}>
-    {'更新'+ usePtk(ptkname).humanName()}</span>
+<span class="clickable hyperlink needupdate" on:click={()=>updateptk(idx)}>
+    {_('更新',$tosim)+ ptkname}</span>
 {/if}
 {/each}
 {downloadmsg}
-{#if needupdate<1}{_("已安裝最新數據",$tosim)}{/if}
+{#if !$hasupdate}{_("數據庫是最新版",$tosim)}{/if}

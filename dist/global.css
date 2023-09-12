@@ -212,7 +212,7 @@ select {font-size:2em}
 .dictgroup {background:#ffb85b}
 
 
-a {var(--hyperlink)}
+a {color:var(--hyperlink)}
 .hyperlink {color:var(--hyperlink)}
 
 .parallelfolio {font-size:90% ; padding-left:0.1em;padding-right:0.1em;border-radius: 5px;border:#d27700 1px dotted}
@@ -236,15 +236,18 @@ a {var(--hyperlink)}
 .hof {color:brown;font-weight: bold;font-size:1.5em}
 .downloading {z-index:1000;display:flex;height: 100vh;width:100vw}
 .logotitle{font-size:125%; color:brown}
+.needupdate{
+  animation: favorblinker 2s linear infinite;
+}
 .notification {position:absolute;
   animation: favorblinker 2s linear infinite;
   top:10vh;left:5vw;height:1.2em;background:#d27700;
   z-index:1999;width:90vw;font-size:2em}
 
-  .deceased {border:1px solid black}
+.deceased {border:1px solid black}
 
-  .delete {color:red}
-  .statebutton{ user-select: none; cursor:pointer;fill:var(--button-selected);padding-right:0.2em}
+.delete {color:red}
+.statebutton{text-decoration: underline; user-select: none; cursor:pointer;fill:var(--button-selected);padding-right:0.2em}
 .statebutton.disabled {cursor:auto;fill:none;stroke:var(--button-unselected) }
 .statebutton.unselected {color:gray}
 .statebutton.disabled:hover {fill:none; stroke: var(--button-unselected)}

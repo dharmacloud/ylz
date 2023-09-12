@@ -8,7 +8,7 @@ import { get } from 'svelte/store';
 import Sharing from './sharing.svelte'
 import Toc from "./toc.svelte"
 import {_} from './textout.ts'
-import {activePtk, landscape,sideWidth,searchable,mediaurls,sharing,tosim} from './store.js'
+import {activePtk, landscape,sideWidth,searchable,mediaurls,sharing,tosim,hasupdate} from './store.js'
 import { usePtk} from "ptk";
 import {CURSORMARK} from './nav.js'
 
@@ -48,7 +48,7 @@ $: if ($sharing) thetab='dict';
 <div class="popup" style={ls?sideWidth(ls):''}>
     <div class="tabs">    
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span class='clickable' class:selected={thetab=="about"} on:click={()=>thetab="about"}>{#if !ls}{@html "&nbsp;"} {/if}⚙️{#if ls}首{/if}</span>
+        <span class='clickable' class:needupdate={$hasupdate} class:selected={thetab=="about"} on:click={()=>thetab="about"}>{#if !ls}{@html "&nbsp;"} {/if}⚙️{#if ls}首{/if}</span>
 
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span class='clickable' class:selected={thetab=="list"} on:click={()=>thetab="list"}>📚{#if ls}{_("錄",$tosim)}{/if}</span>

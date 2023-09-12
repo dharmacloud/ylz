@@ -1,10 +1,10 @@
 <script>
-import {online,player,audioid,activefolioid, playnextjuan, findByAudioId,
+import {online,player,audioid,activefolioid, playnextjuan, findByAudioId,playrate,
      remainrollback,selectmedia,mediaurls, stopAudio, playing, showyoutube} from './store.js';
 import {CacheName} from './constant.js'
 import Slider from './3rd/rangeslider.svelte';
 import Switch from './3rd/switch.svelte';
-import {usePtk,parseOfftext, sleep,} from 'ptk'
+import {usePtk,parseOfftext, sleep,debounce} from 'ptk'
 import { onDestroy, onMount } from 'svelte';
 import { get } from 'svelte/store';
 import {audiofolder,fetchAudioList} from './mediaurls.js'
@@ -12,9 +12,9 @@ import {allJuan} from './nav.js'
 import {downloadicon,youtubeicon} from './icons.js'
 import { downloadToCache } from 'ptk/platform/downloader.js';
 import {_} from './textout.ts'
-    import Endmarker from './endmarker.svelte';
+import Endmarker from './endmarker.svelte';
 export let ptk;
-
+let rate=[$playrate||100,0];
 let value=[ $remainrollback,0] ;
 let subtitles=[], subtitles2=[], subtitle='',subtitle2='',subtitletimer, nsub=0;
 onDestroy(()=>{
@@ -97,6 +97,16 @@ const goyoutube=id=>{
     stopAudio();
     window.open("https://youtube.com/watch?v="+id,"_blank");
 }
+const setPlayrate=e=>{
+    const rate=e.detail[0];
+    player.playbackRate=rate/100;
+    playrate.set(rate)
+}
+const speed1x=()=>{
+    rate=[100,0];
+    player.playbackRate=1;
+    playrate.set(100)
+}
 </script>
 <div class="bodytext">
 
@@ -124,7 +134,16 @@ class:selected={media.aid==$audioid}>{_(media.performer)}{idx&&media.aid==$audio
 
 
 <!-- svelte-ignore missing-declaration -->
-<br/>{_('重播次數')}：{value[0]>0?value[0]:_('無限')}
+<br/>
+<Slider bind:value={rate} on:input={debounce(setPlayrate,300)} max={300} min={30} >
+    <span slot="caption"　style="float:right">{(rate[0]/100)+_(" 播放速度")}</span>
+</Slider>
+
+<br/>
+{#if rate[0]!==100}
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<span class="clickable" on:click={speed1x}>{_("恢復正常速度")}</span>{/if}
+{_('重播次數')}：{value[0]>0?value[0]:_('無限')}
 {#if value[0]>0} { humanStoptime(value[0]*getDuration($audioid))}{/if}
 <Slider on:input={setRemain} bind:value min=0 max=10/>
 {#if ptk&&allJuan(ptk).length>1}
@@ -132,8 +151,8 @@ class:selected={media.aid==$audioid}>{_(media.performer)}{idx&&media.aid==$audio
 {/if}
 
 <hr/>
-<div class="subtitle">{@html htmltext(subtitle2)}</div>
-<div class="subtitle">{@html htmltext(subtitle)}</div>
+<div class="subtitle">{@html _(htmltext(subtitle2))}</div>
+<div class="subtitle">{@html _(htmltext(subtitle))}</div>
 
 <Endmarker/>
 </div>

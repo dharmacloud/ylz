@@ -2,7 +2,7 @@ import {updateSettings,settings} from './savestore.ts'
 import {bsearchNumber, usePtk,makeAddress} from 'ptk'
 import { get,writable } from 'svelte/store';
 import {silence} from './mediaurls.js'
-export const APPVER = '23.9.11'
+export const APPVER = '23.9.12'
 //const folio=folioPosFromAddress(addressFromUrl());
 
 export const online=writable(navigator.onLine);
@@ -34,6 +34,8 @@ export const textsize=writable(settings.textsize);
 export const vip=writable(settings.vip);
 export const tosim=writable(settings.tosim);
 export const palitrans=writable(0)
+export const hasupdate=writable(true)
+export const playrate=writable(settings.playrate);
 export let player
 export const setplayer=p=>player=p;
 // export const foliorawtexts=writable([]);
@@ -86,6 +88,7 @@ showpunc.subscribe((showpunc)=>updateSettings({showpunc}));
 showsponsor.subscribe((showsponsor)=>updateSettings({showsponsor}));
 showyoutube.subscribe((showyoutube)=>updateSettings({showyoutube}));
 favorites.subscribe((favorites)=>updateSettings({favorites}));
+playrate.subscribe((playrate)=>updateSettings({playrate}));
 preferaudio.subscribe((preferaudio)=>updateSettings({preferaudio}));
 tofindhistory.subscribe((tofindhistory)=>updateSettings({tofindhistory}));
 heightratio.subscribe((heightratio)=>updateSettings({heightratio}));
