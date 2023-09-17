@@ -61,7 +61,7 @@ const onkeyup=(e)=>{
 <span class="clickable" 
 class:selected={show==1} on:click={toggleshowsponsoring}>{_("護持")}</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class:selected={show==2}  class="clickable" on:click={toggleshowdonors}>檀越</span>
+<span class:selected={show==2}  class="clickable" on:click={toggleshowdonors}>芳名</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class:selected={show==3}  class="clickable" on:click={toggleshowworkers}>伙伴</span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
