@@ -19,7 +19,7 @@ export const goPbAt=async (ptk,at)=>{
     const ck=ptk.defines.ck;
     const pb=ptk.defines.pb;
     const ckline=ck.linepos[at];
-    const pbtag=ptk.nearestTag(ckline+1,'pb')-1;
+    const pbtag=ptk.nearestTag(ckline+1,'pb');
     const pbid=pb.fields.id.values[pbtag];
     goPb(pbid, ck.fields.id.values[at]);
 }

@@ -34,7 +34,7 @@ let loaded=false,timer,bootmessage='啟動中';
 onDestroy(()=>clearInterval(timer))
 
 
-const openptk=async name=>{
+const installptk=async name=>{
     bootmessage='try to download '+name+'.ptk'
     const res=await downloadToCache(CacheName,name+'.ptk',msg=>{
         bootmessage=name+'.ptk '+msg;
@@ -47,16 +47,16 @@ const openptk=async name=>{
 onMount(async ()=>{
     documentHeight();
     for (let i=0;i<ptks.length;i++) {
-        const ptk=await openptk(ptks[i])
+        const ptk=await installptk(ptks[i])
         bootmessage='open ptk '+ptks[i];
-        if (ptks[i]=='ylz') console.log(ptk)
+        if (ptks[i]=='ylz-c') console.log(ptk)
         if (ptks[i]=='dc') setTimestampPtk(ptk)
     }
 
     bootmessage='fetching foliolist from cache';
     await fetchFolioList(folioincache);
 
-    ptk=usePtk('ylz');
+    ptk=usePtk('ylz-c');
     bootmessage='load folio address from url';
     await loadAddress(ptk,addressFromUrl());
    

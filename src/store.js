@@ -2,11 +2,11 @@ import {updateSettings,settings} from './savestore.ts'
 import {bsearchNumber, usePtk,makeAddress} from 'ptk'
 import { get,writable } from 'svelte/store';
 import {silence} from './mediaurls.js'
-export const APPVER = '23.9.12'
+export const APPVER = '23.9.18'
 
 export const online=writable(navigator.onLine);
 export const thezip=writable(null)
-export const activePtk=writable('ylz');
+export const activePtk=writable('ylz-c');
 export const folioincache=writable({});
 export const loadingfolio=writable(false);  //loadFolio done
 export const loadingzip=writable(false);  //load the folio zip
@@ -58,7 +58,7 @@ export const bookByFolio=(fid,ptk)=>{
 export const audioid=writable('');
 
 export const folioLines=function(_fid){
-    const ptk=usePtk('ylz');
+    const ptk=usePtk(get(activePtk));
     const fid=_fid||get(activefolioid);
     const at=ptk.defines.folio.fields.id?.values.indexOf(fid);
     if (~at) {
@@ -78,7 +78,7 @@ export const remainrollback=writable(-1);//infinite
 export const newbie=writable(settings.newbie);
 export const idlecount=writable(0);
 export const showpaiji=writable(false);
-export const ptks=['ylz','ylz_sanskrit','dc'];
+export const ptks=['ylz-c','ylz_sanskrit','dc'];
 
 
 activefolioid.subscribe((activefolioid)=>updateSettings({activefolioid}));
@@ -114,9 +114,13 @@ export const stopAudio=()=>{
 
 export const booknameOf=folioid=>{
     const bkid=bookByFolio(folioid)
-    const ptk=usePtk('ykz');//assuming sanskrit text always has chinese correspond
-    const bk=ptk.defines.bk;
-    const at=bk.fields.id.values.indexOf(bkid);
+    let ptk=usePtk('ylz-c');//assuming sanskrit text always has chinese correspond
+    let at=ptk.defines.bk.fields.id.values.indexOf(bkid);
+
+    if (!~at) {
+        const ptk=usePtk('ylz-m');//assuming sanskrit text always has chinese correspond
+
+    }
     return bk.innertext.get(at);
 }
 

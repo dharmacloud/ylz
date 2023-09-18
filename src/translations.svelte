@@ -27,8 +27,8 @@ const goFolioByLine=(ptk,line)=>{
     const pb=ptk.defines.pb;
     const folio=ptk.defines.folio;
     if (!pb) return ;
-    const pbat=ptk.nearestTag(line,'pb')-1;
-    const folioat=ptk.nearestTag(line,'folio')-1;
+    const pbat=ptk.nearestTag(line,'pb');
+    const folioat=ptk.nearestTag(line,'folio');
     const pbid=pb.fields.id.values[pbat];
     const newfolio=folio.fields.id.values[folioat];
     loadFolio(newfolio,()=>{
@@ -51,6 +51,7 @@ const updateTranslation=async (mark,loading)=>{
     if (loading) return [];
     const cl=$foliotext?.fromFolioPos(mark);    
     if (!cl) return;
+    
     translations=await getParallelLines(ptk,cl.ptkline,null,{local:true,remote:false});//same ptk only
 
 }

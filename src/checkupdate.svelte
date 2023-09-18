@@ -1,16 +1,21 @@
 <script>
-import {ptks,tosim,hasupdate} from './store.js'
+import {tosim,hasupdate} from './store.js'
 import {onMount} from 'svelte'
 import {isLatest,downloadToCache} from 'ptk/platform/downloader.js'
-import {poolDel,openPtk,usePtk} from 'ptk'
-
+import {poolDel,openPtk} from 'ptk'
+import {ptkInCache} from './folio.js'
 import { CacheName } from './constant.js';
-    import { _ } from './textout.js';
-$: updatestatus=ptks.map(it=>[it, 'checking']);
-let needupdate=ptks.length;
+import { _ } from './textout.js';
+
+let updatestatus=[];
+let needupdate=0;
 onMount(async ()=>{
-    for (let i=0;i<ptks.length;i++) {
-        const same=await isLatest(ptks[i]+'.ptk',CacheName);
+    const cachedPtks=await ptkInCache();
+    updatestatus= cachedPtks.map(it=>[it, 'checking']);
+    needupdate=cachedPtks.length;
+
+    for (let i=0;i<cachedPtks.length;i++) {
+        const same=await isLatest(cachedPtks[i]+'.ptk',CacheName);
         updatestatus[i][1]=same?'':'hasupdate';
         if (same) needupdate--;
     }

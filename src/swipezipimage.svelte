@@ -251,7 +251,8 @@ const confirmfavorite=()=>{
 }
 let cancellable=true;
 const favoritebtn=()=>{
-    if ($activePtk!=='ylz') return;//only support chinese
+    const actptk=$activePtk;
+    if (actptk!=='ylz-c' && actptk!=='ylz-m' && actptk!=='ylz-vny' && actptk!=='ylz-svk') return;//only support chinese
 
     clearTimeout(favoritetimer);
     favoritetimer=setTimeout(()=>{

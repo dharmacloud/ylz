@@ -17,3 +17,11 @@ export const fetchFolioList=async (store)=>{
         return out;
     }
 };
+
+
+export const ptkInCache=async() =>{
+    const cache=await caches.open(CacheName);
+    const keys=await cache.keys();
+    const out=keys.filter(it=>~it.url.indexOf('.ptk')).map(it=>it.url.match(/([a-z\-_]+)\.ptk/)[1]);
+    return out;
+}

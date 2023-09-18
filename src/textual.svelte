@@ -60,7 +60,7 @@ const getLinks=folioid=>{
     if (!ft) return [[],[]];
     let col,key;
     if (agmsjuan) {
-        const at=ptk.nearestTag( to+1 ,'n') -1 ;
+        const at=ptk.nearestTag( to+1 ,'n')  ;
         const n=ptk.defines.n;
         key=parseInt(n.fields.id.values[at]);
         caption=_('雜')+key+_('導讀');
@@ -71,7 +71,7 @@ const getLinks=folioid=>{
 
     const agmssjuan=folioid.match(/agmss(\d+)$/);
     if (agmssjuan) {
-        const at=ptk.nearestTag( to+1 ,'n') -1 ;
+        const at=ptk.nearestTag( to+1 ,'n')  ;
         const n=ptk.defines.n;
         key=parseInt(n.fields.id.values[at]);
         col=dcptk.columns['par_agmss'];
