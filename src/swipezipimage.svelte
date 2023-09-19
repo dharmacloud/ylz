@@ -20,7 +20,7 @@ import { fetchAudioList } from './mediaurls';
 
 export let src;
 
-let ptk=usePtk($activePtk)
+$: ptk=usePtk($activePtk)
 let foliopage=[],puncs=[],ready,hidepunc=false;
 export let totalpages=0;
 export let onTapText=function(){};
@@ -252,7 +252,7 @@ const confirmfavorite=()=>{
 let cancellable=true;
 const favoritebtn=()=>{
     const actptk=$activePtk;
-    if (actptk!=='ylz-c' && actptk!=='ylz-m' && actptk!=='ylz-vny' && actptk!=='ylz-svk') return;//only support chinese
+    if (actptk!=='ylz-prjn' && actptk!=='ylz-tg' && actptk!=='ylz-vny' && actptk!=='ylz-svk') return;//only support chinese
 
     clearTimeout(favoritetimer);
     favoritetimer=setTimeout(()=>{

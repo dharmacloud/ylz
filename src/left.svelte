@@ -1,9 +1,8 @@
 <script>
-
-import TofindHistory from './tofindhistory.svelte'
+import { usePtk } from 'ptk';
 import InputHelper from './inputhelper.svelte'
-import {leftmode,folioHolderWidth,landscape,tofind} from './store.js'
-export let ptk;
+import {leftmode,folioHolderWidth,landscape,activePtk} from './store.js'
+$: ptk= usePtk($activePtk);
 </script>
 
 <div class="left" style={"width:"+folioHolderWidth($landscape)}>

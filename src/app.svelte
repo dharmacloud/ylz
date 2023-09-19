@@ -5,7 +5,7 @@ import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import {downloadToCache} from 'ptk/platform/downloader.js'
 import { onDestroy, onMount } from "svelte";
 import {activefolioid,isAndroid,idlecount,showpaiji,leftmode,online,folioincache,showsponsor,tapmark,
-    newbie,idletime,landscape,APPVER,ptks, activepb} from './store.js'
+    newbie,idletime,landscape,APPVER,ptks} from './store.js'
 import {CacheName} from './constant.js'
 import {documentHeight} from './fullscreen.js'
 import {setTimestampPtk} from './mediaurls.js'
@@ -18,7 +18,7 @@ import Notification from './notification.svelte';
 import { get } from 'svelte/store';
 import Left from './left.svelte'
 import {loadAddress} from './nav.js'
-let ptk,tofind;
+let tofind;
 registerServiceWorker();
 const idleinterval=2;
 isAndroid.set(!!navigator.userAgent.match(/Android/i));
@@ -49,14 +49,14 @@ onMount(async ()=>{
     for (let i=0;i<ptks.length;i++) {
         const ptk=await installptk(ptks[i])
         bootmessage='open ptk '+ptks[i];
-        if (ptks[i]=='ylz-c') console.log(ptk)
+        if (ptks[i]=='ylz-prjn') console.log(ptk)
         if (ptks[i]=='dc') setTimestampPtk(ptk)
     }
 
     bootmessage='fetching foliolist from cache';
     await fetchFolioList(folioincache);
 
-    ptk=usePtk('ylz-c');
+    ptk=usePtk('ylz-prjn');
     bootmessage='load folio address from url';
     await loadAddress(ptk,addressFromUrl());
    
@@ -103,11 +103,11 @@ $: orientation($landscape)
 {/if}
 
 {#key $activefolioid} 
-<SwipeZipImage src={$activefolioid+".zip"} {ptk} {onTapText} {onMainmenu} />
+<SwipeZipImage src={$activefolioid+".zip"} {onTapText} {onMainmenu} />
 {/key}
 
 {#if $leftmode!=='folio'}
-<Left {ptk}/>
+<Left/>
 {/if}
 {#if (shownewbie||showpopup) && !$landscape}
 <!-- svelte-ignore a11y-click-events-have-key-events -->

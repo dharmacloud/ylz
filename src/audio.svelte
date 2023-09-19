@@ -1,5 +1,5 @@
 <script>
-import {online,player,audioid,activefolioid, playnextjuan, findByAudioId,playrate,
+import {online,player,audioid,activefolioid, playnextjuan, findByAudioId,playrate,activePtk,
      remainrollback,selectmedia,mediaurls, stopAudio, playing, showyoutube} from './store.js';
 import {CacheName} from './constant.js'
 import Slider from './3rd/rangeslider.svelte';
@@ -13,7 +13,7 @@ import {downloadicon,youtubeicon} from './icons.js'
 import { downloadToCache } from 'ptk/platform/downloader.js';
 import {_} from './textout.ts'
 import Endmarker from './endmarker.svelte';
-export let ptk;
+$: ptk = usePtk($activePtk);
 let rate=[$playrate||100,0];
 let value=[ $remainrollback,0] ;
 let subtitles=[], subtitles2=[], subtitle='',subtitle2='',subtitletimer, nsub=0;

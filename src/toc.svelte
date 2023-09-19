@@ -1,13 +1,13 @@
 <script>
 import Slider from './3rd/rangeslider.svelte';
-import { bsearchNumber ,styledNumber,debounce} from "ptk";
-import {tosim,activepb,maxfolio,activefolioid,loadingfolio, bookByFolio,foliotext} from './store.js';
+import { bsearchNumber ,styledNumber,debounce, usePtk} from "ptk";
+import {activePtk,tosim,activepb,maxfolio,activefolioid,loadingfolio, bookByFolio,foliotext} from './store.js';
 import {goPbAt, loadFolio} from './nav.js'
 import Endmarker from './endmarker.svelte';
 import {_} from './textout.ts'
 import Juan from './juan.svelte'
 $: folio=[parseInt($activepb),0];
-export let ptk;
+$: ptk=usePtk($activePtk)
 export let closePopup;
 const setFolio=async (e)=>{
     if ($loadingfolio) return;
@@ -57,7 +57,7 @@ $: cknow=getCk($activepb,$loadingfolio);
 </script>
 <div  class="bodytext">
 {#if !$loadingfolio}
-<Juan {ptk} {closePopup}/>
+<Juan {closePopup}/>
 <Slider bind:value={folio} on:input={debounce(setFolio,800)} max={$maxfolio} min={1} >
     <span slot="caption" style="float:right">折{(folio[0]||1)}/{$maxfolio}</span></Slider>
 <div class="toc">

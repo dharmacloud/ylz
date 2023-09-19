@@ -4,13 +4,13 @@ import { loadFolio } from './nav.js';
 import {downloadToCache} from 'ptk/platform/downloader.js'
 import {CacheName} from './constant.js'
 export let thetab;
-import {activefolioid, tosim,parallelFolios,stopAudio,folioincache,online,activepb} from './store.js';
+import {activefolioid, tosim,parallelFolios,stopAudio,folioincache,online,activepb, activePtk} from './store.js';
 import Endmarker from './endmarker.svelte';
 import {ptkInCache} from './folio.js'
 import {_} from './textout.ts'
 import { usePtk,openPtk } from 'ptk';
 export let closePopup=function(){};
-let aptk="ylz-c",downloadmessage='';
+let aptk="ylz-prjn",downloadmessage='';
 let folios=[];
 const texttypeOf=prefix=>{
     if (prefix.slice(0,3)=='agm'||prefix=='lastword') return 1; //聲聞經
@@ -26,7 +26,7 @@ const openptk=async name=>{
     const ptk=await openPtk(name,new Uint8Array(buf));
     return ptk;
 }
-const getFolioList=async ()=>{
+const getFolioList=async (aptk)=>{
     const cachedPtks=await ptkInCache();
     const at=cachedPtks.indexOf(aptk);
     if (!~at) {
@@ -53,6 +53,7 @@ const getFolioList=async ()=>{
 const selectfolio=nfolio=>{
     const folio=usePtk(aptk).defines.folio;
     const folioid=folio.fields.id.values[nfolio];
+    activePtk.set(aptk);
     if ($folioincache[folioid] || $online) {
         stopAudio();
         loadFolio(folioid,function(){
@@ -92,14 +93,13 @@ $: getFolioList(aptk);
 </script>
 <div class="tabs">
     <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <span  class="clickable" class:selected={aptk=="ylz-c"}  on:click={()=>aptk="ylz-c"}>常用</span>
+    <span  class="clickable" class:selected={aptk=="ylz-prjn"}  on:click={()=>aptk="ylz-prjn"}>唯名</span>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <span  class="clickable" class:selected={aptk=="ylz-m"}  on:click={()=>aptk="ylz-m"}>{_("大乘",$tosim)}</span>
+    <span  class="clickable" class:selected={aptk=="ylz-tg"}  on:click={()=>aptk="ylz-tg"}>唯心</span>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <span class="clickable" class:selected={aptk=="ylz-svk"}  on:click={()=>aptk="ylz-svk"}>{_("聲聞",$tosim)}</span>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <span  class="clickable" class:selected={aptk=="ylz-vny"}  on:click={()=>aptk="ylz-vny"}>{_("戒律",$tosim)}</span>
-
+    <span  class="clickable" class:selected={aptk=="ylz-vny"}  on:click={()=>aptk="ylz-vny"}>戒律</span>
 </div>
 {#if folios.length}
 {#each folios as [nfolio,folioid,pars]}
@@ -130,7 +130,7 @@ $: getFolioList(aptk);
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <span class="clickable hyperlink" on:click={()=>installptk(aptk)}>安裝 {downloadmessage}</span>
 {#if aptk=="ylz-vny"}
-<br/>{_("在家居士閱讀聲聞戒律應有充份理由。")}
+<br/>{_("包含聲聞戒律，在家居士閱讀應有充份理由。")}
 {/if}
 </div>
 {/if}

@@ -1,11 +1,11 @@
 <script>
-import {activefolioid,loadingfolio,tapmark,activepb,tapAddress} from './store.js'
+import {activePtk,activefolioid,loadingfolio,tapmark,activepb,tapAddress} from './store.js'
 import Pager from './comps/pager.svelte'
 import { loadFolio,allJuan } from './nav.js';
-import {updateUrl,debounce} from 'ptk'
+import {updateUrl,debounce, usePtk} from 'ptk'
 import Slider from './3rd/rangeslider.svelte';
 export let closePopup;
-export let ptk;
+
 let juans=[]; //find out all juan
 const m=$activefolioid.match(/([a-z_]+)(\d+$)/);
 let currentjuan=m?parseInt(m[2]):1;
@@ -22,7 +22,7 @@ const gojuan=(juan)=>{
         loadJuan(newid);
     });
 }
-
+$: ptk=usePtk($activePtk)
 const loadJuan=(folioid,loading)=>{
     if (!ptk || loading) return [];
     const m=folioid.match(/([a-z_]+)(\d+$)/);

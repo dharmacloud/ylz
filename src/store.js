@@ -2,11 +2,11 @@ import {updateSettings,settings} from './savestore.ts'
 import {bsearchNumber, usePtk,makeAddress} from 'ptk'
 import { get,writable } from 'svelte/store';
 import {silence} from './mediaurls.js'
-export const APPVER = '23.9.18'
+export const APPVER = '23.9.19'
 
 export const online=writable(navigator.onLine);
 export const thezip=writable(null)
-export const activePtk=writable('ylz-c');
+export const activePtk=writable('ylz-prjn');
 export const folioincache=writable({});
 export const loadingfolio=writable(false);  //loadFolio done
 export const loadingzip=writable(false);  //load the folio zip
@@ -78,8 +78,8 @@ export const remainrollback=writable(-1);//infinite
 export const newbie=writable(settings.newbie);
 export const idlecount=writable(0);
 export const showpaiji=writable(false);
-export const ptks=['ylz-c','ylz_sanskrit','dc'];
-
+export const ptks=['ylz-prjn','ylz_sanskrit','dc'];
+export const allptks=['ylz-prjn','ylz-tg','ylz-svk','ylz-vny'];
 
 activefolioid.subscribe((activefolioid)=>updateSettings({activefolioid}));
 autodict.subscribe((autodict)=>updateSettings({autodict}));
@@ -114,14 +114,13 @@ export const stopAudio=()=>{
 
 export const booknameOf=folioid=>{
     const bkid=bookByFolio(folioid)
-    let ptk=usePtk('ylz-c');//assuming sanskrit text always has chinese correspond
-    let at=ptk.defines.bk.fields.id.values.indexOf(bkid);
-
-    if (!~at) {
-        const ptk=usePtk('ylz-m');//assuming sanskrit text always has chinese correspond
-
+    for (let i=0;i<allptks.length;i++) {
+        let ptk=usePtk(allptks[i]);
+        if (!ptk) continue;
+        let at=ptk.defines.bk.fields.id.values.indexOf(bkid);
+        if (~at) return bk.innertext.get(at);
     }
-    return bk.innertext.get(at);
+    return '';
 }
 
 export const idletime=30;

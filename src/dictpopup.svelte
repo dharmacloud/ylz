@@ -1,7 +1,8 @@
 <script>
 import { _ } from "./textout.ts";
-
-export let entries=[],ptk,wikipedia,fgdzd,dfb;
+import {activePtk} from "./store.js"
+import {usePtk} from "ptk"
+export let entries=[],wikipedia,fgdzd,dfb;
 let nentry=0;
 let src='',showing='';
 const wikilink=entry=>"https://zh.wikipedia.org/w/index.php?action=render&title="+encodeURIComponent(entry);
@@ -24,7 +25,7 @@ const availableDict=(n)=>{
     }
     if (!entries[n]) return;
     const at=entries[n][2];
-    const flag=ptk.columns.entries.dict[at];
+    const flag=usePtk($activePtk).columns.entries.dict[at];
     wikipedia=flag&1;
     fgdzd=flag&2;
     dfb=flag&4;

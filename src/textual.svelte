@@ -8,8 +8,9 @@ import Externals from './externals.svelte'
 import ParText from './partext.svelte'
 import {_} from './textout'
 import {usePtk,parseAction, toChineseNumber} from 'ptk'
-import {tosim,activefolioid,activepb, leftmode,hasVariorum,hasTranslation,hasSanskrit,bookByFolio, tapmark,foliotext} from './store.js'
-export let ptk;
+import {tosim,activefolioid,activepb, leftmode,activePtk,
+    hasVariorum,hasTranslation,hasSanskrit,bookByFolio, tapmark,foliotext} from './store.js'
+$: ptk=usePtk($activePtk);
 export let closePopup;
 
 const humanAddress=addr=>{

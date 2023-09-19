@@ -16,10 +16,11 @@ export let tofind='';
 export let address='';
 export let closePopup;
 let thetab=(get(landscape)||!tofind)?"textual":"dict";
-let ptk ,entries=[];
+let entries=[];
 
 const onDict=(t)=>{
     const tap_at=t.indexOf(CURSORMARK);
+    const ptk=usePtk($activePtk);
     entries=ptk.columns.entries.keys.findMatches( t.replace(CURSORMARK,'')).map(it=>[Math.abs(it[0]-tap_at-1),it[1],it[2]]);
     entries.sort((a,b)=> a[0]-b[0]);// 越接近點擊處的優先
     showdict=true;
@@ -39,7 +40,6 @@ const copyaddress=async ele=>{
 }
 */
 $: ls=get(landscape);
-$: ptk=usePtk($activePtk);
 $: setSearchable(tofind);
 $: thetab=='dict' && onDict(tofind);
 $: if ($sharing) thetab='dict';
@@ -74,18 +74,18 @@ $: if ($sharing) thetab='dict';
         {/if}
 
     </div>
-      <div class="tab-content" class:visible={thetab=='list'}><Foliolist {ptk} {closePopup}  bind:thetab /></div>
-      <div class="tab-content" class:visible={thetab=='toc'}><Toc {closePopup} {ptk} /></div>
+      <div class="tab-content" class:visible={thetab=='list'}><Foliolist {closePopup}  bind:thetab /></div>
+      <div class="tab-content" class:visible={thetab=='toc'}><Toc {closePopup}  /></div>
       <!-- <div class="tab-content" class:visible={thetab=='favorite'}><Favorite {address} {closePopup} {ptk} /></div> -->
-      <div class="tab-content" class:visible={thetab=='textual'}><Textual {closePopup} {ptk}/></div>
+      <div class="tab-content" class:visible={thetab=='textual'}><Textual {closePopup} /></div>
       
       {#if $sharing}
       <div class="tab-content" class:visible={thetab=='dict'}><Sharing/></div>
       {:else}
-      <div class="tab-content" class:visible={thetab=='dict'}><DictPopup {entries} {ptk} {address}/></div>
+      <div class="tab-content" class:visible={thetab=='dict'}><DictPopup {entries}  {address}/></div>
       {/if}
       
-      <div class="tab-content" class:visible={thetab=='audio'}><Audio {ptk}/></div>
+      <div class="tab-content" class:visible={thetab=='audio'}><Audio /></div>
       <div class="tab-content" class:visible={thetab=='about'}><About/></div>
 
  </div>
