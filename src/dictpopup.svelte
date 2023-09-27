@@ -10,11 +10,13 @@ const onelinelink=entry=>"https://buddhaspace.org/dict/index.php?keyword="+encod
 const googlelink=entry=>"https://www.google.com/search?q="+encodeURIComponent(entry);
 const baidulink=entry=>"https://www.baidu.com/s?wd="+encodeURIComponent(entry);
 const setWikipedia=()=>{
+    if (!entries[nentry]) nentry=0;
     const entry=entries[nentry][1];
     showing='wikipedia';
     src=wikilink(entry);
 }
 const setOneline=()=>{
+    if (!entries[nentry]) nentry=0;
     const entry=entries[nentry][1];
     showing='oneline';
     src=onelinelink(entry);
@@ -31,6 +33,7 @@ const availableDict=(n)=>{
     dfb=flag&4;
     if (fgdzd||dfb) setOneline();
     else if (wikipedia) setWikipedia();
+
 }
 
 $: availableDict(nentry,entries);

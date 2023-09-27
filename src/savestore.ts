@@ -1,6 +1,6 @@
 export const AppPrefix='YLZ.'
 export const loadSettings=()=>{
-    const activefolioid=localStorage.getItem(AppPrefix+'activefolioid')||'pphs';  
+    const activefolioid='pphs';//localStorage.getItem(AppPrefix+'activefolioid')||'pphs';  
     const autodict=localStorage.getItem(AppPrefix+'autodict')||'off';  
     const newbie=localStorage.getItem(AppPrefix+'newbie')||'on';  
     const playnextjuan=localStorage.getItem(AppPrefix+'playnextjuan')||'on';  

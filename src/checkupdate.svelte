@@ -1,5 +1,5 @@
 <script>
-import {tosim,hasupdate} from './store.js'
+import {tosim,hasupdate,allptks} from './store.js'
 import {onMount} from 'svelte'
 import {isLatest,downloadToCache} from 'ptk/platform/downloader.js'
 import {poolDel,openPtk} from 'ptk'
@@ -10,12 +10,11 @@ import { _ } from './textout.js';
 let updatestatus=[];
 let needupdate=0;
 onMount(async ()=>{
-    const cachedPtks=await ptkInCache();
-    updatestatus= cachedPtks.map(it=>[it, 'checking']);
-    needupdate=cachedPtks.length;
+    updatestatus= allptks.map(it=>[it, 'checking']);
+    needupdate=allptks.length;
 
-    for (let i=0;i<cachedPtks.length;i++) {
-        const same=await isLatest(cachedPtks[i]+'.ptk',CacheName);
+    for (let i=0;i<allptks.length;i++) {
+        const same=await isLatest(allptks[i]+'.ptk',CacheName);
         updatestatus[i][1]=same?'':'hasupdate';
         if (same) needupdate--;
     }

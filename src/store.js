@@ -2,7 +2,7 @@ import {updateSettings,settings} from './savestore.ts'
 import {bsearchNumber, usePtk,makeAddress} from 'ptk'
 import { get,writable } from 'svelte/store';
 import {silence} from './mediaurls.js'
-export const APPVER = '23.9.19'
+export const APPVER = '23.9.27'
 
 export const online=writable(navigator.onLine);
 export const thezip=writable(null)
@@ -78,8 +78,8 @@ export const remainrollback=writable(-1);//infinite
 export const newbie=writable(settings.newbie);
 export const idlecount=writable(0);
 export const showpaiji=writable(false);
-export const ptks=['ylz-prjn','ylz_sanskrit','dc'];
-export const allptks=['ylz-prjn','ylz-tg','ylz-svk','ylz-vny'];
+export const ptks=['ylz-prjn','ylz-tg','ylz_sanskrit','dc'];
+export const allptks=['ylz-prjn','ylz-tg','ylz-svk','ylz-vny','ylz_sanskrit','dc'];
 
 activefolioid.subscribe((activefolioid)=>updateSettings({activefolioid}));
 autodict.subscribe((autodict)=>updateSettings({autodict}));
@@ -113,9 +113,10 @@ export const stopAudio=()=>{
 }
 
 export const booknameOf=folioid=>{
-    const bkid=bookByFolio(folioid)
-    for (let i=0;i<allptks.length;i++) {
-        let ptk=usePtk(allptks[i]);
+    const bkid=bookByFolio(folioid);
+    const ptks=allptks.filter(it=>it.startsWith("ylz-"));
+    for (let i=0;i<ptks.length;i++) {
+        let ptk=usePtk(ptks[i]);
         if (!ptk) continue;
         let at=ptk.defines.bk.fields.id.values.indexOf(bkid);
         if (~at) return bk.innertext.get(at);
