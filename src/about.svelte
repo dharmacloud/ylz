@@ -1,5 +1,5 @@
 <script>
-import {newbie,showyoutube,showpunc,showsponsor,vip,heightratio,tosim, APPVER,textsize} from './store.js'
+import {newbie,showyoutube,showpunc,showsponsor,vip,heightratio,tosim, textsize} from './store.js'
 import {_} from './textout.ts'
 import Switch from './3rd/switch.svelte';
 import Sponsoring from './sponsoring.svelte';
@@ -15,7 +15,8 @@ import { documentHeight } from './fullscreen.js';
 import CheckUpdate from './checkupdate.svelte';
 import StateBtn from './comps/statebutton.svelte'
 import Endmarker from './endmarker.svelte';
-    import { getVip } from './vip.js';
+import {APPVER} from './constant.js'
+import { getVip } from './vip.js';
 let show=0,vipcode=$vip;
 let hratio=[ Math.floor((($heightratio*100)-90)*10) ,0]; 
 let textsz=[ $textsize ,0];

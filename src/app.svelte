@@ -5,8 +5,8 @@ import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import {downloadToCache} from 'ptk/platform/downloader.js'
 import { onDestroy, onMount } from "svelte";
 import {activefolioid,isAndroid,idlecount,showpaiji,leftmode,online,folioincache,showsponsor,tapmark,
-    newbie,idletime,landscape,APPVER,ptks} from './store.js'
-import {CacheName} from './constant.js'
+    newbie,idletime,landscape,ptks} from './store.js'
+import {CacheName,APPVER} from './constant.js'
 import {documentHeight} from './fullscreen.js'
 import {setTimestampPtk} from './mediaurls.js'
 import {fetchFolioList} from './folio.js'

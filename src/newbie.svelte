@@ -1,7 +1,8 @@
 <script>
 import { onDestroy } from "svelte";
 import Switch from "./3rd/switch.svelte";
-import {APPVER, newbie,tosim} from './store.js'
+import {newbie,tosim} from './store.js'
+import {APPVER} from './constant.js'
 import StateBtn from "./comps/statebutton.svelte";
 import {_} from './textout.ts'
 let value=$newbie;

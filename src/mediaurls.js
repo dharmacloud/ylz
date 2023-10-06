@@ -29,7 +29,7 @@ export const fetchAudioList=async (activeid,store,showyoutube=false)=>{
     const incaches=keys.map(it=>it.url.slice(window.location.origin.length+audiofolder.length).replace('.mp3',''))
 
     for (let i=0;i<ts.keys.len();i++) {
-        const aid=ts.keys.get(i);
+        const aid=ts.keys.get(i).replace(/\^\d+$/,'');
         const audiohost=ts.videohost[i];
         let performer=ts.performer[i];
         let youtube='';
@@ -47,8 +47,9 @@ export const fetchAudioList=async (activeid,store,showyoutube=false)=>{
     out.sort((a,b)=>   a.performer==b.performer?0: (a.performer<b.performer?-1:1))
 
     const cacheno=out.filter(it=>!it.incache).concat();
-    out=out.filter(it=>it.incache).concat(cacheno);
+    out=out.filter(it=>it.incache).concat(cacheno);   
     out.unshift(silence);
+    
     if (store) store.set(out);
     return out;
 };

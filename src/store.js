@@ -2,7 +2,6 @@ import {updateSettings,settings} from './savestore.ts'
 import {bsearchNumber, usePtk,makeAddress} from 'ptk'
 import { get,writable } from 'svelte/store';
 import {silence} from './mediaurls.js'
-export const APPVER = '23.9.27'
 
 export const online=writable(navigator.onLine);
 export const thezip=writable(null)
