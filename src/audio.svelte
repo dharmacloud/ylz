@@ -55,11 +55,11 @@ const loadSubtitle=async id=>{
     subtitles2=[],subtitles=[];
     if (!id) return;
     timestamp=findByAudioId(id,'timestamp_sanskrit')?.timestamp||[];
+    
     if (!timestamp?.length) return;
     const skptk=usePtk('dc_sanskrit');   
     subtitles2=await skptk.fetchAddress('bk#'+$activefolioid);
     subtitles=await ptk.fetchAddress('bk#'+$activefolioid);
-    
     nsub=0;
 }
 const htmltext=s=>{

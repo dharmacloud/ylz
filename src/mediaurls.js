@@ -29,7 +29,7 @@ export const fetchAudioList=async (activeid,store,showyoutube=false)=>{
     const incaches=keys.map(it=>it.url.slice(window.location.origin.length+audiofolder.length).replace('.mp3',''))
 
     for (let i=0;i<ts.keys.len();i++) {
-        const aid=ts.keys.get(i).replace(/\^\d+$/,'');
+        const aid=ts.keys.get(i);
         const audiohost=ts.videohost[i];
         let performer=ts.performer[i];
         let youtube='';
@@ -40,7 +40,7 @@ export const fetchAudioList=async (activeid,store,showyoutube=false)=>{
         }
         const timestamp=ts.timestamp[i];
         const bookid=ts.bookid[i];
-        const incache= 1 - !~incaches.indexOf(aid) 
+        const incache= 1 - !~incaches.indexOf(aid.replace(/\^\d+$/,''));
         activeid==bookid&&out.push( {aid,performer,youtube,incache,bookid,timestamp,audiohost});
     }
     //sort by name

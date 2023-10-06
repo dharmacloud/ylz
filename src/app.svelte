@@ -3,8 +3,8 @@ import { openPtk,addressFromUrl, usePtk} from 'ptk'
 import SwipeZipImage from "./swipezipimage.svelte";
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import {downloadToCache} from 'ptk/platform/downloader.js'
-import { onDestroy, onMount } from "svelte";
-import {activefolioid,isAndroid,idlecount,showpaiji,leftmode,online,folioincache,showsponsor,tapmark,
+import { onDestroy } from "svelte";
+import {activefolioid,isAndroid,idlecount,showpaiji,leftmode,online,folioincache,showsponsor,activePtk,
     newbie,idletime,landscape,ptks} from './store.js'
 import {CacheName,APPVER} from './constant.js'
 import {documentHeight} from './fullscreen.js'
@@ -44,21 +44,20 @@ const installptk=async name=>{
     return ptk;
 }
 
-onMount(async ()=>{
+const init=async ()=>{
     documentHeight();
     for (let i=0;i<ptks.length;i++) {
         const ptk=await installptk(ptks[i])
         bootmessage='open ptk '+ptks[i];
-        if (ptks[i]=='ylz-prjn') console.log(ptk)
+        //if (ptks[i]=='ylz-prjn') console.log(ptk)
         if (ptks[i]=='dc') setTimestampPtk(ptk)
     }
 
     bootmessage='fetching foliolist from cache';
     await fetchFolioList(folioincache);
 
-    ptk=usePtk('ylz-prjn');
     bootmessage='load folio address from url';
-    await loadAddress(ptk,addressFromUrl());
+    await loadAddress(addressFromUrl());
    
     bootmessage='loaded';
     loaded=true;
@@ -69,7 +68,7 @@ onMount(async ()=>{
             idlecount.set($idlecount+idleinterval);
         }
     },idleinterval*1000);
-});
+};
 
 
 let showpopup=false,shownewbie=$newbie=='on';
@@ -93,7 +92,7 @@ const orientation=(ls)=>{
 $: orientation($landscape)
 
 // $: console.log(sidepaiji,idletime,$idlecount,$showpaiji,$playing,showpopup)
-
+setTimeout(init,500);
 </script>
 
 <div class="app" bind:this={app}>

@@ -21,6 +21,6 @@ $: seekToPb($activepb,$audioid);
 </script>
 {#key $audioid}
 <audio bind:this={audioplayer}>
-    {#if $audioid}<source src={audiofolder+$audioid+'.mp3'}/>{/if}
+    {#if $audioid}<source src={audiofolder+$audioid.replace(/\^\d+$/,'')+'.mp3'}/>{/if}
 </audio>
 {/key}

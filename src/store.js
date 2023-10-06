@@ -92,6 +92,8 @@ preferaudio.subscribe((preferaudio)=>updateSettings({preferaudio}));
 tofindhistory.subscribe((tofindhistory)=>updateSettings({tofindhistory}));
 heightratio.subscribe((heightratio)=>updateSettings({heightratio}));
 tosim.subscribe((tosim)=>updateSettings({tosim}));
+
+
 textsize.subscribe((textsize)=>{
     const tsz=(textsize/100).toFixed(2)+'em'
     document.documentElement.style.setProperty('--textsize',tsz);

@@ -1,9 +1,8 @@
 import {foliotext,activefolioid ,audioid,tapmark,folioincache,tapAddress,
-    activepb,loadingfolio,bookByFolio, stopAudio,loadingzip} from "./store.js";
+    activepb,loadingfolio,bookByFolio, stopAudio,loadingzip,activePtk} from "./store.js";
 import {get} from 'svelte/store'
-import {bsearchNumber} from 'ptk/utils'
 import {fetchFolioList} from './folio.js'
-import {folioPosFromAddress,updateUrl} from 'ptk'
+import {folioPosFromAddress,updateUrl,poolGetAll,usePtk,bsearchNumber,FolioText} from 'ptk'
 export const CURSORMARK='◆'
 export const goPb=(pbid,ck)=>{   
     activepb.set(pbid);
@@ -125,10 +124,29 @@ export const goPtkLine=(ptk,line)=>{
     })
 }
 
-export const loadAddress=async(ptk,address)=>{
+export const loadAddress=async(address)=>{
     if (!address) return;
-    const addr=await folioPosFromAddress(ptk,address);
+    const allptks=poolGetAll();
+    let addr={};
+    for (let i=0;i<allptks.length;i++) {
+        const ptk=allptks[i]
+        if (!ptk) continue;
 
+        addr=await folioPosFromAddress(ptk,address);
+        if (addr.id) {
+            if (!get(foliotext)) { //initial load, foliotext is not ready, redo folioPosFromAddress
+                const ftext=new FolioText(ptk);//fetchFolioText(ptk,$activefolioid);
+                await ftext.load(addr.id)
+                foliotext.set(ftext);
+                addr=await folioPosFromAddress(ptk,address);
+            }
+            if (get(activePtk)!==ptk.name) {
+                activePtk.set(ptk.name);
+            }
+            break;
+        }
+    }
+    
     if (addr.id) {
         activefolioid.set(addr.id);
         const {pb,line,ch}=addr;

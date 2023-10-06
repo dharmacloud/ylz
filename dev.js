@@ -13,10 +13,11 @@ let ctx=await esbuild
     logLevel: "info",
   })
   .catch(() => process.exit(1));
-//await ctx.watch();
-
+await ctx.watch();
+/*
  await ctx.serve({
       servedir: 'dist',
       port:5000,
       host:"127.0.0.1"
  })
+ */
