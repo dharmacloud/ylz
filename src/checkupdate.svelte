@@ -5,7 +5,7 @@ import {isLatest,downloadToCache} from 'ptk/platform/downloader.js'
 import {poolDel,openPtk} from 'ptk'
 import {ptkInCache} from './folio.js'
 import { CacheName } from './constant.js';
-import { _ } from './textout.js';
+import { _ } from './textout.ts';
 
 let updatestatus=[];
 let needupdate=0;
@@ -45,9 +45,7 @@ const updateptk=async idx=>{
 </script>
 {#each updatestatus as [ptkname,status],idx}
 {#if status=='hasupdate'} 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<span class="clickable hyperlink needupdate" on:click={()=>updateptk(idx)}>
+<span aria-hidden="true" class="clickable hyperlink needupdate" on:click={()=>updateptk(idx)}>
     {_('更新',$tosim)+ ptkname}</span>
 {/if}
 {/each}

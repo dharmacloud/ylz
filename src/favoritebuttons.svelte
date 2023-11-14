@@ -17,6 +17,5 @@ const gofavor=(pb)=>{
 </script>
 
 {#each favors as [pb,favor]}
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<span on:click={()=>gofavor(pb)}>{favortypes[favor]}</span>
+<span aria-hidden="true" on:click={()=>gofavor(pb)}>{favortypes[favor]}</span>
 {/each}

@@ -27,8 +27,7 @@ const humancaption=()=>{
 $: humancaption($tapmark);
 </script>
 <Pager {caption} count={linecount} nextitems={5} previtems={4} now={sentnow} onselect={gosent} let:active let:caption let:idx>
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <span on:click={()=>gosent(idx)} class="clickable" class:selected={active}>{_(caption)}</span>
+    <span aria-hidden="true" on:click={()=>gosent(idx)} class="clickable" class:selected={active}>{_(caption)}</span>
 </Pager>
 
 <!-- {#key humanaddr}

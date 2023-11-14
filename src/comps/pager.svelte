@@ -54,13 +54,13 @@ const onswipe=(direction)=>{
 
 <SwipeView onSwipe={onswipe} caption={caption?"→"+caption:''}>
 {#if pages.length}
-<slot active={pages[0].idx==now} caption={pages[0].caption} idx=0 id={pages[0].id}></slot>
+<slot active={pages[0].idx==now} caption={'['+pages[0].caption} idx=0 id={pages[0].id}></slot>
 {/if}
 {#each neighbors as page}
 <slot active={page.idx==now} caption={page.caption+' '} idx={page.idx} id={page.id}></slot>
 {/each}
 
 {#if last}
-<slot active={last.idx==now} caption={last.caption} idx={last.idx} id={last.id}></slot>
+<slot active={last.idx==now} caption={last.caption+']'} idx={last.idx} id={last.id}></slot>
 {/if}
 </SwipeView>

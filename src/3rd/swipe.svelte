@@ -322,13 +322,11 @@ transition-duration: ${touch_end ? transitionDuration : '0'}ms;
       </div>
     </div>
   </div>
-  <!-- svelte-ignore a11y-click-events-have-key-events -->
-  <div class="swipe-handler" on:touchstart={onMoveStart} on:mousedown={onMoveStart} />
+  <div aria-hidden="true" class="swipe-handler" on:touchstart={onMoveStart} on:mousedown={onMoveStart} />
   {#if showIndicators}
     <div class="swipe-indicator swipe-indicator-inside">
       {#each indicators as x, i}
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span
+        <span aria-hidden="true" 
           class="dot {activeIndicator == i ? 'is-active' : ''}"
           on:click={() => {
             changeItem(i);

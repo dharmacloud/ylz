@@ -10,7 +10,8 @@
   --track-bg: #fffdf6;
   --progress-bg: #fef1a6;
   --thumb-bg: #d27700;
-  --hyperlink:#f99008
+  --hyperlink:#f99008;
+  --hit : rgb(255, 0, 0);  
 }
 
 body{
@@ -110,7 +111,7 @@ select {font-size:2em}
 .subtitle{
   font-size:1em;
 }
-.pager {font-size:var(--textsize)}
+
 .pagenumber {position:absolute ; bottom:0.5em;font-size: 2em;left:0.5em;z-index: 99;color:brown;pointer-events: none;}
 .playbtn {cursor:pointer; position:absolute ; bottom:0.5em; right:0.1em;font-size: 4em;z-index: 99;color:brown;opacity: 0.7;}
 .favoritebtn {cursor:pointer; position:absolute ; top:0px;font-size: 3em;right:0.1em;z-index: 99;color:brown;opacity: 0.7;}
@@ -251,3 +252,7 @@ a {color:var(--hyperlink)}
 .statebutton.disabled {cursor:auto;fill:none;stroke:var(--button-unselected) }
 .statebutton.unselected {color:gray}
 .statebutton.disabled:hover {fill:none; stroke: var(--button-unselected)}
+.hl0{color:var(--hit)}
+.hl1{color:rgb(255, 86, 86)}
+.hl2{color:rgb(238, 105, 255)}
+.hl2{color:rgb(90, 181, 255)}

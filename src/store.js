@@ -55,7 +55,9 @@ export const bookByFolio=(fid,ptk)=>{
     }
 }
 export const audioid=writable('');
-
+export const curPtk=()=>{
+    return usePtk(get(activePtk));
+}
 export const folioLines=function(_fid){
     const ptk=usePtk(get(activePtk));
     const fid=_fid||get(activefolioid);

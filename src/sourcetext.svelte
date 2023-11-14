@@ -23,7 +23,6 @@ $: updateParallels($tapmark,$loadingfolio);
 <div class="bodytext"> 
     <SentenceNav {ptk}/>
     {#each sourcetexts as item}
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div>{_(puretext(item.linetext))}</div>
     <div class="hr"/>
     {/each}

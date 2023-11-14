@@ -63,8 +63,7 @@ $: cknow=getCk($activepb,$loadingfolio);
 <div class="toc">
 {#key $tosim}
 {#each tocitems as item}
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<div on:click={()=>goBookPb(ptk,item.at)} class="tocitem" 
+<div aria-hidden="true" on:click={()=>goBookPb(ptk,item.at)} class="tocitem" 
     class:selecteditem={cknow==item.id}>{styledNumber(item.id,'①') + _(item.caption)}</div>
 {/each}
 {/key}

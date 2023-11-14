@@ -8,8 +8,7 @@ export const setTofind=tf=>{
 </script>
 <div class="bodytext">
 {#each items as item}
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<span on:click={()=>setTofind(item)}>{item}</span><!-- svelte-ignore a11y-click-events-have-key-events --><span 
+<span aria-hidden="true" on:click={()=>setTofind(item)}>{item}</span><span aria-hidden="true" 
 on:click={()=>removeTofind(item)} class="delete clickable">✕</span>
 {/each}
 </div>

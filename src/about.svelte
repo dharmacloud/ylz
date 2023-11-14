@@ -57,21 +57,16 @@ const onkeyup=(e)=>{
 }
 </script>
 <div class="tabs">
-<!-- svelte-ignore a11y-click-events-have-key-events -->
 {#key $tosim}
-<span class="clickable" 
+<span aria-hidden="true" class="clickable" 
 class:selected={show==1} on:click={toggleshowsponsoring}>{_("護持")}</span>
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class:selected={show==2}  class="clickable" on:click={toggleshowdonors}>芳名</span>
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class:selected={show==3}  class="clickable" on:click={toggleshowworkers}>伙伴</span>
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class:selected={show==4}  class="clickable" on:click={toggleshowmaterials}>素材</span>
-<!-- svelte-ignore a11y-click-events-have-key-events -->
+<span aria-hidden="true" class:selected={show==2}  class="clickable" on:click={toggleshowdonors}>芳名</span>
+<span aria-hidden="true" class:selected={show==3}  class="clickable" on:click={toggleshowworkers}>伙伴</span>
+<span aria-hidden="true" class:selected={show==4}  class="clickable" on:click={toggleshowmaterials}>素材</span>
 {#if $vip && getVip("title")}
-<span class:selected={show==6}  class="clickable" on:click={toggleshowstyle}>{_("項目")}</span>
+<span aria-hidden="true" class:selected={show==6}  class="clickable" on:click={toggleshowstyle}>{_("項目")}</span>
 {:else}
-<span class:selected={show==5}  class="clickable" on:click={toggleshowproject}>{_("關於")}</span>
+<span aria-hidden="true" class:selected={show==5}  class="clickable" on:click={toggleshowproject}>{_("關於")}</span>
 {/if}
 {/key}
 </div>

@@ -7,50 +7,13 @@ import SearchMain from  './searchmain.svelte'
 import Externals from './externals.svelte'
 import ParText from './partext.svelte'
 import {_} from './textout'
-import {usePtk,parseAction, toChineseNumber} from 'ptk'
+import {humanAddress} from './address.js'
+import {usePtk,toChineseNumber} from 'ptk'
 import {tosim,activefolioid,activepb, leftmode,activePtk,
     hasVariorum,hasTranslation,hasSanskrit,bookByFolio, tapmark,foliotext} from './store.js'
 $: ptk=usePtk($activePtk);
 export let closePopup;
 
-const humanAddress=addr=>{
-    const act=parseAction(addr);
-    let out='',isNikaya=false;
-    for (let i=0;i<act.length;i++) {
-        const [tagname,v]=act[i];
-        if (tagname=='bk') {
-            // if (v=='agms') out+='';
-            if (v=='agmm') out+='中';
-            else if (v=='agmss') out+='別';
-            else if (v=='agmd') out+='長';
-            else if (v=='agmu') out+='增';
-            
-        } else if (tagname=='ak') {
-            if (v=='mn') out+='中部';
-            else if (v=='dn') out+='長部';
-            else if (v=='an') out+='增支';
-            else if (v=='sn') out+='相應';
-            isNikaya=!!v.match(/[dmsa]n/);
-        } else if (tagname=='ck') {
-            if (isNikaya) {
-                if (out=='相應') {
-                    out=v.slice(1)+out;
-                } else if (out=='增支') {
-                    out+=v.slice(1)+'集';
-                } else {
-                    out+=v.slice(1)+'經';
-                }
-            } else {
-                const [start]=ptk.rangeOfAddress(addr);
-                const ck=ptk.nearestChunk(start);
-                out+=ck?.caption.replace(/\d+$/g,'')||''; //remove tailing number
-            }
-        } else if (tagname=='n') {
-            out+=v+'經';
-        }
-    }
-    return out+" ";
-}
 const getLinks=folioid=>{
     //todo 更精準地定位 經 ，目前是以頁首，有時是上一經
     const dcptk=usePtk("dc");
@@ -140,34 +103,26 @@ $: [externals,internals]=getLinks($activefolioid,$activepb);
 
 </script>
 <div class="tabs">    
+<span aria-hidden="true" class='clickable' class:selected={thetab=="search"} on:click={()=>selecttab("search")}>{_("搜尋",$tosim)}</span>    
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class='clickable' class:selected={thetab=="search"} on:click={()=>selecttab("search")}>{_("搜尋",$tosim)}</span>    
-
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class='clickable' class:selected={thetab=="chunktext"} on:click={()=>selecttab("chunktext")}>全文</span>    
+<span aria-hidden="true" class='clickable' class:selected={thetab=="chunktext"} on:click={()=>selecttab("chunktext")}>全文</span>    
 
 {#if hasSanskrit(bookByFolio($activefolioid))}
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class='clickable' class:selected={thetab=="sourcetext"} on:click={()=>selecttab("sourcetext")}>原文</span>    
+<span aria-hidden="true" class='clickable' class:selected={thetab=="sourcetext"} on:click={()=>selecttab("sourcetext")}>原文</span>    
 {/if}
 {#if hasTranslation(ptk,bookByFolio($activefolioid))}
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class='clickable' class:selected={thetab=="translations"} on:click={()=>selecttab("translations")}>{_("別譯",$tosim)}</span>
+<span aria-hidden="true" class='clickable' class:selected={thetab=="translations"} on:click={()=>selecttab("translations")}>{_("別譯",$tosim)}</span>
 {/if}
 {#if hasVariorum(bookByFolio($activefolioid))}
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class='clickable' class:selected={thetab=="variorum"} on:click={()=>selecttab("variorum")}>{_("集註",$tosim)}</span>    
+<span aria-hidden="true" class='clickable' class:selected={thetab=="variorum"} on:click={()=>selecttab("variorum")}>{_("集註",$tosim)}</span>    
 {/if}
 
 {#each internals as internal,idx}
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class='clickable' class:selected={thetab=="link"+idx} on:click={()=>selecttab("link"+idx)}>{internal[0]}</span> 
+<span aria-hidden="true" class='clickable' class:selected={thetab=="link"+idx} on:click={()=>selecttab("link"+idx)}>{internal[0]}</span> 
 {/each}
 
 
 {#key externals}
-<!-- svelte-ignore a11y-click-events-have-key-events -->
 <Externals {closePopup} links={externals}/>
 {/key}
 

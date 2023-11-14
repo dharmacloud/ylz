@@ -112,19 +112,16 @@ const speed1x=()=>{
 
 {#each $mediaurls as media,idx}
 {#if idx&& !$playing && media.youtube}
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<span on:click={goyoutube(media.youtube)}>{@html youtubeicon}</span>
+<span aria-hidden="true" on:click={goyoutube(media.youtube)}>{@html youtubeicon}</span>
 {/if}
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-
 {#if media.incache || !media.aid}
-<span class="clickable" on:click={()=>!downloading&&selectmedia(media.aid,true)} 
+<span aria-hidden="true" class="clickable" on:click={()=>!downloading&&selectmedia(media.aid,true)} 
 class:selected={media.aid==$audioid}>{_(media.performer)}{idx&&media.aid==$audioid?'♫':''}</span>
     <br/>
 {:else}
 {#if $online}
-<span class="uncache">{_(media.performer)+" "}</span><span class="clickable" on:click={()=>!downloading&&downloadit(media.aid)}>{@html downloadicon}</span>
+<span class="uncache">{_(media.performer)+" "}</span><span aria-hidden="true" class="clickable" on:click={()=>!downloading&&downloadit(media.aid)}>{@html downloadicon}</span>
 {#if downloading==media.aid}{progress}{/if}
 {#if $audioid==media.vid&& $audioid}{humanDuration(getDuration($audioid))}{/if}
 <br/>
@@ -141,8 +138,7 @@ class:selected={media.aid==$audioid}>{_(media.performer)}{idx&&media.aid==$audio
 
 <br/>
 {#if rate[0]!==100}
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class="clickable" on:click={speed1x}>{_("恢復正常速度")}</span>{/if}
+<span aria-hidden="true" class="clickable" on:click={speed1x}>{_("恢復正常速度")}</span>{/if}
 {_('重播次數')}：{value[0]>0?value[0]:_('無限')}
 {#if value[0]>0} { humanStoptime(value[0]*getDuration($audioid))}{/if}
 <Slider on:input={setRemain} bind:value min=0 max=10/>

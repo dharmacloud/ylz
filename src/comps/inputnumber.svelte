@@ -37,8 +37,7 @@ function setfocus(node){
 }
 </script>
 <span class="numinput">
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    {#if stepper}<span title="Ctrl ← min" class="stepper" class:disabled={value==min} on:mousedown={valdec}>←</span>{/if}<input title="↑ ↓ Ctrl-↑  Ctrl-↓"  use:setfocus {style} on:keydown={keydown} on:input={oninput} {value}/>{#if stepper}<span title="Ctrl → max" class="stepper"  class:disabled={value==max} on:mousedown={valinc}>→</span> {/if}
+    {#if stepper}<span aria-hidden="true" title="Ctrl ← min" class="stepper" class:disabled={value==min} on:mousedown={valdec}>←</span>{/if}<input title="↑ ↓ Ctrl-↑  Ctrl-↓"  use:setfocus {style} on:keydown={keydown} on:input={oninput} {value}/>{#if stepper}<span title="Ctrl → max" class="stepper"  class:disabled={value==max} on:mousedown={valinc}>→</span> {/if}
 </span>
 <style>
     .numinput{user-select: none;}

@@ -97,11 +97,8 @@ const setSutra=e=>{
 </script>
 
 <div class="bodytext">
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-
-<span class="clickable gotop" on:click={gotop}>↑</span>
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class="clickable goactiveline" on:click={goactiveline}>▃</span>
+<span aria-hidden="true" class="clickable gotop" on:click={gotop}>↑</span>
+<span aria-hidden="true" class="clickable goactiveline" on:click={goactiveline}>▃</span>
 <ChunkNav {ptk}/>
 
 {#if sutras.length}
@@ -111,8 +108,7 @@ const setSutra=e=>{
 <hr/>
 {#key activeline}
 {#each lines as line,idx}
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<div on:click={()=>setAddress(displayline+idx)} class:activeline={activeline==idx}>{@html renderLine(line)}</div>
+<div aria-hidden="true" on:click={()=>setAddress(displayline+idx)} class:activeline={activeline==idx}>{@html renderLine(line)}</div>
 {/each}
 {/key}
 <Endmarker/>

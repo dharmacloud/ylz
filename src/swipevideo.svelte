@@ -148,9 +148,7 @@ const setHandle=node=>{
 {#if mp4player?.currentTime<1}
 <div class="sponsor">中部全國供佛齋僧大會</div>
 {/if}
-<!-- svelte-ignore missing-declaration -->
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<div class="container" 	on:touchstart|passive={ontouchstart}
+<div aria-hidden="true" class="container" 	on:touchstart|passive={ontouchstart}
 	on:touchmove|passive={ontouchmove}
 	on:touchend|passive={ontouchend}
 	on:click={onclick}

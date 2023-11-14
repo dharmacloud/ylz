@@ -92,28 +92,22 @@ $: getFolioList(aptk);
 
 </script>
 <div class="tabs">
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <span  class="clickable" class:selected={aptk=="ylz-prjn"}  on:click={()=>aptk="ylz-prjn"}>唯名</span>
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <span  class="clickable" class:selected={aptk=="ylz-tg"}  on:click={()=>aptk="ylz-tg"}>唯心</span>
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <span class="clickable" class:selected={aptk=="ylz-svk"}  on:click={()=>aptk="ylz-svk"}>{_("聲聞",$tosim)}</span>
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <span  class="clickable" class:selected={aptk=="ylz-vny"}  on:click={()=>aptk="ylz-vny"}>戒律</span>
+    <span aria-hidden="true" class="clickable" class:selected={aptk=="ylz-prjn"}  on:click={()=>aptk="ylz-prjn"}>唯名</span>
+    <span aria-hidden="true" class="clickable" class:selected={aptk=="ylz-tg"}  on:click={()=>aptk="ylz-tg"}>唯心</span>
+    <span aria-hidden="true" class="clickable" class:selected={aptk=="ylz-svk"}  on:click={()=>aptk="ylz-svk"}>{_("聲聞",$tosim)}</span>
+    <span aria-hidden="true" class="clickable" class:selected={aptk=="ylz-vny"}  on:click={()=>aptk="ylz-vny"}>戒律</span>
 </div>
 {#if folios.length}
 {#each folios as [nfolio,folioid,pars]}
 <div class="book">
 {#key $tosim}
- <!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class:dimmed={!$folioincache[folioid]} on:click={()=>selectfolio(nfolio)} 
+<span aria-hidden="true" class:dimmed={!$folioincache[folioid]} on:click={()=>selectfolio(nfolio)} 
     class:selecteditem={samesutra($activefolioid,folioid)} >{getFolioName(nfolio)}</span>
 
 <Favoritebuttons ptk={usePtk(aptk)} {folioid} {closePopup}/>
 {#each pars as par}
-<!-- svelte-ignore a11y-click-events-have-key-events -->
 {#if $folioincache[getFolioId(par)] || $online}
-<span class="parallelfolio" on:click={()=>selectfolio(par)} 
+<span aria-hidden="true" class="parallelfolio" on:click={()=>selectfolio(par)} 
     class:dimmed={!$folioincache[getFolioId(par)]}
     class:selecteditem={$activefolioid==getFolioId(par)} >
 {getFolioName(par)}</span>
@@ -127,8 +121,7 @@ $: getFolioList(aptk);
 
 {:else}
 <div class="bodytext">
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class="clickable hyperlink" on:click={()=>installptk(aptk)}>安裝 {downloadmessage}</span>
+<span aria-hidden="true" class="clickable hyperlink" on:click={()=>installptk(aptk)}>安裝 {downloadmessage}</span>
 {#if aptk=="ylz-vny"}
 <br/>{_("包含聲聞戒律，在家居士閱讀應有充份理由。")}
 {/if}

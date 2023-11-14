@@ -295,9 +295,8 @@ const toggleplaybtn=()=>{
 $: loadZip(src);
 $: gotoPb($activepb); //trigger by goto folio in setting.svelte
 </script>
-<!-- svelte-ignore a11y-click-events-have-key-events -->
 {#if ready}
-<div class="swipe-holder" on:wheel={mousewheel} style={ "opacity:"+($leftmode!=='folio'?'0;':'1')+";width:"+folioHolderWidth($landscape,1,swiper)}>
+<div aria-hidden="true" class="swipe-holder" on:wheel={mousewheel} style={ "opacity:"+($leftmode!=='folio'?'0;':'1')+";width:"+folioHolderWidth($landscape,1,swiper)}>
 <Swipe bind:this={swiper} {...swipeConfig} {defaultIndex} 
  on:click={onfoliopageclick} on:start={swipeStart} on:change={swipeChanged}>
  <SwipeItem><img src={blankimage} alt='no' class="leftimage swipe"/></SwipeItem>
@@ -310,13 +309,11 @@ $: gotoPb($activepb); //trigger by goto folio in setting.svelte
 {/if}
 {#if !$landscape && totalpages-defaultIndex>1}
 {#key favoritetimer}
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class:blinkfavorbtn={!!favoritetimer} class="favoritebtn" on:click={favoritebtn}>{ favortypes[$favorites[$activefolioid]?.[$activepb]||0]}</span>
+<span aria-hidden="true" class:blinkfavorbtn={!!favoritetimer} class="favoritebtn" on:click={favoritebtn}>{ favortypes[$favorites[$activefolioid]?.[$activepb]||0]}</span>
 {/key}
 {/if}
 {#if !$landscape  && $mediaurls.filter(it=>it.incache).length}
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class="playbtn" on:click={toggleplaybtn}>{$audioid?'◼':'♫'}</span>
+<span aria-hidden="true" class="playbtn" on:click={toggleplaybtn}>{$audioid?'◼':'♫'}</span>
 {/if}
 
 <span class="pagenumber">{imageIndex+1}</span>

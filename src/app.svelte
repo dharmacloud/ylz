@@ -109,8 +109,7 @@ setTimeout(init,500);
 <Left/>
 {/if}
 {#if (shownewbie||showpopup) && !$landscape}
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<span class="closepopup" on:click={closePopup}>✖️</span> <!--╳-->
+<span aria-hidden="true" class="closepopup" on:click={closePopup}>✖️</span> <!--╳-->
 {/if}
 {#if showpopup || $landscape}
 <TapText {tofind} {closePopup}/>
