@@ -256,3 +256,5 @@ a {color:var(--hyperlink)}
 .hl1{color:rgb(255, 86, 86)}
 .hl2{color:rgb(238, 105, 255)}
 .hl2{color:rgb(90, 181, 255)}
+.ck{font-size:80%}
+.excerptseq {padding-left:0.3em;padding-right:0.3em;font-size:90%;color:gray}

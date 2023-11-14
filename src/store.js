@@ -94,7 +94,9 @@ preferaudio.subscribe((preferaudio)=>updateSettings({preferaudio}));
 tofindhistory.subscribe((tofindhistory)=>updateSettings({tofindhistory}));
 heightratio.subscribe((heightratio)=>updateSettings({heightratio}));
 tosim.subscribe((tosim)=>updateSettings({tosim}));
-
+tofind.subscribe(tf=>{
+    console.log('tf',tf)
+})
 
 textsize.subscribe((textsize)=>{
     const tsz=(textsize/100).toFixed(2)+'em'
@@ -108,6 +110,7 @@ export const findByAudioId=(id,column='timestamp')=>{
     const ts=ptk.columns[column].fieldsByKey(id);
     return {id,...ts};
 }
+
 
 export const stopAudio=()=>{
     if (player&&player.paused) player?.pause();

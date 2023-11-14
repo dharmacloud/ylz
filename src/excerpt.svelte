@@ -1,12 +1,12 @@
 <script>
 import {usePtk,listExcerpts,MAXPHRASELEN} from 'ptk'
-import {activePtk} from './store.js'
+import {activePtk,tofind} from './store.js'
 import {makeAddressFromLine,humanAddress} from './address.js'
 import ExcerptLine from './excerptline.svelte'
 import Pager from './comps/pager.svelte';
 import {_} from './textout.ts'
 import Swipeview from './comps/swipeview.svelte';
-export let tofind;//,includesent,excludesent; //derived from sentat and sentsearchmode
+
 export let goLine;
 const ITEMPERPAGE=5;
 $: ptk=usePtk($activePtk);
@@ -25,7 +25,7 @@ const setScope=async (idx,range)=>{
     if (!range) {
         rangecaption='';
     }
-    const {lines,chunks,phrases,postings}=await listExcerpts(ptk,tofind, 
+    const {lines,chunks,phrases,postings}=await listExcerpts(ptk,$tofind, 
     {range:range||scopes[at].scope});
     allphrases=phrases;
     allpostings=postings;
@@ -87,9 +87,13 @@ const gock=(idx)=>{
     goLine(line);
     selecteditem=idx;
 }
-const updateList=()=>{
-    console.log('updatelist',tofind)
-    ptk.scanText(tofind).then(res=>{
+
+const gochar=(line,choff)=>{
+    goLine(line,choff);
+}
+
+const updateList=(tf)=>{
+    ptk.scanText(tf).then(res=>{
         scopes=res;
         let done=false;
         for (let i=0;i<scopes.length;i++) { //first no-null scope
@@ -113,7 +117,10 @@ const onSwipe=direction=>{
     if (now>=pages.length-1) now=pages.length-1;
     gopage(now);
 }
-$: updateList(tofind,$activePtk)
+
+
+$: updateList($tofind,$activePtk)
+
 </script>
 <div class="bodytextarea">
 {#each scopes as scope,idx}
@@ -131,8 +138,8 @@ $: updateList(tofind,$activePtk)
 <Swipeview {onSwipe}>
 {#each excerpts as excerpt,idx}
 <div class="excerptline" class:oddline={idx%2==0}>
-<span class="excerptseq" >{idx+(now*ITEMPERPAGE)+1}</span><ExcerptLine {...excerpt}/>
-<span class:selected={selecteditem==idx} class="clickable" aria-hidden="true" on:click={()=>go(idx+(now*ITEMPERPAGE))}>{humanAddress(makeAddressFromLine(excerpt.line))}</span>
+<span class="excerptseq" >{idx+(now*ITEMPERPAGE)+1}</span><ExcerptLine {gochar} {...excerpt}/>
+<span class:selected={selecteditem==idx+(now*ITEMPERPAGE)} class="clickable ck" aria-hidden="true" on:click={()=>go(idx+(now*ITEMPERPAGE))}>{humanAddress(makeAddressFromLine(excerpt.line))}</span>
 </div>
 {/each}
 </Swipeview>

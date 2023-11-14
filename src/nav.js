@@ -115,10 +115,10 @@ export const folioPosFromPtkLine=(ptk,line)=>{
     }
     return {folioid,ckid,lineoff}
 }
-export const goPtkLine=(ptk,line)=>{
+export const goPtkLine=(ptk,line,choff=0)=>{
     const {folioid,ckid,lineoff}=folioPosFromPtkLine(ptk,line);
     loadFolio(folioid,()=>{
-        const foliopos=get(foliotext).toFolioPos(ckid,lineoff);
+        const foliopos=get(foliotext).toFolioPos(ckid,lineoff,choff);
         tapmark.set(foliopos);
         activepb.set(foliopos[0]);
     })

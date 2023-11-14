@@ -1,6 +1,6 @@
 <script>
-import { splitUTF32Char ,listExcerpts, parseOfftext} from 'ptk';
-import { addTofind, leftmode, searchable, tofind,tosim} from './store.js'
+import { splitUTF32Char } from 'ptk';
+import { addTofind, leftmode, searchable, tofind} from './store.js'
 import { goPtkLine } from './nav.js';
 import SearchHelp from './searchhelp.svelte'
 
@@ -8,14 +8,7 @@ import {_} from './textout.ts'
 import Endmarker from './endmarker.svelte';
 import Excerpt from './excerpt.svelte'
 export let ptk;
-let items=[], theinput, activeidx=-1, value='',
-excerpts=[],chunkhits=[],
-selected=-1,pagecount=0,selecteditem=-1;
-let scopes=[];
-let allexcerpts=[], allchunkhits=[], allpostings=[];
-let now=0;
-const ITEMPERPAGE=10;
-let rangecaption='';
+let items=[], theinput, activeidx=-1, value='';
 const makeSearchable=t=>{
     items.length=0;
     const chars=splitUTF32Char(t);
@@ -52,6 +45,13 @@ const onchange=()=>{
         tofind.set(value);
     },250);
 }
+
+const goLine=(line,choff=0)=>{
+    goPtkLine(ptk, line,choff);
+    leftmode.set('folio')
+    addTofind(value);
+}
+
 /*
 const dosearch=()=>{
     excerpts.length=0;
@@ -119,22 +119,19 @@ const gopage=async idx=>{
     now=idx;
 }
 */
-const goLine=(line)=>{
-    goPtkLine(ptk, line);
-    leftmode.set('folio')
-    addTofind(value);
-}
+
+/*
 const go=(idx)=>{
     let line=allexcerpts[idx][0];
     goLine(line);
     selecteditem=idx;
 }
-// const gock=(idx)=>{
-//     const chit=chunkhits[idx]
-//     const line=chit.ck.line;
-//     goLine(line);
-//     selecteditem=idx;
-// }
+ const gock=(idx)=>{
+     const chit=chunkhits[idx]
+     const line=chit.ck.line;
+     goLine(line);
+     selecteditem=idx;
+ }
 const setChunkScope=(ck)=>{
     const rangeaddr='bk#'+ck.bk.id+'.ck#'+ck.id;
     rangecaption=(ck.bk?.caption||'')+'/'+ck.caption;
@@ -151,6 +148,7 @@ const onblur=()=>{
         leftmode.set('folio')
     },200);
 }
+*/
 $: makeSearchable($searchable)
 //$: dosearch( value, activeidx,$searchable)
 </script>
@@ -162,14 +160,14 @@ on:focus={onfocus} on:blur={onblur} on:input={onchange} bind:value id="tofind"/>
 {/each}
 {#if !items.length}【{_("候選區")}】{/if}
 </div>
-{#if value=='' && activeidx==-1}
+{#if $tofind==''&&value=='' && activeidx==-1}
 <SearchHelp/>
 <Endmarker/>
 {:else}
 
 
 <div class="bodytext">
-<Excerpt {goLine} tofind={$tofind}/>
+<Excerpt {goLine}/>
 </div>
 <!--
 <div class="bodytext">
