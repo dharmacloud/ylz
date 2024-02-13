@@ -2,7 +2,7 @@
 import { styledNumber} from "ptk";
 import { foliotext,tapmark, activepb} from "./store.js";
 export let ptk;
-import {_} from './textout.ts'
+import {_} from './textout.js'
 import Pager from './comps/pager.svelte'
 let sentnow=0;
 

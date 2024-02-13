@@ -4,7 +4,7 @@ import { addTofind, leftmode, searchable, tofind} from './store.js'
 import { goPtkLine } from './nav.js';
 import SearchHelp from './searchhelp.svelte'
 
-import {_} from './textout.ts'
+import {_} from './textout.js'
 import Endmarker from './endmarker.svelte';
 import Excerpt from './excerpt.svelte'
 export let ptk;
@@ -138,17 +138,17 @@ const setChunkScope=(ck)=>{
     setScope(selected*2+1,rangeaddr);
 }
 
-const onfocus=()=>{
-    activeidx=-1;
-    leftmode.set('input')
-}
 
+*/
 const onblur=()=>{
     setTimeout(()=>{
         leftmode.set('folio')
     },200);
 }
-*/
+const onfocus=()=>{
+    activeidx=-1;
+    leftmode.set('input')
+}
 $: makeSearchable($searchable)
 //$: dosearch( value, activeidx,$searchable)
 </script>
@@ -160,7 +160,7 @@ on:focus={onfocus} on:blur={onblur} on:input={onchange} bind:value id="tofind"/>
 {/each}
 {#if !items.length}【{_("候選區")}】{/if}
 </div>
-{#if $tofind==''&&value=='' && activeidx==-1}
+{#if $leftmode=='input' && value.trim()=='' }
 <SearchHelp/>
 <Endmarker/>
 {:else}

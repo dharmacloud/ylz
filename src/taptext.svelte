@@ -4,18 +4,15 @@ import Foliolist from "./foliolist.svelte"
 import Audio from "./audio.svelte"
 import About from "./about.svelte"
 import Textual from './textual.svelte'
-import { get } from 'svelte/store';
 import Sharing from './sharing.svelte'
 import Toc from "./toc.svelte"
-import {_} from './textout.ts'
+import {_} from './textout.js'
 import {activePtk, landscape,sideWidth,searchable,mediaurls,sharing,tosim,hasupdate} from './store.js'
 import { usePtk} from "ptk";
 import {CURSORMARK} from './nav.js'
-
 export let tofind='';
-export let address='';
 export let closePopup;
-let thetab=(get(landscape)||!tofind)?"textual":"dict";
+let thetab=($landscape||!tofind)?"textual":"dict";
 let entries=[];
 
 const onDict=(t)=>{
@@ -23,10 +20,9 @@ const onDict=(t)=>{
     const ptk=usePtk($activePtk);
     entries=ptk.columns.entries.keys.findMatches( t.replace(CURSORMARK,'')).map(it=>[Math.abs(it[0]-tap_at-1),it[1],it[2]]);
     entries.sort((a,b)=> a[0]-b[0]);// 越接近點擊處的優先
-    showdict=true;
+    //showdict=true;
 }
 const setSearchable=t=>{
-    // console.log('setsearchable',t)
     const tap_at=t.indexOf(CURSORMARK);
     searchable.set(t.slice(tap_at+1));
 }
@@ -39,7 +35,7 @@ const copyaddress=async ele=>{
     },2000)
 }
 */
-$: ls=get(landscape);
+$: ls=$landscape;
 $: setSearchable(tofind);
 $: thetab=='dict' && onDict(tofind);
 $: if ($sharing) thetab='dict';
@@ -74,7 +70,7 @@ $: if ($sharing) thetab='dict';
       {#if $sharing}
       <div class="tab-content" class:visible={thetab=='dict'}><Sharing/></div>
       {:else}
-      <div class="tab-content" class:visible={thetab=='dict'}><DictPopup {entries}  {address}/></div>
+      <div class="tab-content" class:visible={thetab=='dict'}><DictPopup {entries}/></div>
       {/if}
       
       <div class="tab-content" class:visible={thetab=='audio'}><Audio /></div>

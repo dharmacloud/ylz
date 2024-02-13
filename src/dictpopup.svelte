@@ -1,8 +1,9 @@
 <script>
-import { _ } from "./textout.ts";
+import { _ } from "./textout.js";
 import {activePtk} from "./store.js"
 import {usePtk} from "ptk"
-export let entries=[],wikipedia,fgdzd,dfb;
+export let entries=[];
+let wikipedia,fgdzd,dfb;
 let nentry=0;
 let src='',showing='';
 const wikilink=entry=>"https://zh.wikipedia.org/w/index.php?action=render&title="+encodeURIComponent(entry);

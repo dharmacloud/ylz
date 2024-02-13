@@ -4,7 +4,7 @@ import { bsearchNumber ,styledNumber,debounce, usePtk} from "ptk";
 import {activePtk,tosim,activepb,maxfolio,activefolioid,loadingfolio, bookByFolio,foliotext} from './store.js';
 import {goPbAt, loadFolio} from './nav.js'
 import Endmarker from './endmarker.svelte';
-import {_} from './textout.ts'
+import {_} from './textout.js'
 import Juan from './juan.svelte'
 $: folio=[parseInt($activepb),0];
 $: ptk=usePtk($activePtk)

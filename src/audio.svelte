@@ -11,7 +11,7 @@ import {audiofolder,fetchAudioList} from './mediaurls.js'
 import {allJuan} from './nav.js'
 import {downloadicon,youtubeicon} from './icons.js'
 import { downloadToCache } from 'ptk/platform/downloader.js';
-import {_} from './textout.ts'
+import {_} from './textout.js'
 import Endmarker from './endmarker.svelte';
 $: ptk = usePtk($activePtk);
 let rate=[$playrate||100,0];
@@ -143,7 +143,7 @@ class:selected={media.aid==$audioid}>{_(media.performer)}{idx&&media.aid==$audio
 {#if value[0]>0} { humanStoptime(value[0]*getDuration($audioid))}{/if}
 <Slider on:input={setRemain} bind:value min=0 max=10/>
 {#if ptk&&allJuan(ptk).length>1}
-<Switch label={_('自動播放下一卷')} design="slider" fontSize="24" bind:value={$playnextjuan}></Switch>
+<Switch label={_('自動播放下一卷')} design="slider"  bind:value={$playnextjuan}></Switch>
 {/if}
 
 <hr/>

@@ -131,7 +131,6 @@ export const loadAddress=async(address)=>{
     for (let i=0;i<allptks.length;i++) {
         const ptk=allptks[i]
         if (!ptk) continue;
-
         addr=await folioPosFromAddress(ptk,address);
         if (addr.id) {
             if (!get(foliotext)) { //initial load, foliotext is not ready, redo folioPosFromAddress

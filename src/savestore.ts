@@ -38,7 +38,7 @@ export const saveSettings=()=>{ //immediate save
     clearTimeout(updateTimer);
     // console.log('settings autosaved on',new Date())
 }
-let updateTimer=0;
+let updateTimer;
 const settingsToBeSave={};
 export const updateSettings=_settings=>{
     let updated=false,oldval;

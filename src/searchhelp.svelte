@@ -1,6 +1,6 @@
 <script>
 import TofindHistory from './tofindhistory.svelte'
-import {_} from './textout.ts'
+import {_} from './textout.js'
 </script>
 <TofindHistory/>
 <hr/>

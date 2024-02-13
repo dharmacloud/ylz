@@ -1,10 +1,10 @@
 <script>
 import {parseOfftext} from 'ptk'
-import QRCode from 'qrcode'
+// import QRCode from 'qrcode/lib/index.js'
 import {shareAddress, foliotext,tapmark,tosim} from './store.js'
-import {_} from './textout.ts'
+import {_} from './textout.js'
 import { onMount } from 'svelte';
-/* TODO  add more sentence */
+/* TODO  add more sentence */ 
 const copylinkmsg='已複製連結到剪貼薄'
 let qrcode='',linetext,title='',caption='',msg=copylinkmsg;
 
@@ -13,7 +13,7 @@ onMount(async()=>{
     linetext=parseOfftext(cl?.linetext||'')[0];
     title=cl?.ck.bk.heading||'';
     caption=cl?.ck.caption;
-    qrcode=await QRCode.toString( shareAddress(),{type:'svg'});
+    // qrcode=await QRCode.toString( shareAddress(),{type:'svg'});
 });
 let timer;
 const showmessage=(_msg)=>{

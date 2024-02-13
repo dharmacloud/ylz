@@ -8,7 +8,7 @@ import SwipeItem from './3rd/swipeitem.svelte';
 import {downloadToCache} from 'ptk/platform/downloader.js'
 import {extractPuncPos,usePtk,FolioText, parseOfftext,updateUrl,addressFromUrl} from 'ptk'
 import { CURSORMARK} from './nav.js';
-import {ZipStore} from 'ptk/zip';
+import {ZipStore} from 'ptk/zip/zipstore.ts';
 import DownloadStatus from './downloadstatus.svelte'
 import {CacheName} from './constant.js'
 import {thezip,favortypes, landscape,foliotext,folioLines,isSidePaiji,tapAddress,
@@ -17,6 +17,8 @@ maxfolio,tapmark, playing, remainrollback, showyoutube,shareAddress,makeAddressF
 idlecount,showpaiji,loadingzip, selectmedia, preferaudio,folioHolderWidth,leftmode,mediaurls, downloading, sharing} from './store.js'
 import { get } from 'svelte/store';
 import { fetchAudioList } from './mediaurls';
+    import { AppPrefix } from './savestore';
+export let onMainmenu=()=>{}
 
 export let src;
 
@@ -170,7 +172,7 @@ const mousewheel=(e)=>{
     if (!ready) return;
 	if (e.ctrlKey ) return;
     hidepunc=true;
-    pb=parseInt($activepb);
+    let pb=parseInt($activepb);
 	if (e.deltaY>0) {
         pb++;
         if (pb>totalpages) pb=1;
@@ -215,7 +217,9 @@ const onfoliopageclick=e=>{
         sharing.set(false)
         tapmark.set(newmark);
     }
-    updateUrl(tapAddress());
+    const _addr=tapAddress();
+    updateUrl(_addr);
+    localStorage.setItem(AppPrefix+'homeurl',_addr);
     const ft=get(foliotext);
     let {choff,linetext}=ft.fromFolioPos($activepb,cx,cy);
     linetext=linetext.replace(/([。！？：、．；，「『（ ])/g,'　');
@@ -331,9 +335,9 @@ folioLines={folioLines()} frame={imageFrame} />
 {#key puncs}
 {#if !hidepunc}
 {#if $showpunc=='on'&& $leftmode=='folio'}
-<PuncLayer frame={imageFrame} folioChars={$folioChars} folioLines={folioLines()} {puncs} />
+<PuncLayer frame={imageFrame}  {puncs} />
 {/if}
-<TranscriptLayer frame={imageFrame} {totalpages} folioLines={folioLines()} {swiper} {ptk} {foliopage}/>
+<TranscriptLayer frame={imageFrame} {totalpages} {ptk} {foliopage}/>
 {/if}
 {/key}
 <style>

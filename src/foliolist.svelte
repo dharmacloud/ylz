@@ -7,7 +7,7 @@ export let thetab;
 import {activefolioid, tosim,parallelFolios,stopAudio,folioincache,online,activepb, activePtk} from './store.js';
 import Endmarker from './endmarker.svelte';
 import {ptkInCache} from './folio.js'
-import {_} from './textout.ts'
+import {_} from './textout.js'
 import { usePtk,openPtk } from 'ptk';
 export let closePopup=function(){};
 let aptk="ylz-prjn",downloadmessage='';
@@ -94,6 +94,7 @@ $: getFolioList(aptk);
 <div class="tabs">
     <span aria-hidden="true" class="clickable" class:selected={aptk=="ylz-prjn"}  on:click={()=>aptk="ylz-prjn"}>唯名</span>
     <span aria-hidden="true" class="clickable" class:selected={aptk=="ylz-tg"}  on:click={()=>aptk="ylz-tg"}>唯心</span>
+    <span aria-hidden="true" class="clickable" class:selected={aptk=="ylz-rite"}  on:click={()=>aptk="ylz-rite"}>{_("懺儀",$tosim)}</span>
     <span aria-hidden="true" class="clickable" class:selected={aptk=="ylz-svk"}  on:click={()=>aptk="ylz-svk"}>{_("聲聞",$tosim)}</span>
     <span aria-hidden="true" class="clickable" class:selected={aptk=="ylz-vny"}  on:click={()=>aptk="ylz-vny"}>戒律</span>
 </div>
@@ -104,14 +105,14 @@ $: getFolioList(aptk);
 <span aria-hidden="true" class:dimmed={!$folioincache[folioid]} on:click={()=>selectfolio(nfolio)} 
     class:selecteditem={samesutra($activefolioid,folioid)} >{getFolioName(nfolio)}</span>
 
-<Favoritebuttons ptk={usePtk(aptk)} {folioid} {closePopup}/>
+<Favoritebuttons {folioid} {closePopup}/>
 {#each pars as par}
 {#if $folioincache[getFolioId(par)] || $online}
 <span aria-hidden="true" class="parallelfolio" on:click={()=>selectfolio(par)} 
     class:dimmed={!$folioincache[getFolioId(par)]}
     class:selecteditem={$activefolioid==getFolioId(par)} >
 {getFolioName(par)}</span>
-<Favoritebuttons folioid={getFolioId(par)} ptk={usePtk(aptk)} {closePopup} />
+<Favoritebuttons folioid={getFolioId(par)} {closePopup} />
 {/if}
 
 {/each}

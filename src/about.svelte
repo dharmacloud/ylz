@@ -1,6 +1,6 @@
 <script>
 import {newbie,showyoutube,showpunc,showsponsor,vip,heightratio,tosim, textsize} from './store.js'
-import {_} from './textout.ts'
+import {_} from './textout.js'
 import Switch from './3rd/switch.svelte';
 import Sponsoring from './sponsoring.svelte';
 import HOF from './hof.svelte'
@@ -107,10 +107,10 @@ placeholder={_("沒有也可正常使用")} size=12 type="text" on:keyup={onkeyu
 </Slider>
 <br/>
 {#key $tosim}
-<Switch bind:value={$showpunc} label={_("顯示標點符號")} design="slider" fontSize="24"/>
-<Switch bind:value={$showsponsor} label={_("靜置時顯示施主")} design="slider" fontSize="24"/>
-<Switch bind:value={$showyoutube} label={_("顯示油管影片連結")} design="slider" fontSize="24"/>
-<Switch bind:value={$newbie} label={_("啟動時顯示歡迎畫面")} design="slider" fontSize="24"/>
+<Switch bind:value={$showpunc} label={_("顯示標點符號")} design="slider" />
+<Switch bind:value={$showsponsor} label={_("靜置時顯示施主")} design="slider" />
+<Switch bind:value={$showyoutube} label={_("顯示油管影片連結")} design="slider" />
+<Switch bind:value={$newbie} label={_("啟動時顯示歡迎畫面")} design="slider" />
 {/key}
 
 <Endmarker/>

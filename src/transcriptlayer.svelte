@@ -115,7 +115,7 @@ const stripstyle=(i,strip)=>{
     
     timers.push(setTimeout( fire,  delay)); 
 
-    duration=timestamp[line+i+1]/100-timestamp[line+i]/100;
+    let duration=timestamp[line+i+1]/100-timestamp[line+i]/100;
     if (duration==0 && i+1 <fl) {//empty line , try next line
         duration=timestamp[line+i+2]/100-timestamp[line+i]/100;
     }

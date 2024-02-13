@@ -1,6 +1,6 @@
 <script>
 import {tosim} from './store.js'
-import {_} from './textout.ts'
+import {_} from './textout.js'
 $: lines=_(`永樂藏：只是產品名稱，不是文獻學意義的藏經版本。
 圖版：以山東圖書館藏永樂北藏為主，整卷缺漏或嚴重錯版（如增壹阿含卷23）改用同館永樂南藏，缺漏幾頁以乾隆大藏經補之。
 文字：以CBETA為底本，只有字數不一致的情況才會修改，不保證與圖版一致。

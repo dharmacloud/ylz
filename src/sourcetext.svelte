@@ -1,11 +1,11 @@
 <script>
 import SentenceNav from './sentencenav.svelte'
 export let ptk
-import {getParallelLines} from 'ptk/align/';
+import {getParallelLines} from 'ptk/align/parallels.ts';
 import {tapmark,foliotext,loadingfolio} from './store.js'
-import { parseOfftext } from 'ptk/offtext';
-import {_} from './textout.ts'
-    import Endmarker from './endmarker.svelte';
+import { parseOfftext } from 'ptk/offtext/parser.ts';
+import {_} from './textout.js'
+import Endmarker from './endmarker.svelte';
 let sourcetexts=[];
 const updateParallels=async (mark,loading)=>{
     if (loading) return;

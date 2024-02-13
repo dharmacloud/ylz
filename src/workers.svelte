@@ -1,5 +1,5 @@
 <script>
-import {_} from './textout.ts'
+import {_} from './textout.js'
 </script>
 {_("圖版裁切")}：釋通泉　張淑楨
 <hr/>

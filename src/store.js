@@ -79,9 +79,11 @@ export const remainrollback=writable(-1);//infinite
 export const newbie=writable(settings.newbie);
 export const idlecount=writable(0);
 export const showpaiji=writable(false);
-export const ptks=['ylz-prjn','ylz-tg','ylz_sanskrit','dc'];
-export const allptks=['ylz-prjn','ylz-tg','ylz-svk','ylz-vny','ylz_sanskrit','dc'];
+export const ptks=['ylz-prjn','ylz-tg','ylz_sanskrit','ylz-rite','dc'];
+export const allptks=['ylz-prjn','ylz-tg','ylz-svk','ylz-vny','ylz-rite','ylz_sanskrit','dc'];
 
+
+export const reverseswipe=writable(false);
 activefolioid.subscribe((activefolioid)=>updateSettings({activefolioid}));
 autodict.subscribe((autodict)=>updateSettings({autodict}));
 newbie.subscribe((newbie)=>updateSettings({newbie}));
@@ -94,9 +96,9 @@ preferaudio.subscribe((preferaudio)=>updateSettings({preferaudio}));
 tofindhistory.subscribe((tofindhistory)=>updateSettings({tofindhistory}));
 heightratio.subscribe((heightratio)=>updateSettings({heightratio}));
 tosim.subscribe((tosim)=>updateSettings({tosim}));
-tofind.subscribe(tf=>{
-    console.log('tf',tf)
-})
+reverseswipe.subscribe((reverseswipe)=>{
+    updateSettings({reverseswipe})
+});
 
 textsize.subscribe((textsize)=>{
     const tsz=(textsize/100).toFixed(2)+'em'

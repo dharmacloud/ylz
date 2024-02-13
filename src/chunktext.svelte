@@ -1,5 +1,4 @@
 <script>
-export let ptk ;
 import Slider from './3rd/rangeslider.svelte';
 import {tapmark,foliotext,loadingfolio,tapAddress} from  './store.js'
 import {get} from 'svelte/store'
@@ -7,7 +6,9 @@ import {debounce,updateUrl} from 'ptk'
 import ChunkNav from './chunknav.svelte'
 import Endmarker from './endmarker.svelte';
 import {goPb} from './nav.js'
-import {_} from './textout.ts'
+import {_} from './textout.js'
+export let ptk ;
+
 let ck,loff,displayline=0,settingaddress=false,
 alllines=[], lines=[],sutra=[0,0],sutras=[],minsutra=0,maxsutra=0;
 $: activeline=0;
@@ -45,7 +46,7 @@ const loadChunkText=(mark,loading)=>{
     updateText();
     
     if (ck==ckid) {
-        idx=sutra[0];
+        const idx=sutra[0];
         lines=alllines.slice( sutras[idx], sutras[idx+1]);
         displayline=sutras[idx]||0;
     } else {

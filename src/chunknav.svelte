@@ -4,7 +4,7 @@ import Pager from './comps/pager.svelte';
 import { styledNumber } from 'ptk';
 import { bookByFolio,activefolioid,tapmark,foliotext } from './store.js';
 import { goChunk} from './nav.js';
-import {_} from './textout.ts'
+import {_} from './textout.js'
 let cknow=0;
 const chunks=[];
 

@@ -3,7 +3,7 @@ import {parseAddress,parseAction, styledNumber, usePtk} from "ptk";
 import SentenceNav from "./sentencenav.svelte";
 import {tapAddress,loadingfolio} from './store.js'
 import Endmarker from "./endmarker.svelte";
-import {_} from './textout.ts'
+import {_} from './textout.js'
 let text='';
 
 const updateVariorum=async (address,loading)=>{

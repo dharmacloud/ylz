@@ -6,7 +6,7 @@ import Variorum from './variorum.svelte'
 import SearchMain from  './searchmain.svelte'
 import Externals from './externals.svelte'
 import ParText from './partext.svelte'
-import {_} from './textout'
+import {_} from './textout.js'
 import {humanAddress} from './address.js'
 import {usePtk,toChineseNumber} from 'ptk'
 import {tosim,activefolioid,activepb, leftmode,activePtk,
@@ -22,7 +22,7 @@ const getLinks=folioid=>{
     const agmsjuan=folioid.match(/agms(\d+)$/);
     const ft=$foliotext;
     if (!ft) return [[],[]];
-    let col,key;
+    let col,key,caption,url;
     if (agmsjuan) {
         const at=ptk.nearestTag( to+1 ,'n')  ;
         const n=ptk.defines.n;
@@ -123,7 +123,7 @@ $: [externals,internals]=getLinks($activefolioid,$activepb);
 
 
 {#key externals}
-<Externals {closePopup} links={externals}/>
+<Externals  links={externals}/>
 {/key}
 
 
@@ -132,7 +132,7 @@ $: [externals,internals]=getLinks($activefolioid,$activepb);
 <div class="subtab-content" class:visible={thetab=='chunktext'}><ChunkText {ptk}  /></div>
 <div class="subtab-content" class:visible={thetab=='sourcetext'}><SourceText {ptk}/></div>
 <div class="subtab-content" class:visible={thetab=='translations'}><Translations {closePopup} {ptk}/></div>
-<div class="subtab-content" class:visible={thetab=='variorum'}><Variorum {closePopup}/></div>
+<div class="subtab-content" class:visible={thetab=='variorum'}><Variorum/></div> 
 {#each internals as internal,idx}
 <div class="subtab-content" class:visible={thetab=="link"+idx}><ParText {closePopup} caption={internal[0]} {ptk} address={internal[1]}/></div>
 {/each}

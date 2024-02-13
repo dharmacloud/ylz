@@ -1,10 +1,10 @@
 <script>
-import {getParallelLines} from 'ptk/align/';
+import {getParallelLines} from 'ptk/align/parallels.ts';
 import {activepb,activefolioid,activePtk,foliotext,tapmark,loadingfolio} from './store.js'
 import { parseOfftext, bsearchNumber} from 'ptk';
 import SentenceNav from './sentencenav.svelte'
 import { loadFolio } from './nav.js';
-import {_} from './textout.ts'
+import {_} from './textout.js'
 import Endmarker from './endmarker.svelte';
 export let closePopup=function(){};
 export let ptk;

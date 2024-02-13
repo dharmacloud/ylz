@@ -1,11 +1,11 @@
 <script>
-import { openPtk,addressFromUrl, usePtk} from 'ptk'
+import { openPtk,addressFromUrl} from 'ptk'
 import SwipeZipImage from "./swipezipimage.svelte";
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
-import {downloadToCache} from 'ptk/platform/downloader.js'
+import {downloadToCache,ptkInCache} from 'ptk/platform/downloader.js'
 import { onDestroy } from "svelte";
-import {activefolioid,isAndroid,idlecount,showpaiji,leftmode,online,folioincache,showsponsor,activePtk,
-    newbie,idletime,landscape,ptks} from './store.js'
+import {activefolioid,isAndroid,idlecount,showpaiji,leftmode,online,
+    folioincache,showsponsor, newbie,idletime,landscape,ptks} from './store.js'
 import {CacheName,APPVER} from './constant.js'
 import {documentHeight} from './fullscreen.js'
 import {setTimestampPtk} from './mediaurls.js'
@@ -18,6 +18,7 @@ import Notification from './notification.svelte';
 import { get } from 'svelte/store';
 import Left from './left.svelte'
 import {loadAddress} from './nav.js'
+    import { AppPrefix } from './savestore';
 let tofind;
 registerServiceWorker();
 const idleinterval=2;
@@ -46,18 +47,29 @@ const installptk=async name=>{
 
 const init=async ()=>{
     documentHeight();
+    const toload=await ptkInCache(CacheName);   
     for (let i=0;i<ptks.length;i++) {
-        const ptk=await installptk(ptks[i])
-        bootmessage='open ptk '+ptks[i];
+        if (!~toload.indexOf(ptks[i])) {
+            toload.push(ptks[i]);
+        }
+    }    
+    for (let i=0;i<toload.length;i++) {
+        const ptk=await installptk(toload[i])
+        bootmessage='open ptk '+toload[i];
         //if (ptks[i]=='ylz-prjn') console.log(ptk)
-        if (ptks[i]=='dc') setTimestampPtk(ptk)
+        if (toload[i]=='dc') setTimestampPtk(ptk)
     }
-
+    
     bootmessage='fetching foliolist from cache';
     await fetchFolioList(folioincache);
 
     bootmessage='load folio address from url';
-    await loadAddress(addressFromUrl());
+    let addr=addressFromUrl();
+    if (!~addr.indexOf('bk')) {
+        addr=localStorage.getItem(AppPrefix+'homeurl')||'';
+    }
+    
+    await loadAddress(addr);
    
     bootmessage='loaded';
     loaded=true;
