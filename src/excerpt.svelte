@@ -122,7 +122,7 @@ const onSwipe=direction=>{
 $: updateList($tofind,$activePtk)
 
 </script>
-<div class="bodytextarea bodytext">
+<div class="bodytextarea">
 {#each scopes as scope,idx}
 <span aria-hidden="true" class="clickable scopebtn" on:click={()=>setScope(idx*2)} class:selected={idx*2==selected}>
     {_(scope.caption)}</span><span aria-hidden="true" class="clickable hitbtn" on:click={()=>setScope(idx*2+1)} 

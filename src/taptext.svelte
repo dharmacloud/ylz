@@ -13,6 +13,7 @@ import {CURSORMARK} from './nav.js'
 export let tofind='';
 export let closePopup;
 let thetab=($landscape||!tofind)?"textual":"dict";
+if (!navigator.onLine && thetab=='dict') thetab='list' 
 let entries=[];
 
 const onDict=(t)=>{
