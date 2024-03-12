@@ -2,7 +2,7 @@
 import {newbie,showyoutube,showpunc,showsponsor,vip,heightratio,tosim, textsize} from './store.js'
 import {_} from './textout.js'
 import Switch from './3rd/switch.svelte';
-import Sponsoring from './sponsoring.svelte';
+//import Sponsoring from './sponsoring.svelte';
 import HOF from './hof.svelte'
 import Workers from './workers.svelte'
 import ProjectIntro from './project.svelte'
@@ -61,7 +61,7 @@ const onkeyup=(e)=>{
 <span aria-hidden="true" class="clickable" 
 class:selected={show==1} on:click={toggleshowsponsoring}>{_("護持")}</span>
 <span aria-hidden="true" class:selected={show==2}  class="clickable" on:click={toggleshowdonors}>芳名</span>
-<span aria-hidden="true" class:selected={show==3}  class="clickable" on:click={toggleshowworkers}>伙伴</span>
+<!--<span aria-hidden="true" class:selected={show==3}  class="clickable" on:click={toggleshowworkers}>伙伴</span>-->
 <span aria-hidden="true" class:selected={show==4}  class="clickable" on:click={toggleshowmaterials}>素材</span>
 {#if $vip && getVip("title")}
 <span aria-hidden="true" class:selected={show==6}  class="clickable" on:click={toggleshowstyle}>{_("項目")}</span>
@@ -72,7 +72,7 @@ class:selected={show==1} on:click={toggleshowsponsoring}>{_("護持")}</span>
 </div>
 <div class="bodytext">
 {#if show==1}
-<Sponsoring/>
+<!--<Sponsoring/>-->
 {:else if show==2}
 <HOF/>
 {:else if show==3}

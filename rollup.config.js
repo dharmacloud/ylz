@@ -7,6 +7,7 @@ import sveltePreprocess from "svelte-preprocess";
 import typescript from "@rollup/plugin-typescript";
 import css from "rollup-plugin-css-only";
 import swc from "rollup-plugin-swc";
+//import builtin from 'rollup-plugin-builtins'
 const production = !process.env.ROLLUP_WATCH;
 
 function serve() {
@@ -33,7 +34,7 @@ function serve() {
     },
   };
 }
-
+const useSourceMap = false;
 export default {
   input: "src/index.ts",
   output: {
@@ -44,10 +45,10 @@ export default {
   },
   plugins: [
     svelte({
-      preprocess: sveltePreprocess({ sourceMap: !production }),
+      preprocess: sveltePreprocess({ sourceMap: useSourceMap }),
       compilerOptions: {
         // enable run-time checks when not in production
-        dev: !production,
+        dev: !production
       },
     }),
     // we'll extract any component CSS out into
@@ -67,8 +68,8 @@ export default {
     }),
     commonjs(),
     typescript({
-      sourceMap: !production,
-      inlineSources: !production,
+      sourceMap: useSourceMap,
+      inlineSources: useSourceMap,
     }),
     swc({
       jsc: {

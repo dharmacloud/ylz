@@ -4,14 +4,16 @@ import { loadFolio } from './nav.js';
 import {downloadToCache} from 'ptk/platform/downloader.js'
 import {CacheName} from './constant.js'
 export let thetab;
-import {activefolioid, tosim,parallelFolios,stopAudio,folioincache,online,activepb, activePtk} from './store.js';
+import {activefolioid, vip,tosim,parallelFolios,stopAudio,folioincache,online,activepb, activePtk} from './store.js';
 import Endmarker from './endmarker.svelte';
 import {ptkInCache} from './folio.js'
 import {_} from './textout.js'
-import { usePtk,openPtk } from 'ptk';
+import { usePtk,openPtk, poolGetAll } from 'ptk';
+import {getAllFolio} from './folio.js';
 export let closePopup=function(){};
-let aptk="ylz-prjn",downloadmessage='';
+let downloadmessage='';
 let folios=[];
+let canceldownload=false,downloading='';
 const texttypeOf=prefix=>{
     if (prefix.slice(0,3)=='agm'||prefix=='lastword') return 1; //聲聞經
     if (prefix.slice(0,5)=='vnybs') return 4; //大乘律
@@ -26,6 +28,22 @@ const openptk=async name=>{
     const ptk=await openPtk(name,new Uint8Array(buf));
     return ptk;
 }
+const ptknameFromFolioId=()=>{
+    const folioid=$activefolioid;
+    let ptkname="ylz-prjn";
+    const ptks=poolGetAll();
+    for (let i=0;i<ptks.length;i++) {
+        const folio=ptks[i].defines.folio;
+        if (!folio) continue;
+        if (~folio.fields.id.values.indexOf(folioid)) {
+            ptkname=ptks[i].name;
+        }
+    }
+    
+    return ptkname;
+}
+let aptk =ptknameFromFolioId();
+
 const getFolioList=async (aptk)=>{
     const cachedPtks=await ptkInCache();
     const at=cachedPtks.indexOf(aptk);
@@ -49,6 +67,23 @@ const getFolioList=async (aptk)=>{
         }
     }
     folios=out;
+}
+const CancelDownloadBook=()=>{
+    canceldownload=true;
+}
+const downloadBook=async function (folioid){
+    const items=getAllFolio(usePtk(aptk) ,folioid);
+    //if (items.length<2) return; 
+   for (let item of items){
+        const src=item+'.zip'
+        console.log('downloading',src)
+        await downloadToCache(CacheName,"folio/"+src,msg=>{
+            downloading=src+ " "+msg;
+            console.log(msg)
+        });
+    };
+    canceldownload=false;
+    downloading='';
 }
 const selectfolio=nfolio=>{
     const folio=usePtk(aptk).defines.folio;
@@ -99,12 +134,18 @@ $: getFolioList(aptk);
     <span aria-hidden="true" class="clickable" class:selected={aptk=="ylz-vny"}  on:click={()=>aptk="ylz-vny"}>戒律</span>
 </div>
 {#if folios.length}
+{#if downloading}
+{downloading} <span aria-hidden="true" on:click={CancelDownloadBook()}>Cancel</span>
+{/if}
 {#each folios as [nfolio,folioid,pars]}
 <div class="book">
 {#key $tosim}
 <span aria-hidden="true" class:dimmed={!$folioincache[folioid]} on:click={()=>selectfolio(nfolio)} 
     class:selecteditem={samesutra($activefolioid,folioid)} >{getFolioName(nfolio)}</span>
 
+{#if $vip=='YAP' && !downloading && samesutra($activefolioid,folioid) && getAllFolio(usePtk(aptk) ,folioid).length>1 }
+<span aria-hidden="true" on:click={downloadBook(folioid)}>Download All</span>
+{/if}
 <Favoritebuttons {folioid} {closePopup}/>
 {#each pars as par}
 {#if $folioincache[getFolioId(par)] || $online}
