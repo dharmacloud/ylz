@@ -24,7 +24,7 @@
     };
 
     self.addEventListener('install', function (event) {
-        event.waitUntil(updateStaticCache());
+        if ( navigator.onLine) event.waitUntil(updateStaticCache());
     });
 
     self.addEventListener('activate', function (event) {
@@ -63,7 +63,7 @@
         if (~accept.indexOf('text/') || ~request.url.indexOf('.js')|| request.url.endsWith('.css')) { //html, css , js, try to fetch updates
             // Fix for Chrome bug: https://code.google.com/p/chromium/issues/detail?id=573937
             if (request.mode != 'navigate') {
-                const url=~request.url.indexOf('index.js')?request.url+'?'+Math.random():request.url;
+                const url=(~request.url.indexOf('index.js')&& navigator.onLine)?request.url+'?'+Math.random():request.url;
                 var request = new Request(url, {//force update
                     method: 'GET',
                     headers: request.headers,
@@ -85,7 +85,7 @@
                         return response;
                     })
                     .catch(function () { //use cache when offline
-                        caches.open(CacheName).then(
+                        return caches.open(CacheName).then(
                             cache=>cache.match(request)
                             .then(function (response) {
                                 return response || cache.match('/offline.html');
