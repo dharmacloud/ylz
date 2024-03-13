@@ -62,16 +62,16 @@
         
         if (~accept.indexOf('text/') || ~request.url.indexOf('.js')|| request.url.endsWith('.css')) { //html, css , js, try to fetch updates
             // Fix for Chrome bug: https://code.google.com/p/chromium/issues/detail?id=573937
-            if (request.mode != 'navigate') {
-                const url=(~request.url.indexOf('index.js')&& navigator.onLine)?request.url+'?'+Math.random():request.url;
-                var request = new Request(url, {//force update
-                    method: 'GET',
-                    headers: request.headers,
-                    mode: request.mode,
-                    credentials: request.credentials,
-                    redirect: request.redirect
-                });
-            }
+            // if (request.mode != 'navigate') {
+            //     const url=(~request.url.indexOf('index.js')&& navigator.onLine)?request.url+'?'+Math.random():request.url;
+            //     var request = new Request(url, {//force update
+            //         method: 'GET',
+            //         headers: request.headers,
+            //         mode: request.mode,
+            //         credentials: request.credentials,
+            //         redirect: request.redirect
+            //     });
+            // }
             event.respondWith(
                 fetch(request) //try online first
                     .then(function (response) {
@@ -88,6 +88,7 @@
                         return caches.open(CacheName).then(
                             cache=>cache.match(request)
                             .then(function (response) {
+                                //console.log('default',request,response)
                                 return response || cache.match('/offline.html');
                             })
                         )
