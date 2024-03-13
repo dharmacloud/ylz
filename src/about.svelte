@@ -58,15 +58,14 @@ const onkeyup=(e)=>{
 </script>
 <div class="tabs">
 {#key $tosim}
-<span aria-hidden="true" class="clickable" 
-class:selected={show==1} on:click={toggleshowsponsoring}>{_("護持")}</span>
+<!-- <span aria-hidden="true"  class:selected={show==1}class="clickable"  on:click={toggleshowsponsoring}>{_("護持")}</span> -->
 <span aria-hidden="true" class:selected={show==2}  class="clickable" on:click={toggleshowdonors}>芳名</span>
-<!--<span aria-hidden="true" class:selected={show==3}  class="clickable" on:click={toggleshowworkers}>伙伴</span>-->
+<span aria-hidden="true" class:selected={show==3}  class="clickable" on:click={toggleshowworkers}>伙伴</span>
 <span aria-hidden="true" class:selected={show==4}  class="clickable" on:click={toggleshowmaterials}>素材</span>
+
+<span aria-hidden="true" class:selected={show==5}  class="clickable" on:click={toggleshowproject}>{_("關於")}</span>
 {#if $vip && getVip("title")}
 <span aria-hidden="true" class:selected={show==6}  class="clickable" on:click={toggleshowstyle}>{_("項目")}</span>
-{:else}
-<span aria-hidden="true" class:selected={show==5}  class="clickable" on:click={toggleshowproject}>{_("關於")}</span>
 {/if}
 {/key}
 </div>
@@ -89,9 +88,10 @@ class:selected={show==1} on:click={toggleshowsponsoring}>{_("護持")}</span>
 <CheckUpdate/>
 {#key $tosim}
 <br/>{_("漢字顯示")}：<StateBtn states={{0:"原貌",1:_("简體（「乾後發」等不變）"),2:"简体"}} storeid={tosim}/>
-<br/>版本 {APPVER}{getVip('title',$vip)||($vip?_("查無此碼"):"")}
-<br/>{_("VIP碼")}<input 
-placeholder={_("沒有也可正常使用")} size=12 type="text" on:keyup={onkeyup} bind:value={vipcode}/>
+<br/>版本 {APPVER}{getVip('title',$vip)||($vip?_("查無此碼"):"")} 
+<br/>{_("VIP碼 ")}<input 
+placeholder={_("沒有也可正常使用")} size=12 
+type="text" on:keyup={onkeyup} bind:value={vipcode}/>
 <br/>微信 Sukhanika
 <br/><a href="mailto:dharmacloudpublishing@gmail.com">dharmacloudpublishing[at]gmail</a>
 <br/>LINE官號<a href="https://lin.ee/1tmTKXi" target=_new>@dharmacloud</a>

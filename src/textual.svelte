@@ -7,7 +7,7 @@ import SearchMain from  './searchmain.svelte'
 import Externals from './externals.svelte'
 import ParText from './partext.svelte'
 import {_} from './textout.js'
-import {humanAddress} from './address.js'
+import {humanAddress,paliHumanAddress} from './address.js'
 import {usePtk,toChineseNumber} from 'ptk'
 import {tosim,activefolioid,activepb, leftmode,activePtk,
     hasVariorum,hasTranslation,hasSanskrit,bookByFolio, tapmark,foliotext} from './store.js'
@@ -80,9 +80,9 @@ const getLinks=folioid=>{
         for (let i=0;i<pars.length;i++) {
             const par=pars[i];
             if (par.match(/ak#[dmsa]n/)) {
-                const host=location.host.replace('5000','5080');
+                const host=location.host.replace('5002','5080');
                 const url=location.protocol+'//'+host+location.pathname.replace('ylz','sz')+'#'+par;
-                externals.push([humanAddress(par),url]);
+                externals.push([paliHumanAddress(par),url]);
             } else {
                 internals.push([humanAddress(par),par]);
             }
