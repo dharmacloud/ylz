@@ -25,7 +25,7 @@ const idleinterval=2;
 isAndroid.set(!!navigator.userAgent.match(/Android/i));
 
 const handleConnection=()=>{
-    online.set(navigator.onLine);
+    online.set(navigator.onLine || location.hostname=='127.0.0.1' || location.hostname=='localhost');
 }
 
 window.addEventListener('online', handleConnection);
