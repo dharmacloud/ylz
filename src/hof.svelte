@@ -19,5 +19,9 @@ import {_} from './textout.js'
 <table>
 <tr><td>金門福慧寺</td><td>3.15</td><td>{_("台幣")} 6,000</td></tr>
 </table>
+<br/><div>2025年</div>
+<table>
+<tr><td>{_("紅坊老黃")} </td><td>3.5</td><td>{_("人民幣")} 2,000</td></tr>
+</table>
 <Endmarker/>
 </div>

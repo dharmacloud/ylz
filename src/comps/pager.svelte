@@ -6,7 +6,7 @@ export let previtems=1;
 export let nextitems=3;
 export let onselect;
 export let caption='';
-import SwipeView from './swipeview.svelte'
+import SwipeView from 'offtextview/comps/swipeview.svelte'
 let left=now-previtems;
 let right=now+nextitems+1;
 const neighbors=[];

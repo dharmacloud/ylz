@@ -1,5 +1,5 @@
 <script>
-import { openPtk,addressFromUrl} from 'ptk'
+import { openPtk,addressFromUrl,enableAccelon23Features} from 'ptk'
 import SwipeZipImage from "./swipezipimage.svelte";
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import {downloadToCache,ptkInCache} from 'ptk/platform/downloader.js'
@@ -42,6 +42,7 @@ const installptk=async name=>{
     })
     const buf=await res.arrayBuffer();
     const ptk=await openPtk(name,new Uint8Array(buf));
+    enableAccelon23Features(ptk);
     return ptk;
 }
 

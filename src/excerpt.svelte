@@ -5,7 +5,7 @@ import {makeAddressFromLine,humanAddress} from './address.js'
 import ExcerptLine from './excerptline.svelte'
 import Pager from './comps/pager.svelte';
 import {_} from './textout.js'
-import Swipeview from 'accelon23/src/comps/swipeview.svelte';
+import Swipeview from 'offtextview/comps/swipeview.svelte';
 
 export let goLine;
 const ITEMPERPAGE=5;

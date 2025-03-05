@@ -2,6 +2,7 @@
 import {tosim,hasupdate,allptks} from './store.js'
 import {onMount} from 'svelte'
 import {isLatest,downloadToCache} from 'ptk/platform/downloader.js'
+import {enableAccelon23Features} from 'ptk/basket/features.ts'
 import {poolDel,openPtk} from 'ptk'
 import { CacheName } from './constant.js';
 import { _ } from './textout.js';
@@ -32,7 +33,8 @@ const updateptk=async idx=>{
 
     poolDel(name);
     const buf=await res.arrayBuffer();
-    await openPtk(name,new Uint8Array(buf));
+    const ptk=await openPtk(name,new Uint8Array(buf));
+    enableAccelon23Features(ptk);
     downloading=false;
     updatestatus[idx][1]='';
     updatestatus=updatestatus;

@@ -8,7 +8,7 @@ import {activefolioid, vip,tosim,parallelFolios,stopAudio,folioincache,online,ac
 import Endmarker from './endmarker.svelte';
 import {ptkInCache} from './folio.js'
 import {_} from './textout.js'
-import { usePtk,openPtk, poolGetAll } from 'ptk';
+import { usePtk,openPtk, poolGetAll,enableAccelon23Features } from 'ptk';
 import {getAllFolio} from './folio.js';
 export let closePopup=function(){};
 let downloadmessage='';
@@ -26,6 +26,7 @@ const openptk=async name=>{
     })
     const buf=await res.arrayBuffer();
     const ptk=await openPtk(name,new Uint8Array(buf));
+    enableAccelon23Features(ptk);
     return ptk;
 }
 const ptknameFromFolioId=()=>{
@@ -51,7 +52,6 @@ const getFolioList=async (aptk)=>{
         folios=[];
         return;
     }
-
     const ptk=await openptk(aptk);
     const folio=ptk.defines.folio;
     const out=[];
@@ -101,7 +101,7 @@ const selectfolio=nfolio=>{
 
 const getFolioName=nfolio=>{
     const folio=usePtk(aptk).defines.folio;
-    return _(folio.innertext.get(nfolio),$tosim); 
+    return _(folio._innertext.get(nfolio),$tosim); 
 }
 const getFolioId=nfolio=>{
     const folio=usePtk(aptk).defines.folio;

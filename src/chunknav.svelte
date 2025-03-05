@@ -24,7 +24,7 @@ const loadChunks=()=>{
     for (let ckat=start;ckat<=end;ckat++ ) {
         const ckid=ck.fields.id.values[ckat];
         const styled=parseInt(ckid)?styledNumber(parseInt(ckid),'①'):(ckid+'.');
-        chunks.push({caption:styled+ck.innertext.get(ckat) ,idx, id:ckat, ckid} ); //id is pager id
+        chunks.push({caption:styled+ck._innertext.get(ckat) ,idx, id:ckat, ckid} ); //id is pager id
         if (ckid==tapckid) cknow=idx;
         idx++;
     }   

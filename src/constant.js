@@ -1,2 +1,2 @@
 export const CacheName='v1::ylz';
-export const APPVER = '24.3.13'
+export const APPVER = '25.3.5'

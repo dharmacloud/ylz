@@ -39,7 +39,7 @@ export const getTocItems=(ptk,folioid,loading)=>{
     const at=bsearchNumber (ck.linepos, from);
     const at2=bsearchNumber (ck.linepos, to);
     for (let i=at;i<at2;i++) {
-        out.push({caption:ck.innertext.get(i),at:i,id:ck.fields.id.values[i]});
+        out.push({caption:ck._innertext.get(i),at:i,id:ck.fields.id.values[i]});
     }
     return out;
 }

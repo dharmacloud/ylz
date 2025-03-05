@@ -296,7 +296,7 @@ const toggleplaybtn=()=>{
         selectmedia('');
     }
 }
-$: loadZip(src);
+$: ptk&&loadZip(src);
 $: gotoPb($activepb); //trigger by goto folio in setting.svelte
 </script>
 {#if ready}

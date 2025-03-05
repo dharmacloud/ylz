@@ -16,9 +16,9 @@ const getBookTitle=(ptk,nbk)=>{
     
     const at=bsearchNumber(folio.linepos, line+1)-1;
     if (folio.linepos[at]!==line) {
-        return bk.innertext.get(nbk);
+        return bk._innertext.get(nbk);
     } else {
-        return ~at?folio.innertext.get(at):bk.innertext.get(nbk);
+        return ~at?folio._innertext.get(at):bk._innertext.get(nbk);
     }
 }
 
