@@ -93,7 +93,7 @@ const setImage=(imageidx,zip,idx)=>{
     if (!swiper) return;
     if (idx>=totalpages) idx=0;
     else if (idx<0) idx=totalpages-1;
-
+    if (isNaN(idx)) idx=0;
     const imgs=getImages(imageidx);
 
     //need to see all clone

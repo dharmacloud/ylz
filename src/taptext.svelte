@@ -19,7 +19,7 @@ let entries=[];
 const onDict=(t)=>{
     const tap_at=t.indexOf(CURSORMARK);
     const ptk=usePtk($activePtk);
-    entries=ptk.columns.entries.keys.findMatches( t.replace(CURSORMARK,'')).map(it=>[Math.abs(it[0]-tap_at-1),it[1],it[2]]);
+    entries=ptk.columns.entries?.keys.findMatches( t.replace(CURSORMARK,'')).map(it=>[Math.abs(it[0]-tap_at-1),it[1],it[2]])||[];
     entries.sort((a,b)=> a[0]-b[0]);// 越接近點擊處的優先
     //showdict=true;
 }

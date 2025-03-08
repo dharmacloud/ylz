@@ -79,8 +79,8 @@
                         if (response.ok) {
                             caches.open(CacheName)
                             .then(function (cache) {
-                            	request.url=request.url.replace(/\?.+/,'');
-                                cache.put(request, copy);
+                            	const url=request.url.replace(/\?.+/,'');
+                                cache.put(url, copy);
                             });
                         }
                         return response;
