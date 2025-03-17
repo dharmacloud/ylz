@@ -115,11 +115,11 @@ const installptk=async name=>{
     if (opening)return;
     opening=true;
     downloadmessage='try to download '+name+'.ptk'
-    await openptk(name);
+    const aptk=await openptk(name);
     opening=false;
     downloadmessage='';
-    getFolioList(aptk);
-    return ptk;
+    getFolioList(name);
+    return aptk;
 }
 
 
