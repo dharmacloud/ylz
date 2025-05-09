@@ -1,1 +1,1 @@
-node dev.js
+npm run dev
