@@ -93,8 +93,7 @@ const onkeyup=(e)=>{
 placeholder={_("沒有也可正常使用")} size=12 
 type="text" on:keyup={onkeyup} bind:value={vipcode}/>
 <br/>微信 Sukhanika
-<br/><a href="mailto:dharmacloudpublishing@gmail.com">dharmacloudpublishing[at]gmail</a>
-<br/>LINE官號<a href="https://lin.ee/1tmTKXi" target=_new>@dharmacloud</a>
+<br/><a href="mailto:sukhanika@gmail.com">sukhanika[at]gmail.com</a>
 <br/>{_("點焦點文字（紅色背景）分享")}
 {/key}
 <hr/>

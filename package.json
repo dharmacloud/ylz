@@ -34,6 +34,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "lossless-simplified-chinese": "^0.1.0",
     "qrcode": "^1.5.3",
     "sirv-cli": "^1.0.14"
   }
