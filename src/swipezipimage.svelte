@@ -14,10 +14,12 @@ import {CacheName} from './constant.js'
 import {thezip,favortypes, landscape,foliotext,folioLines,isSidePaiji,tapAddress,
     folioChars,activePtk,activefolioid,activepb,favorites,audioid,showpunc,
 maxfolio,tapmark, playing, remainrollback, showyoutube,shareAddress,makeAddressFromFolioPos,
-idlecount,showpaiji,loadingzip, selectmedia, preferaudio,folioHolderWidth,leftmode,mediaurls, downloading, sharing} from './store.js'
+idlecount,showpaiji,loadingzip, selectmedia, preferaudio,folioHolderWidth,leftmode,mediaurls, downloading, sharing,
+showfavorite} from './store.js'
 import { get } from 'svelte/store';
 import { fetchAudioList } from './mediaurls';
-    import { AppPrefix } from './savestore';
+import { AppPrefix } from './savestore';
+
 export let onMainmenu=()=>{}
 
 export let src;
@@ -167,20 +169,27 @@ const useractive=(humanaction=false)=>{
         idlecount.set(0);
     }
 }
+const nextpage=()=>{
+    let pb=parseInt($activepb);
+    pb++;
+    if (pb>totalpages) pb=1;
+    activepb.set(pb);
+}
+const prevpage=()=>{
+    let pb=parseInt($activepb);
+    pb--;
+    if (pb<1) pb=totalpages;
+    activepb.set(pb)
+}
 const mousewheel=(e)=>{
     if ($leftmode!=='folio') return;
     if (!ready) return;
 	if (e.ctrlKey ) return;
     hidepunc=true;
-    let pb=parseInt($activepb);
 	if (e.deltaY>0) {
-        pb++;
-        if (pb>totalpages) pb=1;
-        activepb.set(pb);
+        nextpage();
 	} else {
-        pb--;
-        if (pb<1) pb=totalpages;
-        activepb.set(pb)
+        prevpage();
 	}
     useractive(true);
 	e.preventDefault();
@@ -193,8 +202,30 @@ const getCharXY=(x,y)=>{
     const cy=Math.floor((y/height)*$folioChars);
     return [cx,cy];
 }
-
 const onfoliopageclick=e=>{
+    const {x,y}=e.detail;
+    const [cx,cy]=getCharXY(x,y);
+    const half=Math.floor($folioChars/2);
+    hidepunc=false;
+    if (cx==1||cx==0) {
+        if (cy>half) {
+            prevpage();
+        } else {
+            onTapText('$toc');
+        }
+    } else if (cx==folioLines()-1||cx==folioLines()-2) {
+        if (cy>half){
+            nextpage();
+        } else {//music
+            onTapText('$list');            
+        }
+    } else {
+        onTapText('$audio');
+    }
+    
+}
+
+const onfoliopagelongpress=e=>{
     if ($showpaiji && !isSidePaiji()) {
         useractive(true);
         return;
@@ -206,6 +237,7 @@ const onfoliopageclick=e=>{
         onTapText('');
         return;
     }
+
     const oldmark=$tapmark
     const newmark=[ $activepb ,cx,cy ];
     if ( JSON.stringify(oldmark)==JSON.stringify(newmark)) {
@@ -218,8 +250,9 @@ const onfoliopageclick=e=>{
         tapmark.set(newmark);
     }
     const _addr=tapAddress();
-    updateUrl(_addr);
-    localStorage.setItem(AppPrefix+'homeurl',_addr);
+    // updateUrl(_addr);
+    localStorage.setItem(AppPrefix+'homeurl',_addr);    
+
     const ft=get(foliotext);
     let {choff,linetext}=ft.fromFolioPos($activepb,cx,cy);
     linetext=linetext.replace(/([。！？：、．；，「『（ ])/g,'　');
@@ -302,7 +335,9 @@ $: gotoPb($activepb); //trigger by goto folio in setting.svelte
 {#if ready}
 <div aria-hidden="true" class="swipe-holder" on:wheel={mousewheel} style={ "opacity:"+($leftmode!=='folio'?'0;':'1')+";width:"+folioHolderWidth($landscape,1,swiper)}>
 <Swipe bind:this={swiper} {...swipeConfig} {defaultIndex} 
- on:click={onfoliopageclick} on:start={swipeStart} on:change={swipeChanged}>
+ 
+ on:longpress={onfoliopagelongpress} 
+  on:click={onfoliopageclick} on:start={swipeStart} on:change={swipeChanged}>
  <SwipeItem><img src={blankimage} alt='no' class="leftimage swipe"/></SwipeItem>
  <SwipeItem><img src={blankimage} alt='no' class="middleimage swipe"/></SwipeItem>
  <SwipeItem><img src={blankimage} alt='no' class="rightimage swipe"/></SwipeItem>
@@ -312,9 +347,11 @@ $: gotoPb($activepb); //trigger by goto folio in setting.svelte
 <DownloadStatus msg={$downloading}/>
 {/if}
 {#if !$landscape && totalpages-defaultIndex>1}
+{#if $showfavorite=='on'}
 {#key favoritetimer}
 <span aria-hidden="true" class:blinkfavorbtn={!!favoritetimer} class="favoritebtn" on:click={favoritebtn}>{ favortypes[$favorites[$activefolioid]?.[$activepb]||0]}</span>
 {/key}
+{/if}
 {/if}
 {#if !$landscape  && $mediaurls.filter(it=>it.incache).length}
 <span aria-hidden="true" class="playbtn" on:click={toggleplaybtn}>{$audioid?'◼':'♫'}</span>

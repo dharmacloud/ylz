@@ -20,6 +20,7 @@ export const preferaudio=writable(settings.preferaudio);
 export const showpunc=writable(settings.showpunc);
 export const showsponsor=writable(settings.showsponsor);
 export const showyoutube=writable(settings.showyoutube)
+export const showfavorite=writable(settings.showfavorite)
 export const landscape=writable(false)
 export const isAndroid=writable(false)
 export const searchable=writable('')
@@ -34,6 +35,7 @@ export const tosim=writable(settings.tosim);
 export const palitrans=writable(0)
 export const hasupdate=writable(true)
 export const playrate=writable(settings.playrate);
+export const thetab=writable('list')
 export let player
 export const setplayer=p=>player=p;
 // export const foliorawtexts=writable([]);
@@ -90,6 +92,7 @@ newbie.subscribe((newbie)=>updateSettings({newbie}));
 showpunc.subscribe((showpunc)=>updateSettings({showpunc}));
 showsponsor.subscribe((showsponsor)=>updateSettings({showsponsor}));
 showyoutube.subscribe((showyoutube)=>updateSettings({showyoutube}));
+showfavorite.subscribe((showfavorite)=>updateSettings({showfavorite}));
 favorites.subscribe((favorites)=>updateSettings({favorites}));
 playrate.subscribe((playrate)=>updateSettings({playrate}));
 preferaudio.subscribe((preferaudio)=>updateSettings({preferaudio}));
@@ -125,9 +128,8 @@ export const booknameOf=folioid=>{
     const ptks=allptks.filter(it=>it.startsWith("ylz-"));
     for (let i=0;i<ptks.length;i++) {
         let ptk=usePtk(ptks[i]);
-        if (!ptk) continue;
-        let at=ptk.defines.bk.fields.id.values.indexOf(bkid);
-        if (~at) return bk.innertext.get(at);
+        if (!ptk ) continue;
+        return ptk.bookNameById(bkid);
     }
     return '';
 }

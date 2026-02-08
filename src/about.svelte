@@ -1,5 +1,5 @@
 <script>
-import {newbie,showyoutube,showpunc,showsponsor,vip,heightratio,tosim, textsize} from './store.js'
+import {newbie,showyoutube,showfavorite,showpunc,showsponsor,vip,heightratio,tosim, textsize} from './store.js'
 import {_} from './textout.js'
 import Switch from './3rd/switch.svelte';
 //import Sponsoring from './sponsoring.svelte';
@@ -106,6 +106,7 @@ type="text" on:keyup={onkeyup} bind:value={vipcode}/>
 </Slider>
 <br/>
 {#key $tosim}
+<Switch bind:value={$showfavorite} label={_("我的最愛")} design="slider" />
 <Switch bind:value={$showpunc} label={_("顯示標點符號")} design="slider" />
 <Switch bind:value={$showsponsor} label={_("靜置時顯示施主")} design="slider" />
 <Switch bind:value={$showyoutube} label={_("顯示油管影片連結")} design="slider" />

@@ -3,8 +3,8 @@ import Favoritebuttons from './favoritebuttons.svelte';
 import { loadFolio } from './nav.js';
 import {downloadToCache} from 'ptk/platform/downloader.js'
 import {CacheName} from './constant.js'
-export let thetab;
-import {activefolioid, vip,tosim,parallelFolios,stopAudio,folioincache,online,activepb, activePtk} from './store.js';
+
+import {thetab,activefolioid, vip,tosim,parallelFolios,stopAudio,folioincache,online,activepb, activePtk, showfavorite} from './store.js';
 import Endmarker from './endmarker.svelte';
 import {ptkInCache} from './folio.js'
 import {_} from './textout.js'
@@ -92,7 +92,7 @@ const selectfolio=nfolio=>{
     if ($folioincache[folioid] || $online) {
         stopAudio();
         loadFolio(folioid,function(){
-            thetab='toc';
+            thetab.set('toc');
             activepb.set('1');
         });
         closePopup();
@@ -146,6 +146,7 @@ $: getFolioList(aptk);
 {#if $vip=='YAP' && !downloading && samesutra($activefolioid,folioid) && getAllFolio(usePtk(aptk) ,folioid).length>1 }
 <span aria-hidden="true" on:click={downloadBook(folioid)}>Download All</span>
 {/if}
+{#if $showfavorite=='on'}
 <Favoritebuttons {folioid} {closePopup}/>
 {#each pars as par}
 {#if $folioincache[getFolioId(par)] || $online}
@@ -157,6 +158,8 @@ $: getFolioList(aptk);
 {/if}
 
 {/each}
+{/if}
+
 {/key}
 </div>
 {/each}

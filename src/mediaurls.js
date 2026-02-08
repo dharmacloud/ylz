@@ -1,6 +1,6 @@
 let ptk;
 import { CacheName } from "./constant.js";
-export const silence={vid:'',performer:'-靜默-'};
+export const silence={vid:'',performer:'--停止播放--'};
 export const audiofolder='/baudio/'
 
 export const setTimestampPtk=_ptk=>{

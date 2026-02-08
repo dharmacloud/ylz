@@ -7,6 +7,7 @@ export const loadSettings=()=>{
     const showpunc=localStorage.getItem(AppPrefix+'showpunc')||'on';  
     const showsponsor=localStorage.getItem(AppPrefix+'showsponsor')||'off';  
     const showyoutube=localStorage.getItem(AppPrefix+'showyoutube')||'off';  
+    const showfavorite=localStorage.getItem(AppPrefix+'showfavorite')||'off';  
     const heightratio=parseFloat(localStorage.getItem(AppPrefix+'heightratio')||'1') || 1;   
     const textsize=parseInt(localStorage.getItem(AppPrefix+'textsize')||'150') ||150;
     const playrate=parseInt(localStorage.getItem(AppPrefix+'playrate')||'100') ||100;
@@ -26,7 +27,7 @@ export const loadSettings=()=>{
         favorites={};
         preferaudio={}
     }
-    return {tosim,vip,activefolioid,heightratio,tofindhistory,playrate,
+    return {tosim,vip,activefolioid,heightratio,tofindhistory,playrate,showfavorite,
         textsize,showsponsor,showyoutube,autodict,newbie,favorites,playnextjuan,preferaudio,showpunc};
 }
 
@@ -38,7 +39,7 @@ export const saveSettings=()=>{ //immediate save
     clearTimeout(updateTimer);
     // console.log('settings autosaved on',new Date())
 }
-let updateTimer;
+let updateTimer=0;
 const settingsToBeSave={};
 export const updateSettings=_settings=>{
     let updated=false,oldval;

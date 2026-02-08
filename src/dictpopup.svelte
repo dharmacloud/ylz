@@ -72,7 +72,7 @@ $: availableDict(nentry,entries);
 <iframe style="border:none" class="iframe" title="wiki" {src}></iframe>
 {/if}
 {:else}
-{_("點要查的字詞。")}
+{_("在要查詢的名詞長按一秒")}
 {/if}
 </div>
 <style>

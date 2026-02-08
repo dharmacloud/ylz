@@ -181,7 +181,7 @@ transition-duration: ${touch_end ? transitionDuration : '0'}ms;
     }
   }
 
-  let startx,starty;
+  let startx,starty,t2;
   function onMoveStart(e) {
     // e.preventDefault();
     fire('start');
@@ -193,6 +193,12 @@ transition-duration: ${touch_end ? transitionDuration : '0'}ms;
     setTimeout(function () {
       longTouch = true;
     }, 250);
+    t2=setTimeout(function () {
+      longTouch = false;
+      onEnd();
+      fire('longpress',{x:startx,y:starty})
+    }, 1200);
+
     axis = e.touches ? e.touches[0][page_axis] : e[page_axis];
 
     if (e.touches) {
@@ -216,7 +222,7 @@ transition-duration: ${touch_end ? transitionDuration : '0'}ms;
     touch_active = false;
     let _as = availableSpace;
     let accidental_touch = Math.round(availableSpace / 50) > Math.abs(axis - last_axis_pos);
-    if (longTouch || accidental_touch) {
+    if (longTouch  || accidental_touch) {
       availableDistance = Math.round(availableDistance / _as) * _as;
     } else {
       availableDistance = direction
@@ -273,6 +279,8 @@ transition-duration: ${touch_end ? transitionDuration : '0'}ms;
       y=e?.clientY;
     }
 
+    clearTimeout(t2);
+    
     if (Math.abs(startx-x)<3 && Math.abs(starty-y)<3 && movingcount<3) {
       fire('click',{x,y});
     } else {

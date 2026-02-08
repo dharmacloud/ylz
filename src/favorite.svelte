@@ -3,7 +3,7 @@ import { fromObj } from 'ptk';
 import {favorites,activefolioid,booknameOf} from './store.js'
 import {goPb,loadFolio} from './nav.js'
 let items=[],others=[];
-export let ptk;
+
 export let closePopup;
 const loadfavorites=()=>{
     const _favorites=$favorites;

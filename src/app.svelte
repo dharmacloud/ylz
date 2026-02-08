@@ -5,7 +5,7 @@ import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import {downloadToCache,ptkInCache} from 'ptk/platform/downloader.js'
 import { onDestroy } from "svelte";
 import {activefolioid,isAndroid,idlecount,showpaiji,leftmode,online,
-    folioincache,showsponsor, newbie,idletime,landscape,ptks} from './store.js'
+    folioincache,showsponsor, newbie,idletime,landscape,ptks,thetab} from './store.js'
 import {CacheName,APPVER} from './constant.js'
 import {documentHeight} from './fullscreen.js'
 import {setTimestampPtk} from './mediaurls.js'
@@ -95,7 +95,14 @@ const onMainmenu=()=>{
 }
 const onTapText=(t)=>{
     showpopup=true;
-    if (typeof t=='string') tofind=t;
+
+    if (typeof t=='string' && t.charAt(0)!=='$') {
+        tofind=t;
+        thetab.set('dict');
+    } else { //show book list
+        thetab.set(t.slice(1));
+        if (!$thetab) thetab.set('list');
+    }
 }
 const orientation=(ls)=>{
     showpopup=false;
@@ -122,7 +129,7 @@ setTimeout(init,500);
 <Left/>
 {/if}
 {#if (shownewbie||showpopup) && !$landscape}
-<span aria-hidden="true" class="closepopup" on:click={closePopup}>✖️</span> <!--╳-->
+<span aria-hidden="true" class="closepopup" on:click={closePopup}>❌</span> <!--╳-->
 {/if}
 {#if showpopup || $landscape}
 <TapText {tofind} {closePopup}/>

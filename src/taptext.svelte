@@ -4,16 +4,16 @@ import Foliolist from "./foliolist.svelte"
 import Audio from "./audio.svelte"
 import About from "./about.svelte"
 import Textual from './textual.svelte'
+import Favorite from './favorite.svelte'
 import Sharing from './sharing.svelte'
 import Toc from "./toc.svelte"
 import {_} from './textout.js'
-import {activePtk, landscape,sideWidth,searchable,mediaurls,sharing,tosim,hasupdate} from './store.js'
+import {thetab,activePtk, landscape,sideWidth,searchable,mediaurls,sharing,tosim,hasupdate, showfavorite} from './store.js'
 import { usePtk} from "ptk";
 import {CURSORMARK} from './nav.js'
 export let tofind='';
 export let closePopup;
-let thetab=($landscape||!tofind)?"textual":"dict";
-if (!navigator.onLine && thetab=='dict') thetab='list' 
+if (!navigator.onLine && $thetab=='dict') $thetab='list' ;
 let entries=[];
 
 const onDict=(t)=>{
@@ -38,18 +38,20 @@ const copyaddress=async ele=>{
 */
 $: ls=$landscape;
 $: setSearchable(tofind);
-$: thetab=='dict' && onDict(tofind);
-$: if ($sharing) thetab='dict';
+$: $thetab=='dict' && onDict(tofind);
+$: if ($sharing) thetab.set('dict');
 </script>
 {#key $landscape}
 <div class="popup" style={ls?sideWidth(ls):''}>
     <div class="tabs">    
-        <span aria-hidden="true" class='clickable' class:needupdate={$hasupdate} class:selected={thetab=="about"} on:click={()=>thetab="about"}>{#if !ls}{@html "&nbsp;"} {/if}⚙️{#if ls}首{/if}</span>
-        <span aria-hidden="true" class='clickable' class:selected={thetab=="list"} on:click={()=>thetab="list"}>📚{#if ls}{_("錄",$tosim)}{/if}</span>
-        <span aria-hidden="true" class='clickable' class:selected={thetab=="toc"} on:click={()=>thetab="toc"}>🧭{#if ls}次{/if}</span>
-        
-        <span aria-hidden="true" class='clickable' class:selected={thetab=="textual"} on:click={()=>thetab="textual"}>📜{#if ls}文{/if}</span>    
-        <span aria-hidden="true" class='clickable' class:selected={thetab=="dict"} on:click={()=>thetab="dict"}>
+        <span aria-hidden="true" class='clickable' class:needupdate={$hasupdate} class:selected={$thetab=="about"} on:click={()=>thetab.set("about")}>{#if !ls}{@html "&nbsp;"} {/if}⚙️{#if ls}首{/if}</span>
+        <span aria-hidden="true" class='clickable' class:selected={$thetab=="list"} on:click={()=>thetab.set("list")}>📚{#if ls}{_("錄",$tosim)}{/if}</span>
+        <span aria-hidden="true" class='clickable' class:selected={$thetab=="toc"} on:click={()=>thetab.set("toc")}>🧭{#if ls}目{/if}</span>
+        {#if $showfavorite=='on'}
+        <span aria-hidden="true" class='clickable' class:selected={$thetab=="favorite"} on:click={()=>thetab.set("favorite")}>❤️{#if ls}愛{/if}</span>
+        {/if}
+        <span aria-hidden="true" class='clickable' class:selected={$thetab=="textual"} on:click={()=>thetab.set("textual")}>📃{#if ls}文{/if}</span>    
+        <span aria-hidden="true" class='clickable' class:selected={$thetab=="dict"} on:click={()=>thetab.set("dict")}>
         {#if $sharing}    
             🔗{#if ls}{_("鏈",$tosim)}{/if}
         {:else}
@@ -59,23 +61,25 @@ $: if ($sharing) thetab='dict';
         </span>
 
         {#if $mediaurls.length>1}
-        <span aria-hidden="true" class='clickable' class:selected={thetab=="audio"} on:click={()=>thetab="audio"}>🎵{#if ls}{_("誦",$tosim)}{/if}</span>
+        <span aria-hidden="true" class='clickable' class:selected={$thetab=="audio"} on:click={()=>thetab.set("audio")}>📣{#if ls}{_("誦",$tosim)}{/if}</span>
         {/if}
 
     </div>
-      <div class="tab-content" class:visible={thetab=='list'}><Foliolist {closePopup}  bind:thetab /></div>
-      <div class="tab-content" class:visible={thetab=='toc'}><Toc {closePopup}  /></div>
-      <!-- <div class="tab-content" class:visible={thetab=='favorite'}><Favorite {address} {closePopup} {ptk} /></div> -->
-      <div class="tab-content" class:visible={thetab=='textual'}><Textual {closePopup} /></div>
+      <div class="tab-content" class:visible={$thetab=='list'}><Foliolist {closePopup}/></div>
+      <div class="tab-content" class:visible={$thetab=='toc'}><Toc {closePopup}  /></div>
+      {#if $showfavorite=='on'}
+      <div class="tab-content" class:visible={$thetab=='favorite'}><Favorite {closePopup} /></div>
+      {/if}
+      <div class="tab-content" class:visible={$thetab=='textual'}><Textual {closePopup} /></div>
       
       {#if $sharing}
-      <div class="tab-content" class:visible={thetab=='dict'}><Sharing/></div>
+      <div class="tab-content" class:visible={$thetab=='dict'}><Sharing/></div>
       {:else}
-      <div class="tab-content" class:visible={thetab=='dict'}><DictPopup {entries}/></div>
+      <div class="tab-content" class:visible={$thetab=='dict'}><DictPopup {entries}/></div>
       {/if}
       
-      <div class="tab-content" class:visible={thetab=='audio'}><Audio /></div>
-      <div class="tab-content" class:visible={thetab=='about'}><About/></div>
+      <div class="tab-content" class:visible={$thetab=='audio'}><Audio /></div>
+      <div class="tab-content" class:visible={$thetab=='about'}><About/></div>
 
  </div>
  {/key}

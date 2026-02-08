@@ -121,7 +121,7 @@ class:selected={media.aid==$audioid}>{_(media.performer)}{idx&&media.aid==$audio
     <br/>
 {:else}
 {#if $online}
-<span class="uncache">{_(media.performer)+" "}</span><span aria-hidden="true" class="clickable" on:click={()=>!downloading&&downloadit(media.aid)}>{@html downloadicon}</span>
+<span class="uncache">{_(media.performer)+" "}</span><span aria-hidden="true" class="clickable" on:click={()=>!downloading&&downloadit(media.aid)}>{@html downloadicon}{_("下載")}</span>
 {#if downloading==media.aid}{progress}{/if}
 {#if $audioid==media.vid&& $audioid}{humanDuration(getDuration($audioid))}{/if}
 <br/>
