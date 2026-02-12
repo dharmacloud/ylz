@@ -18,7 +18,7 @@ import Notification from './notification.svelte';
 import { get } from 'svelte/store';
 import Left from './left.svelte'
 import {loadAddress} from './nav.js'
-    import { AppPrefix } from './savestore.js';
+import { AppPrefix } from './savestore.js';
 let tofind;
 registerServiceWorker();
 const idleinterval=2;

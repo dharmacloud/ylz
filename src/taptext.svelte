@@ -44,7 +44,7 @@ $: if ($sharing) thetab.set('dict');
 {#key $landscape}
 <div class="popup" style={ls?sideWidth(ls):''}>
     <div class="tabs">    
-        <span aria-hidden="true" class='clickable' class:needupdate={$hasupdate} class:selected={$thetab=="about"} on:click={()=>thetab.set("about")}>{#if !ls}{@html "&nbsp;"} {/if}⚙️{#if ls}首{/if}</span>
+        <span aria-hidden="true" class='clickable' class:needupdate={$hasupdate} class:selected={$thetab=="about"} on:click={()=>thetab.set("about")}>⚙️{#if ls}首{/if}</span>
         <span aria-hidden="true" class='clickable' class:selected={$thetab=="list"} on:click={()=>thetab.set("list")}>📚{#if ls}{_("錄",$tosim)}{/if}</span>
         <span aria-hidden="true" class='clickable' class:selected={$thetab=="toc"} on:click={()=>thetab.set("toc")}>🧭{#if ls}目{/if}</span>
         {#if $showfavorite=='on'}

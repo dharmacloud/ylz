@@ -2,13 +2,13 @@
 import {newbie,showyoutube,showfavorite,showpunc,showsponsor,vip,heightratio,tosim, textsize} from './store.js'
 import {_} from './textout.js'
 import Switch from './3rd/switch.svelte';
-//import Sponsoring from './sponsoring.svelte';
+import Sponsors from './sponsors.svelte';
 import HOF from './hof.svelte'
+import Help from './help.svelte'
 import Workers from './workers.svelte'
 import ProjectIntro from './project.svelte'
 import StyleIntro from './styleintro.svelte'
 import Materials from './materials.svelte'
-import { githubicon } from './icons.js';
 import Slider from './3rd/rangeslider.svelte';
 import {debounce} from 'ptk'
 import { documentHeight } from './fullscreen.js';
@@ -20,12 +20,13 @@ import { getVip } from './vip.js';
 let show=0,vipcode=$vip;
 let hratio=[ Math.floor((($heightratio*100)-90)*10) ,0]; 
 let textsz=[ $textsize ,0];
-const toggleshowsponsoring=()=>show=show==1?0:1;
+const toggleshowhelp=()=>show=show==1?0:1;
 const toggleshowdonors=()=>show=show==2?0:2;
 const toggleshowworkers=()=>show=show==3?0:3;
 const toggleshowmaterials=()=>show=show==4?0:4; 
-const toggleshowstyle=()=>show=show==6?0:6;
 const toggleshowproject=()=>show=show==5?0:5;
+const toggleshowstyle=()=>show=show==6?0:6;
+const toggleshowsponsors=()=>show=show==7?0:7;
 /*
 const clearCache=async (ext)=>{
     const cache=await caches.open(CacheName);
@@ -59,19 +60,25 @@ const onkeyup=(e)=>{
 <div class="tabs">
 {#key $tosim}
 <!-- <span aria-hidden="true"  class:selected={show==1}class="clickable"  on:click={toggleshowsponsoring}>{_("護持")}</span> -->
-<span aria-hidden="true" class:selected={show==2}  class="clickable" on:click={toggleshowdonors}>芳名</span>
-<span aria-hidden="true" class:selected={show==3}  class="clickable" on:click={toggleshowworkers}>伙伴</span>
-<span aria-hidden="true" class:selected={show==4}  class="clickable" on:click={toggleshowmaterials}>素材</span>
-
-<span aria-hidden="true" class:selected={show==5}  class="clickable" on:click={toggleshowproject}>{_("關於")}</span>
 {#if $vip && getVip("title")}
 <span aria-hidden="true" class:selected={show==6}  class="clickable" on:click={toggleshowstyle}>{_("項目")}</span>
+{:else}
+<span aria-hidden="true" class:selected={show==1}  class="clickable" on:click={toggleshowhelp}>{_("說明")}</span>
 {/if}
+
+<span aria-hidden="true" class:selected={show==2}  class="clickable" on:click={toggleshowdonors}>芳名</span>
+{#if $vip && getVip("title")}
+<span aria-hidden="true" class:selected={show==7}  class="clickable" on:click={toggleshowsponsors}>{_("贊助")}</span>
+{:else}
+<span aria-hidden="true" class:selected={show==3}  class="clickable" on:click={toggleshowworkers}>伙伴</span>
+{/if}
+<span aria-hidden="true" class:selected={show==4}  class="clickable" on:click={toggleshowmaterials}>素材</span>
+<span aria-hidden="true" class:selected={show==5}  class="clickable" on:click={toggleshowproject}>{_("關於")}</span>
 {/key}
 </div>
 <div class="bodytext">
 {#if show==1}
-<!--<Sponsoring/>-->
+<Help/>
 {:else if show==2}
 <HOF/>
 {:else if show==3}
@@ -82,6 +89,8 @@ const onkeyup=(e)=>{
 <StyleIntro/>
 {:else if show==6}
 <ProjectIntro/>
+{:else if show==7}
+<Sponsors/>
 {:else}
 
 <span class="logotitle">{_("永樂藏",$tosim)}</span>
@@ -108,8 +117,8 @@ type="text" on:keyup={onkeyup} bind:value={vipcode}/>
 {#key $tosim}
 <Switch bind:value={$showfavorite} label={_("我的最愛")} design="slider" />
 <Switch bind:value={$showpunc} label={_("顯示標點符號")} design="slider" />
-<Switch bind:value={$showsponsor} label={_("靜置時顯示施主")} design="slider" />
-<Switch bind:value={$showyoutube} label={_("顯示油管影片連結")} design="slider" />
+<!-- <Switch bind:value={$showsponsor} label={_("靜置時顯示施主")} design="slider" /> -->
+<!-- <Switch bind:value={$showyoutube} label={_("顯示油管影片連結")} design="slider" /> -->
 <Switch bind:value={$newbie} label={_("啟動時顯示歡迎畫面")} design="slider" />
 {/key}
 

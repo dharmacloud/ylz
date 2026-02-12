@@ -220,7 +220,11 @@ const onfoliopageclick=e=>{
             onTapText('$list');            
         }
     } else {
-        onTapText('$audio');
+        if (cy>half) {
+            onTapText('$audio');
+        } else {
+            onTapText('$about');
+        }
     }
     
 }

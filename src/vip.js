@@ -13,6 +13,10 @@ export const viplist={
         title:'作者',
         www:'https://nissaya.cn/',
     },
+    'XIU':{
+        title:'魏秀秀',
+        www:'https://shutonggui.cn/',
+    },    
     'HAIYIN':{
         title:'金門海印寺',
         www:'https://kinmen.travel/zh-tw/travel/attraction/401',

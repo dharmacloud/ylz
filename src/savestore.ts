@@ -5,7 +5,7 @@ export const loadSettings=()=>{
     const newbie=localStorage.getItem(AppPrefix+'newbie')||'on';  
     const playnextjuan=localStorage.getItem(AppPrefix+'playnextjuan')||'on';  
     const showpunc=localStorage.getItem(AppPrefix+'showpunc')||'on';  
-    const showsponsor=localStorage.getItem(AppPrefix+'showsponsor')||'off';  
+    const showsponsor='off';//localStorage.getItem(AppPrefix+'showsponsor')||'off';  
     const showyoutube=localStorage.getItem(AppPrefix+'showyoutube')||'off';  
     const showfavorite=localStorage.getItem(AppPrefix+'showfavorite')||'off';  
     const heightratio=parseFloat(localStorage.getItem(AppPrefix+'heightratio')||'1') || 1;   

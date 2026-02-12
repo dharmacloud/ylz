@@ -1,8 +1,17 @@
 <script>
 import Endmarker from "./endmarker.svelte";
+import Mending from "./mending.svelte";
+let isshowmending=false;
+const showmending=(show)=>{
+    isshowmending=show;
+}
 </script>
 <div>
-<a target=_new href="https://docs.google.com/document/d/16m-DGbSTMpM67WSWHaojbRRWtUi2FfovgkdeWhFitKk/edit?usp=sharing">補版計劃</a>
+{#if isshowmending}
+<button on:click={()=>showmending(false)}>項目介紹</button>
+<Mending/>
+{:else}
+<button on:click={()=>showmending(true)}>補版計劃</button>
 佛法是中華文明的三大組成部份(儒釋道)中唯一的非原生文明，佛經的翻譯和編修是大規模的文化交流工程，其在文明史的地位，不亞於阿拉伯的百年翻譯運動。
 <br/>因此，以佛法為依托的文化符號，能夠將中華文明以較小的阻力，散播至儒家文化圈以外。
 <br/>漢傳佛教徒素有勇於嘗試新科技的傳統，公元868年（唐咸通九年），在雕版印刷術萌芽之初，印行了金剛經（敦煌唐刻本），比歐洲早五百年。
@@ -36,5 +45,6 @@ import Endmarker from "./endmarker.svelte";
 <br/>三）使用者點擊的圖檔任何一處、立即由軟體換算為對應的文字，可搜尋、查字典、連結原文、誦讀、顯示相關的開示錄影等。
 <br/>四）取得諸山長老的祝福，我們的目標是只要會按手機，都可以悠遊法海。
 <br/>五）由於沒有版權的限制，可以將此成果與置入商品平板電腦，贈與經濟欠發達地區的僧人，以做為國際文化交流的拌手禮。
+{/if}
 <Endmarker/>
 </div>

@@ -111,9 +111,10 @@ const speed1x=()=>{
 <div class="bodytext">
 
 {#each $mediaurls as media,idx}
-{#if idx&& !$playing && media.youtube}
+
+<!-- {#if idx&& !$playing && media.youtube}
 <span aria-hidden="true" on:click={goyoutube(media.youtube)}>{@html youtubeicon}</span>
-{/if}
+{/if} -->
 
 {#if media.incache || !media.aid}
 <span aria-hidden="true" class="clickable" on:click={()=>!downloading&&selectmedia(media.aid,true)} 

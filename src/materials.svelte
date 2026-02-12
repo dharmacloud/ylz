@@ -10,7 +10,7 @@ import Endmarker from "./endmarker.svelte";
 <br/>{_("梵漢佛經對勘叢書(黃寶生，中國社會科學出版社)")}
 <br/>{_("四部阿含相似經文對照表")}<a target=_new href="https://suttacentral.net/">SuttaCentral</a>
 <br/>{_("一行佛學詞典之詞條")}
-<br/>{_("油管公開誦經影片")}
+<br/>{_("網路公開誦經影片")}
 <hr/>
 {_("進行以下加工：")}
 <br/>{_("按手機比例裁圖及修圖")}

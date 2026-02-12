@@ -23,5 +23,11 @@ import {_} from './textout.js'
 <table>
 <tr><td>{_("紅坊老黃")} </td><td>3.5</td><td>{_("人民幣")} 2,000</td></tr>
 </table>
+
+<br/><div>2026年</div>
+<table>
+<tr><td>等著你</td><td></td><td></td></tr>
+</table>
+
 <Endmarker/>
 </div>
