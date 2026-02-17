@@ -18,7 +18,7 @@ export const sharing=writable(false);
 export const favorites=writable(settings.favorites);
 export const preferaudio=writable(settings.preferaudio);
 export const showpunc=writable(settings.showpunc);
-export const showsponsor=writable(settings.showsponsor);
+export const showgallery=writable(settings.showgallery);
 export const showyoutube=writable(settings.showyoutube)
 export const showfavorite=writable(settings.showfavorite)
 export const landscape=writable(false)
@@ -90,7 +90,7 @@ activefolioid.subscribe((activefolioid)=>updateSettings({activefolioid}));
 autodict.subscribe((autodict)=>updateSettings({autodict}));
 newbie.subscribe((newbie)=>updateSettings({newbie}));
 showpunc.subscribe((showpunc)=>updateSettings({showpunc}));
-showsponsor.subscribe((showsponsor)=>updateSettings({showsponsor}));
+showgallery.subscribe((showgallery)=>updateSettings({showgallery}));
 showyoutube.subscribe((showyoutube)=>updateSettings({showyoutube}));
 showfavorite.subscribe((showfavorite)=>updateSettings({showfavorite}));
 favorites.subscribe((favorites)=>updateSettings({favorites}));
@@ -134,7 +134,7 @@ export const booknameOf=folioid=>{
     return '';
 }
 
-export const idletime=30;
+export const idletime=5;
 
 export const hasVariorum=(bkid)=>{
     const ptk=usePtk('ylz_sanskrit');

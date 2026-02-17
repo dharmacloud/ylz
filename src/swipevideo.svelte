@@ -174,6 +174,6 @@ const setHandle=node=>{
 .container {width:100%;background-color: rgb(243, 208, 160);height: 100%;}
 video { height:100%;user-select: none; pointer-events: none;width:100%;}
 .swipe {position:absolute;top:50%;left:50%;transform: translate(-50%,-50%); }
-.pagenumber {position:absolute ; bottom:1%;font-size: 200%;left:0.1em;z-index: 999;color:brown}
+.pagenumber {position:absolute ; bottom:1%;font-size: 200%;left:0.1em;z-index: 99;color:brown}
 
 </style>

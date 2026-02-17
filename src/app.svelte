@@ -5,7 +5,7 @@ import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import {downloadToCache,ptkInCache} from 'ptk/platform/downloader.js'
 import { onDestroy } from "svelte";
 import {activefolioid,isAndroid,idlecount,showpaiji,leftmode,online,
-    folioincache,showsponsor, newbie,idletime,landscape,ptks,thetab} from './store.js'
+    folioincache,showgallery, newbie,idletime,landscape,ptks,thetab} from './store.js'
 import {CacheName,APPVER} from './constant.js'
 import {documentHeight} from './fullscreen.js'
 import {setTimestampPtk} from './mediaurls.js'
@@ -13,7 +13,7 @@ import {fetchFolioList} from './folio.js'
 import TapText from './taptext.svelte'
 import Player from './player.svelte'
 import Newbie from './newbie.svelte';
-import Paiji from './paiji.svelte';
+import Gallery from './gallery.svelte';
 import Notification from './notification.svelte';
 import { get } from 'svelte/store';
 import Left from './left.svelte'
@@ -77,7 +77,7 @@ const init=async ()=>{
     
     timer=setInterval(()=>{
         showpaiji.set($idlecount>=idletime);
-        if (!shownewbie && !showpopup && $showsponsor=='on') {
+        if (!shownewbie && !showpopup && $showgallery=='on') {
             idlecount.set($idlecount+idleinterval);
         }
     },idleinterval*1000);
@@ -117,11 +117,12 @@ setTimeout(init,500);
 
 <div class="app" bind:this={app}>
 {#if loaded}
-{#if $showpaiji && !showpopup && !shownewbie && !$landscape && $showsponsor=='on'}
-<Paiji/>
+{#if $showpaiji && !showpopup && !shownewbie && !$landscape && $showgallery=='on'}
+
 {/if}
 
-{#key $activefolioid} 
+{#key $activefolioid}
+{#if showgallery}<Gallery/>{/if}
 <SwipeZipImage src={$activefolioid+".zip"} {onTapText} {onMainmenu} />
 {/key}
 
