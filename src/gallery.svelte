@@ -14,7 +14,7 @@ setTimeout(()=>{
 </script>
 <div>
 {#if srcs[$activefolioid] && showit}
-<img in:fade out:fade={{duration:3000}} src={srcs[$activefolioid]}/>
+<img in:fade out:fade={{duration:2000}} src={srcs[$activefolioid]}/>
 {/if}
 </div>
 

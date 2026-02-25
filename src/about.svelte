@@ -68,11 +68,11 @@ const onkeyup=(e)=>{
 
 <span aria-hidden="true" class:selected={show==2}  class="clickable" on:click={toggleshowdonors}>芳名</span>
 {#if $vip && getVip("title")}
-<span aria-hidden="true" class:selected={show==7}  class="clickable" on:click={toggleshowsponsors}>{_("贊助")}</span>
+<span aria-hidden="true" class:selected={show==7}  class="clickable" on:click={toggleshowsponsors}>{_("擴編")}</span>
 {:else}
-<span aria-hidden="true" class:selected={show==3}  class="clickable" on:click={toggleshowworkers}>伙伴</span>
-{/if}
 <span aria-hidden="true" class:selected={show==4}  class="clickable" on:click={toggleshowmaterials}>素材</span>
+{/if}
+<span aria-hidden="true" class:selected={show==3}  class="clickable" on:click={toggleshowworkers}>伙伴</span>
 <span aria-hidden="true" class:selected={show==5}  class="clickable" on:click={toggleshowproject}>{_("關於")}</span>
 {/key}
 </div>

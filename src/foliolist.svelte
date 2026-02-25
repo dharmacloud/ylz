@@ -14,12 +14,7 @@ export let closePopup=function(){};
 let downloadmessage='';
 let folios=[];
 let canceldownload=false,downloading='';
-const texttypeOf=prefix=>{
-    if (prefix.slice(0,3)=='agm'||prefix=='lastword') return 1; //聲聞經
-    if (prefix.slice(0,5)=='vnybs') return 4; //大乘律
-    if (prefix.slice(0,3)=='vny') return 3; //聲聞律
-    return 2;//大乘經
-}
+
 const openptk=async name=>{
     const res=await downloadToCache(CacheName,name+'.ptk',msg=>{
         downloadmessage=name+'.ptk '+msg;
@@ -91,12 +86,12 @@ const selectfolio=nfolio=>{
     activePtk.set(aptk);
     if ($folioincache[folioid] || $online) {
         stopAudio();
-        loadFolio(folioid,function(){
-            thetab.set('toc');
-            activepb.set('1');
-        });
         closePopup();
     }
+    loadFolio(folioid,function(){
+        thetab.set('toc');
+        activepb.set('1');
+    });
 }
 
 const getFolioName=nfolio=>{
@@ -124,11 +119,10 @@ const installptk=async name=>{
 
 
 $: getFolioList(aptk);
-
 </script>
 <div class="tabs">
-    <span aria-hidden="true" class="clickable" class:selected={aptk=="ylz-prjn"}  on:click={()=>aptk="ylz-prjn"}>唯名</span>
-    <span aria-hidden="true" class="clickable" class:selected={aptk=="ylz-tg"}  on:click={()=>aptk="ylz-tg"}>唯心</span>
+    <span aria-hidden="true" class="clickable" class:selected={aptk=="ylz-prjn"}  on:click={()=>aptk="ylz-prjn"}>法性</span>
+    <span aria-hidden="true" class="clickable" class:selected={aptk=="ylz-tg"}  on:click={()=>aptk="ylz-tg"}>法界</span>
     <span aria-hidden="true" class="clickable" class:selected={aptk=="ylz-rite"}  on:click={()=>aptk="ylz-rite"}>{_("懺儀",$tosim)}</span>
     <span aria-hidden="true" class="clickable" class:selected={aptk=="ylz-svk"}  on:click={()=>aptk="ylz-svk"}>{_("聲聞",$tosim)}</span>
     <span aria-hidden="true" class="clickable" class:selected={aptk=="ylz-vny"}  on:click={()=>aptk="ylz-vny"}>戒律</span>
@@ -138,6 +132,7 @@ $: getFolioList(aptk);
 {downloading} <span aria-hidden="true" on:click={CancelDownloadBook()}>Cancel</span>
 {/if}
 {#each folios as [nfolio,folioid,pars]}
+{#key folioid}
 <div class="book">
 {#key $tosim}
 <span aria-hidden="true" class:dimmed={!$folioincache[folioid]} on:click={()=>selectfolio(nfolio)} 
@@ -147,6 +142,7 @@ $: getFolioList(aptk);
 <span aria-hidden="true" on:click={downloadBook(folioid)}>Download All</span>
 {/if}
 {#if $showfavorite=='on'}
+
 <Favoritebuttons {folioid} {closePopup}/>
 {#each pars as par}
 {#if $folioincache[getFolioId(par)] || $online}
@@ -156,14 +152,14 @@ $: getFolioList(aptk);
 {getFolioName(par)}</span>
 <Favoritebuttons folioid={getFolioId(par)} {closePopup} />
 {/if}
-
 {/each}
+
 {/if}
 
 {/key}
 </div>
+{/key}
 {/each}
-
 {:else}
 <div class="bodytext">
 <span aria-hidden="true" class="clickable hyperlink" on:click={()=>installptk(aptk)}>安裝 {downloadmessage}</span>
