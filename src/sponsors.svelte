@@ -22,7 +22,6 @@ import {_} from './textout.js'
 </tr>
 <tr>
 
-<tr>
 <td>摩訶般若波羅蜜經</td>
 <td>30</td>
 <td>鳩摩羅什</td>
@@ -58,7 +57,7 @@ import {_} from './textout.js'
 <td>八十華嚴</td>
 <td>80</td>
 <td>實叉難陀</td>
-<td>40,000</td><!--0084-001拱01 cropped-->
+<td>40,000</td><!--0084-001拱01 cropped 缺12卷 1,2,3,4,5,8,11,15,43,46,49,51-->
 </tr>
 <tr>
 <td>六十華嚴</td>

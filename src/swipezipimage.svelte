@@ -293,7 +293,8 @@ const confirmfavorite=()=>{
 let cancellable=true;
 const favoritebtn=()=>{
     const actptk=$activePtk;
-    if (actptk!=='ylz-prjn' && actptk!=='ylz-tg' && actptk!=='ylz-vny' && actptk!=='ylz-svk') return;//only support chinese
+    if (actptk!=='ylz-prjn' && actptk!=='ylz-tg'&& actptk!=='ylz-avts'
+     && actptk!=='ylz-vny' && actptk!=='ylz-svk') return;//only support chinese
 
     clearTimeout(favoritetimer);
     favoritetimer=setTimeout(()=>{
