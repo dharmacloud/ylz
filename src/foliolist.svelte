@@ -58,8 +58,6 @@ const getFolioList=async (aptk)=>{
             //const tt=texttypeOf(bkprefix);
             //if (texttype&& tt!==texttype) continue;
             out.push([i, id, parallelFolios(ptk,id)]);
-        } else if (id=='avts_eighty1') {
-            out.push([i, id, parallelFolios(ptk,id)]);
         }
     }
     folios=out;
