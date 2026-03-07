@@ -15,7 +15,6 @@
   let order = false;
 
   function setValue(pos) {
-    console.log('setvalue',pos)
     if (!pos||pos.length!==2||!Array.isArray(pos)) {
       pos=[min,max];
     }

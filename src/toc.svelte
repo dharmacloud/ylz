@@ -36,11 +36,11 @@ const getCk=(pb,loading)=>{
     if (loading) return '';
     const ft=$foliotext;
     if (!ft||!ft.fromFolioPos) return '';
-    const {ckid}=ft.fromFolioPos($activepb);
+    const {ckid}=ft.fromFolioPos(pb);
     return ckid;
 }
 $: tocitems=getTocItems(ptk,$activefolioid,$loadingfolio);
-$: cknow=getCk($activepb,$loadingfolio);
+$: cknow=getCk(parseInt($activepb)+1,$loadingfolio);
 </script>
 <div  class="bodytext">
 {#if !$loadingfolio}
