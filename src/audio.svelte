@@ -1,6 +1,6 @@
 <script>
 import {online,player,audioid,activefolioid, playnextjuan, findByAudioId,playrate,activePtk,
-     remainrollback,selectmedia,mediaurls, stopAudio, playing, showyoutube} from './store.js';
+     remainrollback,selectmedia,mediaurls, stopAudio, playing,tosim, showyoutube} from './store.js';
 import {CacheName} from './constant.js'
 import Slider from './3rd/rangeslider.svelte';
 import Switch from './3rd/switch.svelte';
@@ -118,11 +118,11 @@ const speed1x=()=>{
 
 {#if media.incache || !media.aid}
 <span aria-hidden="true" class="clickable" on:click={()=>!downloading&&selectmedia(media.aid,true)} 
-class:selected={media.aid==$audioid}>{_(media.performer)}{idx&&media.aid==$audioid?'♫':''}</span>
+class:selected={media.aid==$audioid}>{_(media.performer,$tosim)}{idx&&media.aid==$audioid?'♫':''}</span>
     <br/>
 {:else}
 {#if $online}
-<span class="uncache">{_(media.performer)+" "}</span><span aria-hidden="true" class="clickable" on:click={()=>!downloading&&downloadit(media.aid)}>{@html downloadicon}{_("下載")}</span>
+<span class="uncache">{_(media.performer,$tosim)+" "}</span><span aria-hidden="true" class="clickable" on:click={()=>!downloading&&downloadit(media.aid)}>{@html downloadicon}{_("下載")}</span>
 {#if downloading==media.aid}{progress}{/if}
 {#if $audioid==media.vid&& $audioid}{humanDuration(getDuration($audioid))}{/if}
 <br/>

@@ -142,19 +142,24 @@ $: getFolioList(aptk);
 <span aria-hidden="true" on:click={downloadBook(folioid)}>Download All</span>
 {/if}
 {#if $showfavorite=='on'}
-
 <Favoritebuttons {folioid} {closePopup}/>
+{/if}
+
 {#each pars as par}
 {#if $folioincache[getFolioId(par)] || $online}
 <span aria-hidden="true" class="parallelfolio" on:click={()=>selectfolio(par)} 
     class:dimmed={!$folioincache[getFolioId(par)]}
     class:selecteditem={$activefolioid==getFolioId(par)} >
 {getFolioName(par)}</span>
+
+{#if $showfavorite=='on'}
 <Favoritebuttons folioid={getFolioId(par)} {closePopup} />
+{/if}
+
 {/if}
 {/each}
 
-{/if}
+
 
 {/key}
 </div>
