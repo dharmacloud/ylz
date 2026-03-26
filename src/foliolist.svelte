@@ -3,8 +3,8 @@ import Favoritebuttons from './favoritebuttons.svelte';
 import { loadFolio } from './nav.js';
 import {downloadToCache} from 'ptk/platform/downloader.js'
 import {CacheName} from './constant.js'
-
-import {thetab,activefolioid, vip,tosim,parallelFolios,stopAudio,folioincache,online,activepb, activePtk, showfavorite, showinggallery} from './store.js';
+import {fetchFolioList} from './folio.js'
+import {thetab,activefolioid,downloading, vip,tosim,parallelFolios,stopAudio,folioincache,online,activepb, activePtk, showfavorite, showinggallery} from './store.js';
 import Endmarker from './endmarker.svelte';
 import {ptkInCache} from './folio.js'
 import {_} from './textout.js'
@@ -13,7 +13,7 @@ import {getAllFolio} from './folio.js';
 export let closePopup=function(){};
 let downloadmessage='';
 let folios=[];
-let canceldownload=false,downloading='';
+let canceldownload=false;
 
 const openptk=async name=>{
     const res=await downloadToCache(CacheName,name+'.ptk',msg=>{
@@ -70,14 +70,37 @@ const downloadBook=async function (folioid){
     //if (items.length<2) return; 
    for (let item of items){
         const src=item+'.zip'
-        console.log('downloading',src)
         await downloadToCache(CacheName,"folio/"+src,msg=>{
-            downloading=src+ " "+msg;
-            console.log(msg)
+            downloading.set(src+ " "+msg);
         });
     };
     canceldownload=false;
-    downloading='';
+    downloading.set('');
+}
+const hasDimBook=()=>{
+    const F=$folioincache;
+    for (let i=0;i<folios.length;i++) {
+        if (!F[folios[i][1]]) return true;
+    }
+}
+const downloadAll=async function (){
+    const todownload=folios.concat([]);
+    folios.length=0;//force ui refresh
+    canceldownload=false;
+    setTimeout(async ()=>{
+        for (let item of todownload){
+            const src=item[1]+'.zip'
+            await downloadToCache(CacheName,"folio/"+src,msg=>{
+                downloading.set(src+ " "+msg);
+            });
+            if (canceldownload) break;
+        };
+        canceldownload=false;
+        downloading.set('');
+        fetchFolioList(folioincache);
+        await getFolioList(aptk)
+    })
+
 }
 const selectfolio=nfolio=>{
     activePtk.set(aptk);
@@ -118,7 +141,6 @@ const installptk=async name=>{
     return aptk;
 }
 
-
 $: getFolioList(aptk);
 </script>
 <div class="tabs">
@@ -130,8 +152,8 @@ $: getFolioList(aptk);
     <span aria-hidden="true" class="clickable" class:selected={aptk=="ylz-vny"}  on:click={()=>aptk="ylz-vny"}>戒律</span>
 </div>
 {#if folios.length}
-{#if downloading}
-{downloading} <span aria-hidden="true" on:click={CancelDownloadBook()}>Cancel</span>
+{#if $downloading}
+{$downloading} <span aria-hidden="true" on:click={CancelDownloadBook()}>Cancel</span>
 {/if}
 {#each folios as [nfolio,folioid,pars]}
 {#key folioid}
@@ -140,8 +162,8 @@ $: getFolioList(aptk);
 <span aria-hidden="true" class:dimmed={!$folioincache[folioid]} on:click={()=>selectfolio(nfolio)} 
     class:selecteditem={samesutra($activefolioid,folioid)} >{getFolioName(nfolio)}</span>
 
-{#if $vip=='YAP' && !downloading && samesutra($activefolioid,folioid) && getAllFolio(usePtk(aptk) ,folioid).length>1 }
-<span aria-hidden="true" on:click={downloadBook(folioid)}>Download All</span>
+{#if ($vip=='YAP'||$vip=='XIU') && !$downloading && samesutra($activefolioid,folioid) && getAllFolio(usePtk(aptk) ,folioid).length>1 }
+<button on:click={downloadBook(folioid)}>{_("下載本經所有卷")}</button>
 {/if}
 {#if $showfavorite=='on'}
 <Favoritebuttons {folioid} {closePopup}/>
@@ -167,6 +189,11 @@ $: getFolioList(aptk);
 </div>
 {/key}
 {/each}
+{#key folios.length}
+{#if ($vip=='YAP'||$vip=='XIU') && hasDimBook()}
+<button on:click={()=>downloadAll()}>{_("下載此頁所有經之首卷")}</button>
+{/if}
+{/key}
 {:else}
 <div class="bodytext">
 <span aria-hidden="true" class="clickable hyperlink" on:click={()=>installptk(aptk)}>安裝 {downloadmessage}</span>

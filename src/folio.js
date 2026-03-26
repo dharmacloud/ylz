@@ -46,6 +46,7 @@ export const getTocItems=(ptk,folioid,loading)=>{
 
 export const getAllFolio=(ptk,folioid)=>{
     const out=[];
+    if (!ptk) return out
     const bk=bookByFolio(folioid);
     const bookaddr='bk#'+bk;
     const [from,to]=ptk.rangeOfAddress(bookaddr);
