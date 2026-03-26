@@ -83,6 +83,10 @@ const hasDimBook=()=>{
     const F=$folioincache;
     for (let i=0;i<folios.length;i++) {
         if (!F[folios[i][1]]) return true;
+        const pars=folios[i][2];
+        for (let j=0;j<pars.length;j++){
+            if (!F[getFolioId(pars[j])]) return true;
+        }
     }
 }
 const hasDimJuan=(folioid)=>{
@@ -106,10 +110,17 @@ const downloadAll=async function (){
     setTimeout(async ()=>{
         for (let item of folios){
             const src=item[1]+'.zip'
+            if (canceldownload) break;
             await downloadToCache(CacheName,"folio/"+src,msg=>{
                 downloading.set(src+ " "+msg);
             });
-            if (canceldownload) break;
+            const pars=item[2];
+            for (let j=0;j<pars.length;j++){
+                if (canceldownload) break;
+                await downloadToCache(CacheName,"folio/"+getFolioId(pars[j])+'.zip',msg=>{
+                    downloading.set(src+ " "+msg);
+                });
+            }
         };
         downloading.set('');
         
@@ -209,7 +220,7 @@ $: getFolioList(aptk);
 {/if}
 {/key}
 
-{#if $folioincache[$activefolioid]}
+{#if $folioincache[$activefolioid] && $activePtk==aptk}
 <button class="deletecache" aria-hidden="true" on:click={()=>deletecache($activefolioid)}>{_("清除緩存")}:{$activefolioid}</button>
 {/if}
 
