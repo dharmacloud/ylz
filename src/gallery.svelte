@@ -1,23 +1,24 @@
 <script>
-import {activefolioid} from "./store.js"
+import {activefolioid,showgallery,showinggallery} from "./store.js"
+import {_} from './textout.js'
 import { fade } from 'svelte/transition';
-let showit=true;
 const srcs={
     'pphs':"pphs_ulucitta.jpg",
     'ksitigarbha1':'ksitigarbha1.jpg',
     'ksitigarbha2':'ksitigarbha2.jpg',
 }
 
-setTimeout(()=>{
-    showit=false;
-},2000);
+const hide=()=>{
+    showinggallery.set(false)
+}
 </script>
-<div>
-{#if srcs[$activefolioid] && showit}
-<img in:fade out:fade={{duration:2000}} src={srcs[$activefolioid]}/>
+
+{#if srcs[$activefolioid] && $showinggallery}
+<img aria-hidden="true" on:click={hide} in:fade out:fade={{duration:2000}} src={srcs[$activefolioid]} alt=''/>
+<span>{_("點一下隱藏，可取消「顯示經變圖」")}</span>
 {/if}
-</div>
 
 <style>
-    img {z-index:999;height: 100%;position:absolute}
+    span {position:absolute;bottom:0px;z-index:199;color:white;background-color: black;}
+    img {position:absolute;z-index:99;height: 100%}
 </style>

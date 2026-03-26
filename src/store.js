@@ -19,6 +19,7 @@ export const favorites=writable(settings.favorites);
 export const preferaudio=writable(settings.preferaudio);
 export const showpunc=writable(settings.showpunc);
 export const showgallery=writable(settings.showgallery);
+export const showinggallery=writable(true);
 export const showyoutube=writable(settings.showyoutube)
 export const showfavorite=writable(settings.showfavorite)
 export const landscape=writable(false)
@@ -38,6 +39,7 @@ export const playrate=writable(settings.playrate);
 export const thetab=writable('list')
 export let player
 export const setplayer=p=>player=p;
+
 // export const foliorawtexts=writable([]);
 // export const foliostartfrom=writable(0)
 

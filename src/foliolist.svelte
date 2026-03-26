@@ -4,7 +4,7 @@ import { loadFolio } from './nav.js';
 import {downloadToCache} from 'ptk/platform/downloader.js'
 import {CacheName} from './constant.js'
 
-import {thetab,activefolioid, vip,tosim,parallelFolios,stopAudio,folioincache,online,activepb, activePtk, showfavorite} from './store.js';
+import {thetab,activefolioid, vip,tosim,parallelFolios,stopAudio,folioincache,online,activepb, activePtk, showfavorite, showinggallery} from './store.js';
 import Endmarker from './endmarker.svelte';
 import {ptkInCache} from './folio.js'
 import {_} from './textout.js'
@@ -80,17 +80,19 @@ const downloadBook=async function (folioid){
     downloading='';
 }
 const selectfolio=nfolio=>{
+    activePtk.set(aptk);
     const folio=usePtk(aptk).defines.folio;
     const folioid=folio.fields.id.values[nfolio];
-    activePtk.set(aptk);
     if ($folioincache[folioid] || $online) {
         stopAudio();
         closePopup();
     }
+    // console.log('select folio',nfolio,folioid)
     loadFolio(folioid,function(){
-        thetab.set('toc');
         activepb.set('1');
+        thetab.set('toc');
     });
+    showinggallery.set(true)
 }
 
 const getFolioName=nfolio=>{

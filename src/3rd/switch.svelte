@@ -8,6 +8,7 @@
 export let label;
 export let design = 'inner label'
 export let options = [];
+export let captiononclick='';
 // export let fontSize = 16;
 export let value = 'on';
 let checked = value== 'on'
@@ -22,7 +23,11 @@ function handleClick(event){
 
 {#if design == 'inner'}
 <div class="s s--inner">
+{#if captiononclick}
+    <span aria-hidden="true" on:click={captiononclick} id={`switch-${uniqueID}`}>{label}</span>
+{:else}
     <span id={`switch-${uniqueID}`}>{label}</span>
+{/if}
     <button
         role="switch"
         aria-checked={checked}

@@ -1,5 +1,5 @@
 <script>
-import {newbie,showyoutube,showfavorite,showpunc,showgallery,vip,heightratio,tosim, textsize} from './store.js'
+import {newbie,showyoutube,showfavorite,showpunc,showgallery,vip,heightratio,tosim, textsize, showinggallery} from './store.js'
 import {_} from './textout.js'
 import Switch from './3rd/switch.svelte';
 import Sponsors from './sponsors.svelte';
@@ -56,6 +56,7 @@ const onkeyup=(e)=>{
         vip.set(ele.value);
     },1000);
 }
+
 </script>
 <div class="tabs">
 {#key $tosim}

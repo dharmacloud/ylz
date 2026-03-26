@@ -118,13 +118,11 @@ setTimeout(init,500);
 <div class="app" bind:this={app}>
 {#if loaded}
 {#if $showpaiji && !showpopup && !shownewbie && !$landscape && $showgallery=='on'}
-
 {/if}
 
-{#key $activefolioid}
-{#if showgallery}<Gallery/>{/if}
+
+{#if $showgallery=='on'}<Gallery/>{/if}
 <SwipeZipImage src={$activefolioid+".zip"} {onTapText} {onMainmenu} />
-{/key}
 
 {#if $leftmode!=='folio'}
 <Left/>

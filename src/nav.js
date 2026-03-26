@@ -24,27 +24,25 @@ export const goPbAt=async (ptk,at)=>{
 }
 export const loadFolio=(folioid,func)=>{
     let timer=0;
-    // console.log('loading folio',folioid)
     if (folioid==get(activefolioid)) func&&func(folioid);
     else {
         stopAudio();
         audioid.set('')
         loadingfolio.set(true);
-        loadingzip.set(true);
-        activefolioid.set(folioid);
+        activefolioid.set(folioid)
         timer=setInterval(()=>{
             if (!get(loadingzip)) {
                 clearInterval(timer);
                 setTimeout(()=>{//wait for 
-                    func&&func(folioid);
                     loadingfolio.set(false);
                     updateUrl(tapAddress());
+                    func&&func(folioid);
                     setTimeout(()=>{
                         fetchFolioList(folioincache);//update cache
                     },100);
                 },100); 
             }
-        },30);
+        },100);
     }
 }
 
@@ -159,7 +157,7 @@ export const getPrevJuan=folioid=>{
     const juan=parseInt(m[1]);
     if (m && juan>1) {
         const prevjuan=folioid.slice(0,folioid.length-m[1].length)+ parseInt(juan-1);
-        console.log(prevjuan)
+        //console.log(prevjuan)
         return prevjuan;
     }
 }

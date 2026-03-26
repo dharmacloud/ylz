@@ -6,7 +6,6 @@ export const setTofind=tf=>{
     
     tofind.set(tf);
 }
-$: console.log('tofind',$tofind)
 </script>
 <div class="bodytext">
 {#each items as item}

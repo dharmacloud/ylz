@@ -73,18 +73,21 @@ const loadZip=async ()=>{
     const buf=await res.arrayBuffer();
     const zip=new ZipStore(buf);
     thezip.set(zip);
-
     totalpages=zip.files.length;
     imageIndex=parseInt($activepb)-1;
     if (imageIndex>=totalpages) imageIndex=0;
-    ready=true;
-    setTimeout(()=>{
-        maxfolio.set(totalpages);
-        loadingzip.set(false);
-        setImages(imageIndex); 
-        updateFolioText()
-        fetchAudioList($activefolioid,mediaurls,$showyoutube=='on')
-    },10);   
+    maxfolio.set(totalpages);
+    loadingzip.set(false);
+    // console.log('loadzip',src,imageIndex,'loadingzip false')
+    ready=true;//tell UI to draw Swiper
+    let inter=setInterval(()=>{        
+        if (swiper){ //swiper visible, update the image
+            clearInterval(inter)
+            setImages(imageIndex); 
+            updateFolioText();
+            fetchAudioList($activefolioid,mediaurls,$showyoutube=='on')
+        }
+    },100);
 }
 const swipeStart=(obj)=>{
     hidepunc=true;
@@ -100,6 +103,9 @@ const setImage=(imageidx,zip,idx)=>{
 
     //need to see all clone
     for(let i=0;i<imgs.length;i++) {
+        if (!zip.files[idx]) {
+            console.error(src,'no zip files',idx,zip.files)
+        }
         const blob=new Blob([zip.files[idx].content]);
         imgs[i].src=URL.createObjectURL(blob);
     }
@@ -108,7 +114,6 @@ const setImage=(imageidx,zip,idx)=>{
 const setImages=(idx)=>{
     if (!swiper) return;
     const zip=$thezip;
-
     let previdx=idx-1;
     if (previdx<0) previdx=totalpages-1;
     let nextidx=idx+1;
@@ -337,10 +342,10 @@ const toggleplaybtn=()=>{
 $: ptk&&loadZip(src);
 $: gotoPb($activepb); //trigger by goto folio in setting.svelte
 </script>
+
 {#if ready}
 <div aria-hidden="true" class="swipe-holder" on:wheel={mousewheel} style={ "opacity:"+($leftmode!=='folio'?'0;':'1')+";width:"+folioHolderWidth($landscape,1,swiper)}>
-<Swipe bind:this={swiper} {...swipeConfig} {defaultIndex} 
- 
+<Swipe bind:this={swiper} {...swipeConfig} {defaultIndex}  
  on:longpress={onfoliopagelongpress} 
   on:click={onfoliopageclick} on:start={swipeStart} on:change={swipeChanged}>
  <SwipeItem><img src={blankimage} alt='no' class="leftimage swipe"/></SwipeItem>
@@ -351,6 +356,7 @@ $: gotoPb($activepb); //trigger by goto folio in setting.svelte
 {:else}
 <DownloadStatus msg={$downloading}/>
 {/if}
+
 {#if !$landscape && totalpages-defaultIndex>1}
 {#if $showfavorite=='on'}
 {#key favoritetimer}
