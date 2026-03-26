@@ -15,7 +15,8 @@ import {thezip,favortypes, landscape,foliotext,folioLines,isSidePaiji,tapAddress
     folioChars,activePtk,activefolioid,activepb,favorites,audioid,showpunc,
 maxfolio,tapmark, playing, remainrollback, showyoutube,shareAddress,makeAddressFromFolioPos,
 idlecount,showpaiji,loadingzip, selectmedia, preferaudio,folioHolderWidth,leftmode,mediaurls, downloading, sharing,
-showfavorite} from './store.js'
+showfavorite,
+showinggallery} from './store.js'
 import { get } from 'svelte/store';
 import { fetchAudioList } from './mediaurls';
 import { AppPrefix } from './savestore';
@@ -335,6 +336,7 @@ const toggleplaybtn=()=>{
         const pick=  Math.floor(Math.random()*($mediaurls.length-1))+1;
         const vid= $preferaudio[$activefolioid] || $mediaurls[pick||1]?.aid;
         selectmedia(vid);
+        showinggallery.set(false)
     } else {
         selectmedia('');
     }
