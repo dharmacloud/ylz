@@ -1,5 +1,5 @@
 <script>
-import {newbie,showyoutube,showfavorite,showpunc,showgallery,vip,heightratio,tosim, textsize, showinggallery} from './store.js'
+import {newbie,showfavorite,showpunc,showgallery,vip,heightratio,tosim, textsize, showinggallery} from './store.js'
 import {_} from './textout.js'
 import Switch from './3rd/switch.svelte';
 import Sponsors from './sponsors.svelte';
@@ -15,9 +15,10 @@ import { documentHeight } from './fullscreen.js';
 import CheckUpdate from './checkupdate.svelte';
 import StateBtn from './comps/statebutton.svelte'
 import Endmarker from './endmarker.svelte';
-import {APPVER} from './constant.js'
-import { getVip } from './vip.js';
-let show=0,vipcode=$vip;
+import {APPVER,CacheName} from './constant.js'
+import { getVip,hasVip } from './vip.js';
+import { deleteFromCache} from 'ptk/platform/downloader.js'
+let show=0,vipcode=$vip,cachefilename='';
 let hratio=[ Math.floor((($heightratio*100)-90)*10) ,0]; 
 let textsz=[ $textsize ,0];
 const toggleshowhelp=()=>show=show==1?0:1;
@@ -53,7 +54,11 @@ const onkeyup=(e)=>{
     ele.setSelectionRange(start, end);
     clearTimeout(timer)
     timer=setTimeout(()=>{
-        vip.set(ele.value);
+        if (hasVip(ele.value)){
+            vip.set(ele.value);
+        } else {
+            vip.set('')
+        }
     },1000);
 }
 
@@ -102,6 +107,12 @@ const onkeyup=(e)=>{
 <br/>{_("VIP碼 ")}<input 
 placeholder={_("沒有也可正常使用")} size=12 
 type="text" on:keyup={onkeyup} bind:value={vipcode}/>
+
+{#if $vip}
+<br/><button class="deletecache" aria-hidden="true" on:click={()=>deleteFromCache(CacheName,cachefilename)}>{_("清除緩存")}</button>
+<input palceholder="文件名" size=10 type=text bind:value={cachefilename}/>
+{/if}
+
 <br/>微信 Sukhanika
 <br/><a href="mailto:sukhanika@gmail.com">sukhanika[at]gmail.com</a>
 <br/>{_("點焦點文字（紅色背景）分享")}

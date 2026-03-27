@@ -1,7 +1,7 @@
 <script>
 import Favoritebuttons from './favoritebuttons.svelte';
 import { loadFolio } from './nav.js';
-import {deleteFromCache, downloadToCache} from 'ptk/platform/downloader.js'
+import { downloadToCache} from 'ptk/platform/downloader.js'
 import {CacheName} from './constant.js'
 import {fetchFolioList} from './folio.js'
 import {thetab,activefolioid,downloading, vip,tosim,parallelFolios,stopAudio,folioincache,online,activepb, activePtk, showfavorite, showinggallery} from './store.js';
@@ -10,6 +10,7 @@ import {ptkInCache} from './folio.js'
 import {_} from './textout.js'
 import { usePtk,openPtk, poolGetAll,enableAccelon23Features } from 'ptk';
 import {getAllFolio} from './folio.js';
+
 export let closePopup=function(){};
 let downloadmessage='';
 let folios=[];
@@ -101,10 +102,7 @@ const refreshList=async ()=>{
     await fetchFolioList(folioincache);
     await getFolioList(aptk)
 }
-const deletecache=async (folioid)=>{
-    await deleteFromCache(CacheName,'/folio/'+folioid+'.zip');
-    await refreshList();
-}
+
 const downloadAll=async function (){
     canceldownload=false;
     setTimeout(async ()=>{
@@ -187,7 +185,7 @@ $: getFolioList(aptk);
 <span aria-hidden="true" class:dimmed={!$folioincache[folioid]} on:click={()=>selectfolio(nfolio)} 
     class:selecteditem={samesutra($activefolioid,folioid)} >{getFolioName(nfolio)}</span>
 
-{#if ($vip=='YAP'||$vip=='XIU') && !$downloading && samesutra($activefolioid,folioid) 
+{#if $vip && !$downloading && samesutra($activefolioid,folioid) 
 && hasDimJuan(folioid) }
 <button on:click={downloadBook(folioid)}>{_("下載本經所有卷")}</button>
 {/if}
@@ -215,14 +213,11 @@ $: getFolioList(aptk);
 {/key}
 {/each}
 {#key folios.length}
-{#if ($vip=='YAP'||$vip=='XIU') && hasDimBook()}
+{#if $vip && hasDimBook()}
 <button on:click={()=>downloadAll()}>{_("下載此頁首卷")}</button>
 {/if}
 {/key}
 
-{#if $folioincache[$activefolioid] && $activePtk==aptk}
-<button class="deletecache" aria-hidden="true" on:click={()=>deletecache($activefolioid)}>{_("清除緩存")}:{$activefolioid}</button>
-{/if}
 
 
 {:else}

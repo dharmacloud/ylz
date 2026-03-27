@@ -27,4 +27,7 @@ export const getVip=(field)=>{
     const obj=viplist[get(vip)]||{};
     return obj[field]||'';
 }
+export const hasVip=vipcode=>{
+    return viplist[vipcode];
+}
 
