@@ -22,6 +22,12 @@ const setOneline=()=>{
     showing='oneline';
     src=onelinelink(entry);
 }
+const setBaidu=()=>{
+    if (!entries[nentry]) nentry=0;
+    const entry=entries[nentry][1];
+    showing='baidu';
+    src=baidulink(entry);
+}
 const availableDict=(n)=>{
     if ( n>=entries.length) {
         n=0;
@@ -32,8 +38,9 @@ const availableDict=(n)=>{
     wikipedia=flag&1;
     fgdzd=flag&2;
     dfb=flag&4;
-    if (fgdzd||dfb) setOneline();
-    else if (wikipedia) setWikipedia();
+    //if (fgdzd||dfb) 
+    setBaidu();
+    //else if (wikipedia) setWikipedia();
 
 }
 

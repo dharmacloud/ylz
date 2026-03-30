@@ -190,14 +190,16 @@ transition-duration: ${touch_end ? transitionDuration : '0'}ms;
     e.stopPropagation();
     touch_active = true;
     longTouch = false;
+    /*
     setTimeout(function () {
       longTouch = true;
     }, 250);
+    */
     t2=setTimeout(function () {
-      longTouch = false;
-      onEnd();
-      fire('longpress',{x:startx,y:starty})
-    }, 1200);
+      longTouch = true;
+ //     onEnd();
+//      fire('longpress',{x:startx,y:starty})
+    }, 50);
 
     axis = e.touches ? e.touches[0][page_axis] : e[page_axis];
 
@@ -281,7 +283,7 @@ transition-duration: ${touch_end ? transitionDuration : '0'}ms;
 
     clearTimeout(t2);
     
-    if (Math.abs(startx-x)<3 && Math.abs(starty-y)<3 && movingcount<3) {
+    if (Math.abs(startx-x)<3 && Math.abs(starty-y)<3 && movingcount<2) {
       fire('click',{x,y});
     } else {
       setTimeout(()=>{

@@ -26,7 +26,7 @@ const excerptcopy=async ()=>{
     showmessage('已複製經文及連結到剪貼薄');
 }
 const copylink=async()=>{
-    navigator.clipboard.writeText(shareAddress());
+    await navigator.clipboard.writeText(shareAddress());
     showmessage(copylinkmsg);
 }
 const markdowncopy=async ()=>{

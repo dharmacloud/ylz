@@ -5,12 +5,12 @@ portrait.addEventListener("change", function(e) {
     // console.log(e.matches)
     landscape.set(!e.matches)
 })
-
+/*
 window.addEventListener("deviceorientation", ()=>{
     landscape.set(screen.availWidth>screen.availHeight)
 }, true);
 landscape.set(screen.availWidth>screen.availHeight);
-
+*/
 
 export const documentHeight = () => {
     const doc = document.documentElement

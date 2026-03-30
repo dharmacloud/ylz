@@ -95,6 +95,18 @@ const swipeStart=(obj)=>{
 }
 let oldDefaultIndex=1;
 
+const findImageByIdx=(zip,idx)=>{//occcasionally
+    const fn=(idx+1).toString().padStart(3,'0')+'.jpg';
+    if (fn==zip.files[idx].name) {
+        return zip.files[idx];
+    } else {
+        for (let i=0;i<zip.files.length;i++) {
+            if (fn==zip.files[i].name) {
+                return zip.files[i];
+            }
+        }
+    }
+}
 const setImage=(imageidx,zip,idx)=>{
     if (!swiper) return;
     if (idx>=totalpages) idx=0;
@@ -104,10 +116,13 @@ const setImage=(imageidx,zip,idx)=>{
 
     //need to see all clone
     for(let i=0;i<imgs.length;i++) {
-        if (!zip.files[idx]) {
-            console.error(src,'no zip files',idx,zip.files)
+        const f=findImageByIdx(zip,idx);
+        if (!f) {
+             console.error(src,'no zip files',idx,zip.files)
+             return;
         }
-        const blob=new Blob([zip.files[idx].content]);
+
+        const blob=new Blob([f.content]);
         imgs[i].src=URL.createObjectURL(blob);
     }
     swiper.update()
@@ -236,6 +251,7 @@ const onfoliopageclick=e=>{
 }
 
 const onfoliopagelongpress=e=>{
+    return ;//buggy
     if ($showpaiji && !isSidePaiji()) {
         useractive(true);
         return;
@@ -252,7 +268,11 @@ const onfoliopagelongpress=e=>{
     const newmark=[ $activepb ,cx,cy ];
     if ( JSON.stringify(oldmark)==JSON.stringify(newmark)) {
         sharing.set(true);
-        navigator.clipboard.writeText(shareAddress());
+        // try {
+        //     navigator.clipboard.writeText(shareAddress());
+        // } catch(e){
+        //     console.log(e)
+        // }
         onTapText('');
         return;
     } else {
