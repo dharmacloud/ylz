@@ -15,6 +15,7 @@ const setFolio=async (e)=>{
     const v=((e.detail[0]||1)).toString();
     if ($activepb!==v) {
         activepb.set(v);
+        closePopup();
     }
 }
 
@@ -27,9 +28,11 @@ const goBookPb=(ptk,at)=>{
     if (folioid!==$activefolioid) {
         loadFolio(folioid,()=>{
             goPbAt(ptk,at);
+            closePopup();
         })
     } else {        
         goPbAt(ptk,at);
+        closePopup();
     }    
 }
 const getCk=(pb,loading)=>{
@@ -45,7 +48,7 @@ $: cknow=getCk(parseInt($activepb)+1,$loadingfolio);
 <div  class="bodytext">
 {#if !$loadingfolio}
 <Juan {closePopup}/>
-<Slider bind:value={folio} on:input={debounce(setFolio,800)} max={$maxfolio} min={1} >
+<Slider bind:value={folio} on:input={debounce(setFolio,2000)} max={$maxfolio} min={1} >
     <span slot="caption" style="float:right">折{(folio[0]||1)}/{$maxfolio}</span></Slider>
 <div class="toc">
 {#key $tosim}

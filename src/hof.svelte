@@ -9,6 +9,7 @@ import {_} from './textout.js'
 <table>
 <tr><td>{_("功德芳名")}</td><td>{_("贊助日期")}</td><td>{_("卷數")}</td></tr>
 
+<tr><td>新時代華嚴文化研究院</td><td>3.8</td><td>華嚴經180卷</td></tr>
 <tr><td>妙慧</td><td>2.17</td><td>一卷</td></tr>
 </table>
 

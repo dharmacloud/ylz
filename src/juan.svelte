@@ -46,7 +46,7 @@ $: juans=loadJuan($activefolioid,$loadingfolio);
     <span aria-hidden="true" on:click={()=>gojuan(id)} class="clickable" class:selected={active}>{caption}</span>
     </Pager>  
 {:else}
-<Slider bind:value={juan} on:input={debounce(gotojuan,300)} max={juans.length} min={1} >
+<Slider bind:value={juan} on:input={debounce(gotojuan,2000)} max={juans.length} min={1} >
     <span slot="caption" style="float:right">卷{(juan[0]||1)}/{juans.length}</span></Slider>
 
 {/if}

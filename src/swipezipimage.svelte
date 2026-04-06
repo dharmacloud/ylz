@@ -146,16 +146,17 @@ const setImages=(idx)=>{
     imageFrame={left:0,top:0,width,height}; 
 }
 const swipeChanged=(obj)=>{
+   
     if (!ready) return;
     const {active_item}=obj.detail;
     defaultIndex=active_item;
     let idx=imageIndex;
     const zip=$thezip;
+
     if (oldDefaultIndex==defaultIndex) {
         hidepunc=false;
         return;
     }
-    //console.log( ((oldDefaultIndex+3) - defaultIndex)%3)
     if ( ((oldDefaultIndex+3) - defaultIndex)%3 ==1) { //next image
         idx++;
         if (idx>=totalpages) idx=0;

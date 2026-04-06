@@ -199,7 +199,7 @@ transition-duration: ${touch_end ? transitionDuration : '0'}ms;
       longTouch = true;
  //     onEnd();
 //      fire('longpress',{x:startx,y:starty})
-    }, 50);
+    }, 250);
 
     axis = e.touches ? e.touches[0][page_axis] : e[page_axis];
 
@@ -234,9 +234,11 @@ transition-duration: ${touch_end ? transitionDuration : '0'}ms;
     axis = null;
     last_axis_pos = null;
     pos_axis = availableDistance;
+    
     activeIndicator = availableDistance / _as;
     active_item = activeIndicator;
     defaultIndex = active_item;
+
 
     setElementsPosition({
       end: true,
@@ -283,7 +285,8 @@ transition-duration: ${touch_end ? transitionDuration : '0'}ms;
 
     clearTimeout(t2);
     
-    if (Math.abs(startx-x)<3 && Math.abs(starty-y)<3 && movingcount<2) {
+    if (Math.abs(startx-x)<3 && Math.abs(starty-y)<3 
+    && movingcount<2) {
       fire('click',{x,y});
     } else {
       setTimeout(()=>{
