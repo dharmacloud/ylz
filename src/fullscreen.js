@@ -6,11 +6,16 @@ portrait.addEventListener("change", function(e) {
     landscape.set(!e.matches)
 })
 
-window.addEventListener("deviceorientation", ()=>{
-    landscape.set(screen.availWidth>screen.availHeight)
-}, true);
-landscape.set(screen.availWidth>screen.availHeight);
-
+/*
+try{
+    window.addEventListener("deviceorientation", ()=>{
+        landscape.set(screen.availWidth>screen.availHeight)
+    }, true);
+    landscape.set(screen.availWidth>screen.availHeight);
+} catch(e) {
+    console.log(e)
+}
+*/
 
 export const documentHeight = () => {
     const doc = document.documentElement
