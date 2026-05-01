@@ -154,6 +154,7 @@ export const loadAddress=async(address)=>{
 
 export const getPrevJuan=folioid=>{
     const m=folioid.match(/(\d+)$/);
+    if (!m) return;
     const juan=parseInt(m[1]);
     if (m && juan>1) {
         const prevjuan=folioid.slice(0,folioid.length-m[1].length)+ parseInt(juan-1);
@@ -165,8 +166,8 @@ export const getPrevJuan=folioid=>{
 export const getNextJuan=(folioid,ptk)=>{
     const maxjuan=allJuan(ptk,folioid).length;
     const m=folioid.match(/(\d+)$/);
+    if (!m) return;
     const juan=parseInt(m[1]);
-
     if (juan<maxjuan) {
         return folioid.slice(0,folioid.length-m[1].length)+ parseInt(juan+1);
     }

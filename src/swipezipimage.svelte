@@ -7,7 +7,7 @@ import Swipe from './3rd/swipe.svelte';
 import SwipeItem from './3rd/swipeitem.svelte';
 import {downloadToCache} from 'ptk/platform/downloader.js'
 import {extractPuncPos,usePtk,FolioText, parseOfftext,updateUrl,addressFromUrl} from 'ptk'
-import { CURSORMARK} from './nav.js';
+import {getNextJuan,getPrevJuan, CURSORMARK} from './nav.js';
 import {ZipStore} from 'ptk/zip/zipstore.ts';
 import DownloadStatus from './downloadstatus.svelte'
 import {CacheName} from './constant.js'
@@ -35,7 +35,7 @@ let defaultIndex=1;
 let imageIndex=0;
 
 let favoritetimer=0;
-let imageFrame={};
+let folioFrame={};
 
 const getImages=(idx)=>{
     const clss=["leftimage","middleimage","rightimage"];
@@ -141,9 +141,9 @@ const setImages=(idx)=>{
     swiper.update()
     imageIndex=idx;
     const img=document.getElementsByClassName('middleimage')[0];
-    const height=img.clientHeight||imageFrame.height;
-    const width=img.clientWidth||imageFrame.width||height*0.45; //some time width ==0
-    imageFrame={left:0,top:0,width,height}; 
+    const height=img.clientHeight||folioFrame.height;
+    const width=img.clientWidth||folioFrame.width||height*0.45; //some time width ==0
+    folioFrame={left:0,top:0,width,height}; 
 }
 const swipeChanged=(obj)=>{
    
@@ -194,13 +194,28 @@ const useractive=(humanaction=false)=>{
 const nextpage=()=>{
     let pb=parseInt($activepb);
     pb++;
-    if (pb>totalpages) pb=1;
+    if (pb>totalpages) {
+        const nj=getNextJuan($activefolioid,ptk);
+        if (nj&&nj!==$activefolioid){
+            activefolioid.set(nj);
+        }
+        pb=1;
+    }
     activepb.set(pb);
 }
 const prevpage=()=>{
     let pb=parseInt($activepb);
     pb--;
-    if (pb<1) pb=totalpages;
+    
+    if (pb<1) {
+        const nj=getPrevJuan($activefolioid,ptk);
+        if (nj&& nj!==$activefolioid){
+            activefolioid.set(nj);
+            pb=1;
+        } else {
+            pb=totalpages;
+        }
+    }
     activepb.set(pb)
 }
 const mousewheel=(e)=>{
@@ -217,7 +232,7 @@ const mousewheel=(e)=>{
 	e.preventDefault();
 }
 const getCharXY=(x,y)=>{
-	const {left,top,width,height}=imageFrame;
+	const {left,top,width,height}=folioFrame;
     x-=left;
     y-=top;	
     const cx=folioLines()-Math.floor((x/width)*folioLines())-1;
@@ -399,16 +414,16 @@ $: gotoPb($activepb); //trigger by goto folio in setting.svelte
 {#key $tapmark+$activepb}
 {#if ready&&!hidepunc && !$showpaiji && $leftmode=='folio'}
 <TapMark mark={$tapmark} pb={$activepb} folioChars={$folioChars} 
-folioLines={folioLines()} frame={imageFrame} />
+folioLines={folioLines()} frame={folioFrame} />
 {/if}
 {/key}
   
 {#key puncs}
 {#if !hidepunc}
 {#if $showpunc=='on'&& $leftmode=='folio'}
-<PuncLayer frame={imageFrame}  {puncs} />
+<PuncLayer frame={folioFrame}  {puncs} />
 {/if}
-<TranscriptLayer frame={imageFrame} {totalpages} {ptk} {foliopage}/>
+<TranscriptLayer frame={folioFrame} {totalpages} {ptk} {foliopage}/>
 {/if}
 {/key}
 <style>
