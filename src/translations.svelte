@@ -13,8 +13,11 @@ const getBookTitle=(ptk,nbk)=>{
     const bk=ptk.defines.bk;
     const line=bk.linepos[nbk]; //assuming folio tag at bk
     const folio=ptk.defines.folio;
-    
+    if (nbk==19) debugger
     const at=bsearchNumber(folio.linepos, line+1)-1;
+    //workaround for last book
+    if (folio.linepos[folio.linepos.length-1]==line) return folio._innertext.get(folio.linepos.length-1);
+
     if (folio.linepos[at]!==line) {
         return bk._innertext.get(nbk);
     } else {
