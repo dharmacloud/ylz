@@ -1,5 +1,5 @@
 import {updateSettings,settings} from './savestore.ts'
-import {bsearchNumber, usePtk,makeAddress} from 'ptk'
+import {bookByFolio,bsearchNumber, usePtk,makeAddress} from 'ptk'
 import { get,writable } from 'svelte/store';
 import {silence} from './mediaurls.js'
 
@@ -45,19 +45,6 @@ export const setplayer=p=>player=p;
 
 export const mediaurls=writable([silence]);
 export const notificationmessage=writable('');
-export const bookByFolio=(fid,ptk)=>{
-    if (ptk) {
-        const folio=ptk.defines.folio;
-        const bk=ptk.defines.bk;
-        const at=folio.fields.id.values.indexOf(fid);
-        if (!~at) return '';
-        const line=folio.linepos[at]+1;
-        const at2=bsearchNumber(bk.linepos, line)-1;//closest bk
-        return bk.fields.id.values[at2];   
-    } else {
-        return fid.replace(/\d+$/,'')
-    }
-}
 export const audioid=writable('');
 export const curPtk=()=>{
     return usePtk(get(activePtk));
@@ -77,7 +64,7 @@ export const folioChars=writable(17);
 export const playing=writable(false);
 export const continueplay=writable(false);
 export const playnextjuan=writable(settings.playnextjuan);//自動播放下一卷
-export const tapmark = writable(['2',0,0]);// folio*folioLines*folioChar+offset
+export const tapmark = writable(['1',0,0]);// folio*folioLines*folioChar+offset
 export const remainrollback=writable(-1);//infinite
 
 export const newbie=writable(settings.newbie);
@@ -125,8 +112,8 @@ export const stopAudio=()=>{
     remainrollback.set(-1);
 }
 
-export const booknameOf=folioid=>{
-    const bkid=bookByFolio(folioid);
+export const booknameOf= (folioid,ptk)=>{
+    const bkid=bookByFolio(folioid,ptk);
     const ptks=allptks.filter(it=>it.startsWith("ylz-"));
     for (let i=0;i<ptks.length;i++) {
         let ptk=usePtk(ptks[i]);
@@ -156,7 +143,7 @@ export const hasTranslation=(ptk,bkid)=>{
     return books.length
 }
 
-export const makeAddressFromFolioPos=(pbid,cx=0,cy=0)=>{
+export const makeAddressFromFolioPos=(ptk,pbid,cx=0,cy=0)=>{
     if (typeof pbid!=='string') {
         cx=pbid[1];
         cy=pbid[2];
@@ -164,12 +151,13 @@ export const makeAddressFromFolioPos=(pbid,cx=0,cy=0)=>{
     }
     const ft=get(foliotext);
     if (!ft||!ft.fromFolioPos) return '';
+    
     const {ckid,lineoff,choff}=ft.fromFolioPos(pbid,cx,cy);
 
-    const address=makeAddress('','bk#'+bookByFolio(get(activefolioid)) + '.ck#'+ckid, 0,0, lineoff,choff) ;
+    const address=makeAddress('','bk#'+bookByFolio(get(activefolioid),ptk) + '.ck#'+ckid, 0,0, lineoff,choff) ;
     return address;
 }
-export const tapAddress=()=>makeAddressFromFolioPos(get(tapmark));
+export const tapAddress=()=>makeAddressFromFolioPos(curPtk(),get(tapmark));
 
 export const parallelFolios=(ptk,folioid)=>{
     folioid=folioid||get(activefolioid);
@@ -239,7 +227,7 @@ export const favortypes=['♡','🤍','❤️', '💚', '💙','💜','🖤'];
 
 
 export const shareAddress=(addr)=>{
-    if (!addr) addr= makeAddressFromFolioPos(get(tapmark));
+    if (!addr) addr= makeAddressFromFolioPos(curPtk(),get(tapmark));
     return location.origin+location.pathname+'#'+addr;
 }
 

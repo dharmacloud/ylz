@@ -6,7 +6,7 @@ let mp4player;
 let touching=-1;
 let touchx=0,touchy=0,startx=0,starty=0,direction=0;
 import {up1,up2,turnleft,turnright,swipestart,swipeend,down1,down2} from './swipeshapes.js';
-import {getFolioPageText,getConcreatePos,folioPos2ChunkLine,extractPuncPos,usePtk} from 'ptk'
+import {bookByFolio,getFolioPageText,getConcreatePos,folioPos2ChunkLine,extractPuncPos,usePtk} from 'ptk'
 import {folioLines, folioChars,activefolioid,activepb,activePtk, maxfolio} from './store.js'
 const swipeshapes=[ down2,down1, swipeend,turnright, , turnleft,swipestart, up1,up2];
 
@@ -174,6 +174,6 @@ const setHandle=node=>{
 .container {width:100%;background-color: rgb(243, 208, 160);height: 100%;}
 video { height:100%;user-select: none; pointer-events: none;width:100%;}
 .swipe {position:absolute;top:50%;left:50%;transform: translate(-50%,-50%); }
-.pagenumber {position:absolute ; bottom:1%;font-size: 200%;left:0.1em;z-index: 99;color:brown}
+.pagenumber {position:absolute ; bottom:1%;font-size: 200%;left:0.1em;z-index: 99;color:rgba(255,0,0, 0.7)}
 
 </style>

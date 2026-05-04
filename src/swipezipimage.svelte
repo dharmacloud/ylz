@@ -13,7 +13,7 @@ import DownloadStatus from './downloadstatus.svelte'
 import {CacheName} from './constant.js'
 import {thezip,favortypes, landscape,foliotext,folioLines,isSidePaiji,tapAddress,
     folioChars,activePtk,activefolioid,activepb,favorites,audioid,showpunc,
-maxfolio,tapmark, playing, remainrollback, showyoutube,shareAddress,makeAddressFromFolioPos,
+maxfolio,tapmark, playing, remainrollback, showyoutube,makeAddressFromFolioPos,
 idlecount,showpaiji,loadingzip, selectmedia, preferaudio,folioHolderWidth,leftmode,mediaurls, downloading, sharing,
 showfavorite,
 showinggallery} from './store.js'
@@ -61,8 +61,7 @@ const loadZip=async ()=>{
     foliotext.set(ftext);
 
     // const res=await fetch(host+src);
-
-    const validateaddress=makeAddressFromFolioPos($tapmark);
+    const validateaddress=makeAddressFromFolioPos(ptk,$tapmark);
     if (addressFromUrl()!==validateaddress) {
         updateUrl(validateaddress);
     }

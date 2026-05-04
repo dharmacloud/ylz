@@ -8,7 +8,7 @@ import {thetab,activefolioid,downloading, vip,tosim,parallelFolios,stopAudio,fol
 import Endmarker from './endmarker.svelte';
 import {ptkInCache} from './folio.js'
 import {_} from './textout.js'
-import { usePtk,openPtk, poolGetAll,enableAccelon23Features } from 'ptk';
+import { usePtk,openPtk, poolGetAll,enableAccelon23Features, bsearchNumber } from 'ptk';
 import {getAllFolio} from './folio.js';
 
 export let closePopup=function(){};
@@ -41,11 +41,18 @@ const ptknameFromFolioId=()=>{
 }
 let aptk =ptknameFromFolioId();
 
+const mppstartfolio=[1,401,479,538,556,566,574,576,577,578,579,600]
+
 const ismpp=id=>{
-    const startfolio=['1','401','479','538','556','566','574','576','577','578','579']
     const mpp=id.indexOf('mpp')==0;
     const endingnumber=id.match(/(\d+)$/);
-    return mpp && endingnumber && ~startfolio.indexOf(endingnumber[1]);
+    return mpp && endingnumber && ~mppstartfolio.indexOf(parseInt(endingnumber[1])) &&endingnumber[1]!=='600';
+}
+const firstMppFolio=id=>{//return first folio 
+    const endingnumber=id.match(/(\d+)$/);
+    if (!endingnumber) return id;
+    const at=bsearchNumber(mppstartfolio,parseInt(parseInt(endingnumber[1])+1))-1;
+    return 'mpp'+mppstartfolio[at];
 }
 const getFolioList=async (aptk)=>{
     const cachedPtks=await ptkInCache();
@@ -157,7 +164,7 @@ const getFolioId=nfolio=>{
 }
 const samesutra=(f1,f2)=>{
     if (f1.startsWith('mpp') && f2.startsWith('mpp')) {
-        return f1==f2;
+        return firstMppFolio(f1)==f2;
     }
     return f1.replace(/\d+$/,'')==f2.replace(/\d+$/,'')
 }
