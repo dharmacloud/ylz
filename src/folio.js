@@ -31,7 +31,7 @@ export const ptkInCache=async() =>{
 export const getTocItems=(ptk,folioid,loading)=>{
     if (loading) return [];
     const out=[];
-    const bk=bookByFolio(folioid);
+    const bk=bookByFolio(folioid,ptk);
     const bookaddr='bk#'+bk;
     const [from,to]=ptk.rangeOfAddress(bookaddr);
     
@@ -47,10 +47,9 @@ export const getTocItems=(ptk,folioid,loading)=>{
 export const getAllFolio=(ptk,folioid)=>{
     const out=[];
     if (!ptk) return out
-    const bk=bookByFolio(folioid);
+    const bk=bookByFolio(folioid,ptk);
     const bookaddr='bk#'+bk;
     const [from,to]=ptk.rangeOfAddress(bookaddr);
-    
     const folio=ptk.defines.folio;
     const at=bsearchNumber (folio.linepos, from);
     const at2=bsearchNumber (folio.linepos, to);

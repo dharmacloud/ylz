@@ -1,7 +1,7 @@
 import {foliotext,activefolioid ,audioid,tapmark,folioincache,tapAddress,
     activepb,loadingfolio,bookByFolio, stopAudio,loadingzip,activePtk} from "./store.js";
 import {get} from 'svelte/store'
-import {fetchFolioList} from './folio.js'
+import {fetchFolioList,getAllFolio} from './folio.js'
 import {folioPosFromAddress,updateUrl,poolGetAll,usePtk,bsearchNumber,FolioText} from 'ptk'
 export const CURSORMARK='◆'
 export const goPb=(pbid,ck)=>{   
@@ -48,20 +48,31 @@ export const loadFolio=(folioid,func)=>{
 
 
 
-
 export const allJuan=(ptk,folioid)=>{
     folioid=folioid||get(activefolioid);
-    const arrfolioid=ptk.defines.folio.fields.id.values;
     const m=folioid.match(/([a-z\_]+)(\d+$)/);
-    const juans=[]
     if (!m) return [];
-    for (let i=0;i<arrfolioid.length;i++) {
-        if (arrfolioid[i].startsWith(m[1])) {
-            const j=arrfolioid[i].slice( m[1].length);
+    const folios=getAllFolio(ptk,folioid);
+    const juans=[];
+    for (let i=0;i<folios.length;i++) {
+        if (folios[i].startsWith(m[1])) {
+            const j=folios[i].slice( m[1].length);
+
             if (parseInt(j)) juans.push(j);
         }
     }
     return juans;
+}
+
+export const loadJuan=(ptk,folioid,loading)=>{
+    if (!ptk || loading) return [];
+    const m=folioid.match(/([a-z_]+)(\d+$)/);
+    if (!m) return [];
+    const juans=allJuan(ptk,folioid).map((it,idx)=>{
+        return {caption:parseInt(it), idx:parseInt(idx), id:(idx+1).toString() }
+    });
+    return juans;
+
 }
 
 const markChunk=ckid=>{
@@ -158,7 +169,6 @@ export const getPrevJuan=folioid=>{
     const juan=parseInt(m[1]);
     if (m && juan>1) {
         const prevjuan=folioid.slice(0,folioid.length-m[1].length)+ parseInt(juan-1);
-        //console.log(prevjuan)
         return prevjuan;
     }
 }

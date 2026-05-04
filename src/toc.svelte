@@ -7,12 +7,12 @@ import Endmarker from './endmarker.svelte';
 import {_} from './textout.js'
 import Juan from './juan.svelte'
 import {getTocItems} from './folio.js';
-$: folio=[parseInt($activepb),0];
+$: folio=parseInt($activepb);
 $: ptk=usePtk($activePtk)
 export let closePopup;
 const setFolio=async (e)=>{
     if ($loadingfolio) return;
-    const v=((e.detail[0]||1)).toString();
+    const v=folio;
     if ($activepb!==v) {
         activepb.set(v);
         closePopup();
@@ -48,8 +48,9 @@ $: cknow=getCk(parseInt($activepb)+1,$loadingfolio);
 <div  class="bodytext">
 {#if !$loadingfolio}
 <Juan {closePopup}/>
-<Slider bind:value={folio} on:input={debounce(setFolio,2000)} max={$maxfolio} min={1} >
-    <span slot="caption" style="float:right">折{(folio[0]||1)}/{$maxfolio}</span></Slider>
+<input type="number" bind:value={folio} size={3} name="folio" on:input={debounce(setFolio,2000)} style="width:3em" />  {$maxfolio}折
+<!-- <Slider bind:value={folio} on:input={debounce(setFolio,2000)} max={$maxfolio} min={1} >
+    <span slot="caption" style="float:right">折{(folio[0]||1)}/{$maxfolio}</span></Slider> -->
 <div class="toc">
 {#key $tosim}
 {#each tocitems as item}

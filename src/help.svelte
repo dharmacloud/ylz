@@ -12,4 +12,4 @@ import {_} from './textout.js'
 <br/>
 {_("中間下方：選擇音頻")}
 <br/>
-{_("長按文字查字典")}
+<img src="newbie.png" style="width:70%" alt=""/>

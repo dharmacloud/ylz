@@ -47,8 +47,8 @@ export const mediaurls=writable([silence]);
 export const notificationmessage=writable('');
 export const bookByFolio=(fid,ptk)=>{
     if (ptk) {
-        const folio=dc.defines.folio;
-        const bk=dc.defines.bk;
+        const folio=ptk.defines.folio;
+        const bk=ptk.defines.bk;
         const at=folio.fields.id.values.indexOf(fid);
         if (!~at) return '';
         const line=folio.linepos[at]+1;

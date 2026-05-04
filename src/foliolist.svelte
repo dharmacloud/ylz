@@ -41,6 +41,12 @@ const ptknameFromFolioId=()=>{
 }
 let aptk =ptknameFromFolioId();
 
+const ismpp=id=>{
+    const startfolio=['1','401','479','538','556','566','574','576','577','578','579']
+    const mpp=id.indexOf('mpp')==0;
+    const endingnumber=id.match(/(\d+)$/);
+    return mpp && endingnumber && ~startfolio.indexOf(endingnumber[1]);
+}
 const getFolioList=async (aptk)=>{
     const cachedPtks=await ptkInCache();
     const at=cachedPtks.indexOf(aptk);
@@ -55,7 +61,7 @@ const getFolioList=async (aptk)=>{
         const id=folio.fields.id.values[i];
         const endingnumber=id.match(/(\d+)$/);
         const at=id.indexOf('_');
-        if (!~at && (!endingnumber||endingnumber[1]=='1') ) {//only show book without _ and not ends with >2
+        if (!~at && ((!endingnumber||endingnumber[1]=='1')||ismpp(id) )) {//only show book without _ and not ends with >2
             //const tt=texttypeOf(bkprefix);
             //if (texttype&& tt!==texttype) continue;
             out.push([i, id, parallelFolios(ptk,id)]);
@@ -150,6 +156,9 @@ const getFolioId=nfolio=>{
     return folio.fields.id.values[nfolio]
 }
 const samesutra=(f1,f2)=>{
+    if (f1.startsWith('mpp') && f2.startsWith('mpp')) {
+        return f1==f2;
+    }
     return f1.replace(/\d+$/,'')==f2.replace(/\d+$/,'')
 }
 let opening=false;
