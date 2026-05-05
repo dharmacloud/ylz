@@ -95,7 +95,7 @@ select {font-size:2em}
 }
 
 .puncs {z-index:8;position:absolute;user-select: none;overflow:hidden;pointer-events: none;user-select: none;}
-.punc {z-index:8;position:absolute;color:rgba(255, 14, 1,0.8);font-family: bolder;animation: fadeIn 1s}
+.punc {z-index:8;position:absolute;color:rgba(255, 14, 1,0.8);font-family: bolder;animation: fadeIn 1s;font-weight: bold;}
 .transcript {z-index:8;position:absolute;user-select: none;overflow:hidden;pointer-events: none;user-select: none;}
 
 
@@ -112,7 +112,7 @@ select {font-size:2em}
   font-size:1em;
 }
 
-.pagenumber {position:absolute ; bottom:0.5em;font-size: 2em;left:0.5em;z-index: 99;color:brown;pointer-events: none;}
+.pagenumber {position:absolute ; bottom:0.5em;font-size: 2em;left:0.5em;z-index: 99;color:rgba(165, 42, 42,0.5);pointer-events: none;font-weight: bold;}
 .playbtn {cursor:pointer; position:absolute ; bottom:0.5em; right:0.1em;font-size: 4em;z-index: 99;color:brown;opacity: 0.7;}
 .favoritebtn {cursor:pointer; position:absolute ; top:0px;font-size: 3em;right:0.1em;z-index: 99;color:brown;opacity: 0.7;}
 .favoriteitem {cursor:pointer;padding-right:0.3em;padding-left:0.3em}

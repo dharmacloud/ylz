@@ -1,6 +1,6 @@
 import {CacheName} from './constant.js'
 const url2folioid=(url)=>url.slice(url.indexOf('folio/')+6).replace('.zip','');
-import { bsearchNumber ,,bookByFolio} from 'ptk';
+import { bsearchNumber ,bookByFolio} from 'ptk';
 export const fetchFolioList=async (store)=>{
     const cache=await caches.open(CacheName);
     const keys=await cache.keys();

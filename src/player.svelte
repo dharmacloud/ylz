@@ -1,20 +1,20 @@
 <script>
-import {player,setplayer,activepb,audioid,folioLines,continueplay,playing,activefolioid, stopAudio,findByAudioId} from './store.js'
+import {timeline,player,setplayer,activepb,audioid,folioLines,continueplay,playing,activefolioid, stopAudio} from './store.js'
 import {audiofolder} from './mediaurls.js'
 let audioplayer;
 $: setplayer(audioplayer)
 
-const seekToPb=(pbid,audioid)=>{
-    if (!audioid || $continueplay || !$playing) return;
-    const {timestamp,bookid} = findByAudioId(audioid);
-    if (bookid!==$activefolioid) {
+const seekToPb=(pbid,id)=>{
+    if (!id || $continueplay || !$playing) return;
+    const {folio,timestamps}=$timeline;
+    if (!timestamps) return;
+    if (folio!==$activefolioid) {
         stopAudio();
     }
-    if (!timestamp) return;
-    const line=(parseInt(pbid)-1)*folioLines();
-    const t=timestamp[line];
+    const timestampline=timestamps[(parseInt(pbid)-1)]||[];
+    const t=timestampline[0]||-1;
     setTimeout(()=>{ //allow audio to initialized
-        if (player) player.currentTime=t/100;
+        if (player) player.currentTime=t;
     },100)
 }
 $: seekToPb($activepb,$audioid);

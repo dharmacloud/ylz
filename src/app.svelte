@@ -4,7 +4,7 @@ import SwipeZipImage from "./swipezipimage.svelte";
 import {registerServiceWorker} from 'ptk/platform/pwa.js'
 import {downloadToCache,ptkInCache} from 'ptk/platform/downloader.js'
 import { onDestroy } from "svelte";
-import {activefolioid,isAndroid,idlecount,showpaiji,leftmode,online,
+import {alltracks,activefolioid,isAndroid,idlecount,showpaiji,leftmode,online,
     folioincache,showgallery, newbie,idletime,landscape,ptks,thetab} from './store.js'
 import {CacheName,APPVER} from './constant.js'
 import {documentHeight} from './fullscreen.js'
@@ -53,14 +53,21 @@ const init=async ()=>{
         if (!~toload.indexOf(ptks[i])) {
             toload.push(ptks[i]);
         }
-    }    
-    for (let i=0;i<toload.length;i++) {
-        const ptk=await installptk(toload[i])
-        bootmessage='open ptk '+toload[i];
-        //if (ptks[i]=='ylz-prjn') console.log(ptk)
-        if (toload[i]=='dc') setTimestampPtk(ptk)
     }
+    const alltrackjson='timelinejson/alltracks.json';
+    if ($online){
+        for (let i=0;i<toload.length;i++) {
+            const ptk=await installptk(toload[i])
+            bootmessage='open ptk '+toload[i];
+            if (toload[i]=='dc') setTimestampPtk(ptk)
+        }
+        await downloadToCache(CacheName,alltrackjson);
+    }
+    fetch(alltrackjson).then(res=>res.json()).then(json=>{
+       alltracks.set(json);      
+    })
     
+
     bootmessage='fetching foliolist from cache';
     await fetchFolioList(folioincache);
 
@@ -95,7 +102,6 @@ const onMainmenu=()=>{
 }
 const onTapText=(t)=>{
     showpopup=true;
-
     if (typeof t=='string' && t.charAt(0)!=='$') {
         tofind=t;
         thetab.set('dict');
@@ -111,7 +117,6 @@ const orientation=(ls)=>{
 }
 $: orientation($landscape)
 
-// $: console.log(sidepaiji,idletime,$idlecount,$showpaiji,$playing,showpopup)
 setTimeout(init,500);
 </script>
 

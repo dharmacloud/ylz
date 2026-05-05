@@ -16,6 +16,7 @@
             'index.css',
             'global.css',
             'folio/pphs.zip',
+            'timelinejson/alltracks.json',
             'logo128.png',
             'logo512.png',
             'swipegallery.manifest',
@@ -89,7 +90,6 @@
                         return caches.open(CacheName).then(
                             cache=>cache.match(request)
                             .then(function (response) {
-                                //console.log('default',request,response)
                                 return response || cache.match('/offline.html');
                             })
                         )
@@ -100,7 +100,6 @@
 
         if (event.request.headers.get('range')) {
             let pos = Number(/^bytes\=(\d+)\-$/g.exec(event.request.headers.get('range'))[1]);
-            // console.log('Range request for', event.request.url, ', starting position:', pos);
             event.respondWith(
               caches.open(CacheName)
               .then(function(cache) {

@@ -1,8 +1,9 @@
 import {updateSettings,settings} from './savestore.ts'
-import {bookByFolio,bsearchNumber, usePtk,makeAddress} from 'ptk'
+import {fileInCache,bookByFolio,bsearchNumber, usePtk,makeAddress} from 'ptk'
+import {downloadToCache} from 'ptk/platform/downloader.js'
 import { get,writable } from 'svelte/store';
 import {silence} from './mediaurls.js'
-
+import {CacheName,APPVER} from './constant.js'
 export const online=writable(navigator.onLine);
 export const thezip=writable(null)
 export const activePtk=writable('ylz-prjn');
@@ -37,6 +38,9 @@ export const palitrans=writable(0)
 export const hasupdate=writable(true)
 export const playrate=writable(settings.playrate);
 export const thetab=writable('list')
+export const alltracks=writable({})
+export const timeline=writable({});
+export const infiniteplay=writable(false)
 export let player
 export const setplayer=p=>player=p;
 
@@ -65,7 +69,6 @@ export const playing=writable(false);
 export const continueplay=writable(false);
 export const playnextjuan=writable(settings.playnextjuan);//自動播放下一卷
 export const tapmark = writable(['1',0,0]);// folio*folioLines*folioChar+offset
-export const remainrollback=writable(-1);//infinite
 
 export const newbie=writable(settings.newbie);
 export const idlecount=writable(0);
@@ -98,18 +101,19 @@ textsize.subscribe((textsize)=>{
     updateSettings({textsize})
 });
 vip.subscribe((vip)=>updateSettings({vip}));
-export const findByAudioId=(id,column='timestamp')=>{
+/*
+export const find_ByAudioId=(id,column='timestamp')=>{
     const ptk=usePtk('dc');
     if (!ptk.columns[column]) return null;
     const ts=ptk.columns[column].fieldsByKey(id);
     return {id,...ts};
 }
-
+*/
 
 export const stopAudio=()=>{
     if (player&&player.paused) player?.pause();
     playing.set(false);
-    remainrollback.set(-1);
+    
 }
 
 export const booknameOf= (folioid,ptk)=>{
@@ -174,17 +178,38 @@ export const parallelFolios=(ptk,folioid)=>{
     }
     return out;
 }
-
-export const selectmedia=(aid,restart)=>{
-    if (get(remainrollback)==0) remainrollback.set(-1);
-    if (!aid) stopAudio();
+const getTimelineJson=async (audioid)=>{
+    if (!audioid)return[];
+    const [m,prefix,juan]=audioid.match(/([a-z\_]+)(\d*)$/);
+    let jsonfolder='/timelinejson/';
+    if (juan) jsonfolder+='/'+prefix+'/';
+    const url=jsonfolder+audioid+'.json';
+    let res;
+    if (get(online)) {
+        res=await downloadToCache(CacheName,url);
+    } else {
+        res=await fetch(url);
+    }
+    if (res&&res.status==200) {
+        const json=await res.json();
+        return json;
+    }
+    return [];
+}
+export const selectmedia=async (id,restart)=>{
+    if (!id) stopAudio();
     else {
         const prefer=get(preferaudio)
-        prefer[get(activefolioid)]=aid;
+        prefer[get(activefolioid)]=id;
         preferaudio.set(Object.assign({},prefer));
         playing.set(true);        
     }
-    audioid.set(aid||'');
+    get(mediaurls);
+    const json=(await getTimelineJson(id))||[];
+    timeline.set(json);
+    console.log('select media',id,json);
+
+    audioid.set(id||'');
     if (restart) activepb.set('1');
     setTimeout(()=>{
         player.play();

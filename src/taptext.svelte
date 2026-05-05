@@ -51,7 +51,7 @@ $: if ($sharing) thetab.set('dict');
         <span aria-hidden="true" class='clickable' class:selected={$thetab=="favorite"} on:click={()=>thetab.set("favorite")}>❤️{#if ls}愛{/if}</span>
         {/if}
         <span aria-hidden="true" class='clickable' class:selected={$thetab=="textual"} on:click={()=>thetab.set("textual")}>📃{#if ls}文{/if}</span>    
-        <span aria-hidden="true" class='clickable' class:selected={$thetab=="dict"} on:click={()=>thetab.set("dict")}>
+        <!--<span aria-hidden="true" class='clickable' class:selected={$thetab=="dict"} on:click={()=>thetab.set("dict")}>
         {#if $sharing}    
             🔗{#if ls}{_("鏈",$tosim)}{/if}
         {:else}
@@ -59,7 +59,7 @@ $: if ($sharing) thetab.set('dict');
         {/if}
         
         </span>
-
+-->
         {#if $mediaurls.length>1}
         <span aria-hidden="true" class='clickable' class:selected={$thetab=="audio"} on:click={()=>thetab.set("audio")}>📣{#if ls}{_("誦",$tosim)}{/if}</span>
         {/if}
@@ -71,13 +71,15 @@ $: if ($sharing) thetab.set('dict');
       <div class="tab-content" class:visible={$thetab=='favorite'}><Favorite {closePopup} /></div>
       {/if}
       <div class="tab-content" class:visible={$thetab=='textual'}><Textual {closePopup} /></div>
-      
+
+      <!--
       {#if $sharing}
       <div class="tab-content" class:visible={$thetab=='dict'}><Sharing/></div>
       {:else}
       <div class="tab-content" class:visible={$thetab=='dict'}><DictPopup {entries}/></div>
       {/if}
-      
+      -->
+
       <div class="tab-content" class:visible={$thetab=='audio'}><Audio /></div>
       <div class="tab-content" class:visible={$thetab=='about'}><About/></div>
 

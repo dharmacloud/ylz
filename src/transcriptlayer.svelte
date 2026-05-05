@@ -1,7 +1,8 @@
 <script>
 import {stylestring} from './unit.js'
 import {activepb,audioid,folioLines,foliotext,folioChars,playing,selectmedia,mediaurls,
-    stopAudio,remainrollback, player,continueplay, findByAudioId, playnextjuan, activefolioid} from './store.js'
+    timeline,stopAudio, player,continueplay,  playnextjuan, activefolioid,
+    infiniteplay} from './store.js'
 import {get} from 'svelte/store'
 
 import {onDestroy} from 'svelte'
@@ -18,12 +19,9 @@ onDestroy(()=>{
 const rollback=()=>{
     continueplay.set(false); 
     activepb.set('1');
-    let r=get(remainrollback);
-    if (r>0) {
-        r--;
-        remainrollback.set(r);
+    if (!get(infiniteplay)) {
+        stopAudio();
     }
-    if (r==0) stopAudio();
 }
 const playnext=()=>{
     const juans=allJuan(ptk);
@@ -56,6 +54,30 @@ const playnext=()=>{
         rollback();
     }
 }
+
+const getTimestamp=(nfolio,nline=0)=>{
+    const timestamps=get(timeline)?.timestamps;
+    if (!timestamps?.length) return -1;
+    return (timestamps[nfolio]||[])[nline]||-1;
+}
+const getNextTimestamp=(nfolio,nline=0)=>{
+    if (nline<folioLines()) {
+        return getTimestamp(nfolio,nline+1);
+    } else {
+        return getTimestamp(nfolio+1,0);
+    }
+}
+const getLastTimestamp=()=>{
+    const timestamps=get(timeline)?.timestamps;
+    for (let i=timestamps.length-1;i>=0;i--) {
+        if (timestamps[i]?.length) {
+            for (let j=timestamps[i].length-1;j>=0;j--) {
+                if (timestamps[i][j]) return timestamps[i][j];
+            }
+        }
+    }
+}
+
 const stripstyle=(i,strip)=>{
     if (i==0) {
         destroyTimer();
@@ -71,24 +93,27 @@ const stripstyle=(i,strip)=>{
     out.push('top:0px');
     out.push('width:'+Math.floor(w)+'px');
     out.push('height:0px');
-    const {timestamp} = findByAudioId($audioid);
-    if (!timestamp) {
+    const {timestamps} = get(timeline)||{};
+    if (!timestamps?.length) {
         return out.join(';'); //cannot play
     }
-    const line=(parseInt(get(activepb))-1)*fl;
 
-    if (!timestamp[line] && i==0) { //read the end
+    const pb=parseInt(get(activepb))-1;
+
+    /*
+    if (!timestamps[line] && i==0) { //read the end
         playnext();
     }
+        */
     const playertime=player?.currentTime;
-    let timedelta=playertime-timestamp[line]/100;//player 跑得比較快。（因換頁動畫時間），需修正
+    let timedelta=playertime-getTimestamp(pb);//player 跑得比較快。（因換頁動畫時間），需修正
     if (Math.abs(timedelta)>3 ) { //不會差這麼多，是快速滑輪造成。getCurrentTime 未切到
         timedelta=0.02;
     }
 
     if (i==0) { //翻頁timer
-        const lastlinet=timestamp[line+fl]/100 || timestamp[timestamp.length-1]/100;
-        const nextpagetime= ( lastlinet - timestamp[line]/100 -timedelta)*1000;
+        const lastlinet=getTimestamp(pb+1,0)|| getLastTimestamp();
+        const nextpagetime= ( lastlinet - getTimestamp(pb) -timedelta)*1000;
         timers.push( setTimeout(()=>{
             if ( parseInt(get(activepb))<totalpages) { 
                 continueplay.set(true); //auto swipe , do not trigger 
@@ -97,11 +122,11 @@ const stripstyle=(i,strip)=>{
                     continueplay.set(false);// user swipe manually
                 },500);            
             } else {
-                playnext();
+                // playnext();
             }
         },nextpagetime));
     }
-    let delay=(timestamp[line+i]/100  - timestamp[line]/100 - timedelta )*1000 ;
+    let delay=(getTimestamp(pb,i)  - getTimestamp(pb) - timedelta )*1000 ;
     if (i==0&&delay<30) delay=30;// too small value  cause immediate trigger fire
     // console.log(i,'delay',delay)
     const fire=(function(){
@@ -115,9 +140,9 @@ const stripstyle=(i,strip)=>{
     
     timers.push(setTimeout( fire,  delay)); 
 
-    let duration=timestamp[line+i+1]/100-timestamp[line+i]/100;
+    let duration=getNextTimestamp(pb,i)-getTimestamp(pb,i);
     if (duration==0 && i+1 <fl) {//empty line , try next line
-        duration=timestamp[line+i+2]/100-timestamp[line+i]/100;
+        duration=getNextTimestamp(pb,i+1)-getTimestamp(pb,i);
     }
     out.push('transition:height '+duration+'s  linear'); //
 
@@ -130,7 +155,7 @@ const destroyTimer=()=>{
 }
 
 </script>
-{#if $playing && findByAudioId($audioid) }
+{#if $playing && $timeline?.timestamps?.length && $audioid}
 {#key $activepb,$audioid}
 <div class="transcript" style={stylestring(frame)} >
     {#each strips as strip,idx}

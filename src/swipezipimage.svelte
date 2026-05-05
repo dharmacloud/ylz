@@ -11,9 +11,9 @@ import {getNextJuan,getPrevJuan, CURSORMARK} from './nav.js';
 import {ZipStore} from 'ptk/zip/zipstore.ts';
 import DownloadStatus from './downloadstatus.svelte'
 import {CacheName} from './constant.js'
-import {thezip,favortypes, landscape,foliotext,folioLines,isSidePaiji,tapAddress,
+import {alltracks,thezip,favortypes, landscape,foliotext,folioLines,isSidePaiji,tapAddress,
     folioChars,activePtk,activefolioid,activepb,favorites,audioid,showpunc,
-maxfolio,tapmark, playing, remainrollback, showyoutube,makeAddressFromFolioPos,
+maxfolio,tapmark, playing,  showyoutube,makeAddressFromFolioPos,
 idlecount,showpaiji,loadingzip, selectmedia, preferaudio,folioHolderWidth,leftmode,mediaurls, downloading, sharing,
 showfavorite,
 showinggallery} from './store.js'
@@ -78,14 +78,13 @@ const loadZip=async ()=>{
     if (imageIndex>=totalpages) imageIndex=0;
     maxfolio.set(totalpages);
     loadingzip.set(false);
-    // console.log('loadzip',src,imageIndex,'loadingzip false')
     ready=true;//tell UI to draw Swiper
     let inter=setInterval(()=>{        
         if (swiper){ //swiper visible, update the image
             clearInterval(inter)
             setImages(imageIndex); 
             updateFolioText();
-            fetchAudioList($activefolioid,mediaurls,$showyoutube=='on')
+            fetchAudioList($alltracks,$activefolioid,mediaurls,$showyoutube=='on')
         }
     },100);
 }
@@ -369,7 +368,7 @@ const toggleplaybtn=()=>{
     if (!get(audioid)) {
         if ($mediaurls.length<2) return;
         const pick=  Math.floor(Math.random()*($mediaurls.length-1))+1;
-        const vid= $preferaudio[$activefolioid] || $mediaurls[pick||1]?.aid;
+        const vid= $preferaudio[$activefolioid] || $mediaurls[pick||1]?.audioid;
         selectmedia(vid);
         showinggallery.set(false)
     } else {
@@ -406,9 +405,6 @@ $: gotoPb($activepb); //trigger by goto folio in setting.svelte
 {/if}
 
 <span class="pagenumber">{imageIndex+1}</span>
-{#if $playing}
-<span class="remainrollback">{$remainrollback>0?$remainrollback:''}</span>
-{/if}
 
 {#key $tapmark+$activepb}
 {#if ready&&!hidepunc && !$showpaiji && $leftmode=='folio'}

@@ -1,5 +1,8 @@
 let ptk;
 import { CacheName } from "./constant.js";
+import { get } from "svelte/store";
+import { online } from "./store.js";
+
 export const silence={vid:'',performer:'--停止播放--'};
 export const audiofolder='/baudio/'
 
@@ -19,29 +22,27 @@ export const mediabyid=(_vid)=>{
     }
 }
 
-export const fetchAudioList=async (activeid,store,showyoutube=false)=>{
+export const fetchAudioList=async (alltracks,activeid,store,showyoutube=false)=>{
     let out=[];
-    if (!ptk) return out;
-    const ts=ptk.columns.timestamp;
-    if (!ts) return out;
     const cache=await caches.open(CacheName);
     const keys=await cache.keys();
-    const incaches=keys.map(it=>it.url.slice(window.location.origin.length+audiofolder.length).replace('.mp3',''))
+    const incaches=keys.filter(it=>it.url.endsWith('.mp3')).map(it=>it.url.slice(window.location.origin.length+audiofolder.length).replace('.mp3',''))
 
-    for (let i=0;i<ts.keys.len();i++) {
-        const aid=ts.keys.get(i);
-        const audiohost=ts.videohost[i];
-        let performer=ts.performer[i];
-        let youtube='';
-        const at=performer.indexOf('|');
-        if (~at) {
-            if (showyoutube) youtube=performer.slice(at+1)
-            performer=performer.slice(0,at);
+    const tracks=alltracks[activeid]||[];
+    if (!tracks.length && get(online) && activeid!='vcppkeyi'){// no tracks, assuming no timestamp yet
+        const incache= 1 - !~incaches.indexOf(activeid);
+        out.push({audioid:activeid,performer:'誦讀',youtube:'',incache,timestamp:[]})
+    } else {
+        for (let i=0;i<tracks.length;i++) {
+            const audioid=tracks[i].audio;
+            let performer=tracks[i].title||'誦讀';
+            let youtube=tracks[i].youtube||'';
+            if (!showyoutube) youtube=''
+
+            const timestamp=[];//not ready yet
+            const incache= 1 - !~incaches.indexOf(audioid);
+            out.push( {audioid,performer,youtube,incache,timestamp});
         }
-        const timestamp=ts.timestamp[i];
-        const bookid=ts.bookid[i];
-        const incache= 1 - !~incaches.indexOf(aid.replace(/\^\d+$/,''));
-        activeid==bookid&&out.push( {aid,performer,youtube,incache,bookid,timestamp,audiohost});
     }
     //sort by name
     out.sort((a,b)=>   a.performer==b.performer?0: (a.performer<b.performer?-1:1))
@@ -49,7 +50,6 @@ export const fetchAudioList=async (activeid,store,showyoutube=false)=>{
     const cacheno=out.filter(it=>!it.incache).concat();
     out=out.filter(it=>it.incache).concat(cacheno);   
     out.unshift(silence);
-    
     if (store) store.set(out);
     return out;
 };
