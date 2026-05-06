@@ -40,7 +40,6 @@ export const playrate=writable(settings.playrate);
 export const thetab=writable('list')
 export const alltracks=writable({})
 export const timeline=writable({});
-export const infiniteplay=writable(false)
 export let player
 export const setplayer=p=>player=p;
 

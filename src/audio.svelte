@@ -1,5 +1,5 @@
 <script>
-import {online,player,audioid,activefolioid, playnextjuan, playrate,activePtk,infiniteplay,
+import {online,player,audioid,activefolioid, playnextjuan, playrate,activePtk,timeline,vip,
      selectmedia,mediaurls, stopAudio, alltracks,tosim, showyoutube} from './store.js';
 import {CacheName} from './constant.js'
 import Slider from './3rd/rangeslider.svelte';
@@ -14,11 +14,9 @@ import {_} from './textout.js'
 import Endmarker from './endmarker.svelte';
 $: ptk = usePtk($activePtk);
 let rate=[$playrate||100,0];
-let infiniteplayvalue=$infiniteplay;
 let subtitles=[], subtitles2=[], subtitle='',subtitle2='',subtitletimer, nsub=0;
 onDestroy(()=>{
     clearInterval(subtitletimer);
-    infiniteplay.set(infiniteplayvalue)
 });
 
 const humanDuration=(t)=>{
@@ -29,6 +27,7 @@ const humanDuration=(t)=>{
 }
 
 let timestamp=[];
+/*
 onMount(()=>{
     subtitletimer=setInterval(()=>{
         if (!$audioid) return;
@@ -45,7 +44,7 @@ onMount(()=>{
         if (nsub>=timestamp.length) nsub=0;
     },500);
 });
-/*
+
 const loadSubtitle=async id=>{
     subtitle2=subtitle='';
     subtitles2=[],subtitles=[];
@@ -89,6 +88,12 @@ const setPlayrate=e=>{
     player.playbackRate=rate/100;
     playrate.set(rate)
 }
+const editTimestamp=(folioid,audioid)=>{
+    const loc=window.location;
+    let url=loc.protocol+'//'+loc.host+'/timeline/?src='+folioid;
+    if (audioid!==folioid) url+='&mp3='+audioid;
+    window.open(url);
+}
 const speed1x=()=>{
     rate=[100,0];
     player.playbackRate=1;
@@ -106,7 +111,11 @@ const speed1x=()=>{
 {#if media.incache || !media.audioid}
 <span aria-hidden="true" class="clickable" on:click={()=>!downloading&&selectmedia(media.audioid,true)} 
 class:selected={media.audioid==$audioid}>{_(media.performer,$tosim)}{idx&&media.audioid==$audioid?'♫':''}</span>
-    <br/>
+
+{#if idx&&media.audioid==$audioid&& ($vip||!$timeline?.timestamps?.length)}
+<button on:click={editTimestamp(media.folioid,media.audioid)}>{_("設置時間戳記")}</button>
+{/if}
+<br/>
 {:else}
 {#if $online}
 <span class="uncache">{_(media.performer,$tosim)+" "}</span><span aria-hidden="true" class="clickable" on:click={()=>!downloading&&downloadit(media.audioid)}>{@html downloadicon}{_("下載")}</span>
@@ -127,16 +136,10 @@ class:selected={media.audioid==$audioid}>{_(media.performer,$tosim)}{idx&&media.
 {#if rate[0]!==100}
 <span aria-hidden="true" class="clickable" on:click={speed1x}>{_("恢復正常速度")}</span>{/if}
 <!-- <Slider on:input={setRemain} bind:value min=0 max=10/> -->
-<Switch bind:value={infiniteplayvalue} label={_("無限重播")} design="slider" />
 
 {#if ptk&&allJuan(ptk).length>1}
 <Switch label={_('自動播放下一卷')} design="slider"  bind:value={$playnextjuan}></Switch>
 {/if}
 
-<hr/>
-<!--
-<div class="subtitle">{@html _(htmltext(subtitle2))}</div>
-<div class="subtitle">{@html _(htmltext(subtitle))}</div>
--->
 <Endmarker/>
 </div>

@@ -2,7 +2,7 @@
 import {stylestring} from './unit.js'
 import {activepb,audioid,folioLines,foliotext,folioChars,playing,selectmedia,mediaurls,
     timeline,stopAudio, player,continueplay,  playnextjuan, activefolioid,
-    infiniteplay} from './store.js'
+    playrate} from './store.js'
 import {get} from 'svelte/store'
 
 import {onDestroy} from 'svelte'
@@ -19,19 +19,16 @@ onDestroy(()=>{
 const rollback=()=>{
     continueplay.set(false); 
     activepb.set('1');
-    if (!get(infiniteplay)) {
-        stopAudio();
-    }
 }
 const playnext=()=>{
     const juans=allJuan(ptk);
     const folioid=$activefolioid;
-    const vid=$audioid;
+    const aid=$audioid;
     //get the media index in this juan
     const thisaudiolist=$mediaurls;
     let performer='';
     for (let i=0;i<thisaudiolist.length;i++) {
-        if (thisaudiolist[i].vid==vid) performer=thisaudiolist[i].performer;
+        if (thisaudiolist[i].audioid==aid) performer=thisaudiolist[i].performer;
     }
     if ( $playnextjuan=='on' && juans.length>1 ) {
         const juannow=folioid.match(/(\d+)$/)[1];
@@ -58,14 +55,15 @@ const playnext=()=>{
 const getTimestamp=(nfolio,nline=0)=>{
     const timestamps=get(timeline)?.timestamps;
     if (!timestamps?.length) return -1;
-    return (timestamps[nfolio]||[])[nline]||-1;
+    return (timestamps[nfolio]||[])[nline]|| getLastTimestamp();
 }
 const getNextTimestamp=(nfolio,nline=0)=>{
-    if (nline<folioLines()) {
+    if (nline<folioLines()-1) {
         return getTimestamp(nfolio,nline+1);
     } else {
         return getTimestamp(nfolio+1,0);
     }
+    
 }
 const getLastTimestamp=()=>{
     const timestamps=get(timeline)?.timestamps;
@@ -77,7 +75,6 @@ const getLastTimestamp=()=>{
         }
     }
 }
-
 const stripstyle=(i,strip)=>{
     if (i==0) {
         destroyTimer();
@@ -97,14 +94,8 @@ const stripstyle=(i,strip)=>{
     if (!timestamps?.length) {
         return out.join(';'); //cannot play
     }
-
     const pb=parseInt(get(activepb))-1;
-
-    /*
-    if (!timestamps[line] && i==0) { //read the end
-        playnext();
-    }
-        */
+        
     const playertime=player?.currentTime;
     let timedelta=playertime-getTimestamp(pb);//player 跑得比較快。（因換頁動畫時間），需修正
     if (Math.abs(timedelta)>3 ) { //不會差這麼多，是快速滑輪造成。getCurrentTime 未切到
@@ -122,13 +113,14 @@ const stripstyle=(i,strip)=>{
                     continueplay.set(false);// user swipe manually
                 },500);            
             } else {
-                // playnext();
+                playnext();
             }
         },nextpagetime));
     }
     let delay=(getTimestamp(pb,i)  - getTimestamp(pb) - timedelta )*1000 ;
     if (i==0&&delay<30) delay=30;// too small value  cause immediate trigger fire
-    // console.log(i,'delay',delay)
+    delay= delay / ($playrate/100);
+
     const fire=(function(){
         if (this.folio!=get(activepb)) return;
         // console.log('fire',this.idx, 'folio',this.folio, 'activepb',get(activepb))
@@ -141,9 +133,13 @@ const stripstyle=(i,strip)=>{
     timers.push(setTimeout( fire,  delay)); 
 
     let duration=getNextTimestamp(pb,i)-getTimestamp(pb,i);
+
     if (duration==0 && i+1 <fl) {//empty line , try next line
         duration=getNextTimestamp(pb,i+1)-getTimestamp(pb,i);
+    } else if (duration<0) {
+        duration=getLastTimestamp()-getTimestamp(pb,i);
     }
+    duration=duration/($playrate/100);
     out.push('transition:height '+duration+'s  linear'); //
 
     return out.join(';');

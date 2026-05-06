@@ -14,7 +14,7 @@ const gojuan=(j)=>{
     if (newid==fid) return;
     loadFolio( newid,function(){
         activepb.set('1');
-        tapmark.set(['1',0,0]);
+        tapmark.set(['0',0,0]);
         updateUrl(tapAddress());
         closePopup();
         loadJuan(ptk,newid);

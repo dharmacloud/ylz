@@ -28,7 +28,8 @@ export const loadSettings=()=>{
         preferaudio={}
     }
     return {tosim,vip,activefolioid,heightratio,tofindhistory,playrate,showfavorite,
-        textsize,showgallery,showyoutube,autodict,newbie,favorites,playnextjuan,preferaudio,showpunc};
+        textsize,showgallery,showyoutube,autodict,newbie,favorites,playnextjuan,
+        preferaudio,showpunc};
 }
 
 export const saveSettings=()=>{ //immediate save
