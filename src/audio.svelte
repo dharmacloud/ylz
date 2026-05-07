@@ -1,6 +1,6 @@
 <script>
 import {online,player,audioid,activefolioid, playnextjuan, playrate,activePtk,timeline,vip,
-     selectmedia,mediaurls, stopAudio, alltracks,tosim, showyoutube} from './store.js';
+     selectmedia,mediaurls, stopAudio, alltracks,tosim, showyoutube,maxfolio} from './store.js';
 import {CacheName} from './constant.js'
 import Slider from './3rd/rangeslider.svelte';
 import Switch from './3rd/switch.svelte';
@@ -99,6 +99,9 @@ const speed1x=()=>{
     player.playbackRate=1;
     playrate.set(100)
 }
+const incompleteTimestamp=()=>{
+    return (($timeline?.timestamps?.length||0)/$maxfolio) < 0.9;
+}
 </script>
 <div class="bodytext">
 
@@ -112,7 +115,7 @@ const speed1x=()=>{
 <span aria-hidden="true" class="clickable" on:click={()=>!downloading&&selectmedia(media.audioid,true)} 
 class:selected={media.audioid==$audioid}>{_(media.performer,$tosim)}{idx&&media.audioid==$audioid?'♫':''}</span>
 
-{#if idx&&media.audioid==$audioid&& ($vip||!$timeline?.timestamps?.length)}
+{#if idx&&media.audioid==$audioid&& ($vip||incompleteTimestamp())}
 <button on:click={editTimestamp(media.folioid,media.audioid)}>{_("設置時間戳記")}</button>
 {/if}
 <br/>
