@@ -13,7 +13,7 @@ import DownloadStatus from './downloadstatus.svelte'
 import {CacheName} from './constant.js'
 import {alltracks,thezip,favortypes, landscape,foliotext,folioLines,isSidePaiji,tapAddress,
     folioChars,activePtk,activefolioid,activepb,favorites,audioid,showpunc,
-maxfolio,tapmark, playing,  showyoutube,makeAddressFromFolioPos,
+maxfolio,tapmark, showyoutube,makeAddressFromFolioPos,
 idlecount,showpaiji,loadingzip, selectmedia, preferaudio,folioHolderWidth,leftmode,mediaurls, downloading, sharing,
 showfavorite,
 showinggallery} from './store.js'

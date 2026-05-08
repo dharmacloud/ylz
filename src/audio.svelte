@@ -88,11 +88,12 @@ const setPlayrate=e=>{
     player.playbackRate=rate/100;
     playrate.set(rate)
 }
-const editTimestamp=(folioid,audioid)=>{
+const timelineURL=(folioid,audioid)=>{
     const loc=window.location;
     let url=loc.protocol+'//'+loc.host+'/timeline/?src='+folioid;
     if (audioid!==folioid) url+='&mp3='+audioid;
-    window.open(url);
+    if ($vip) url+='&contributor='+$vip;
+    return url;
 }
 const speed1x=()=>{
     rate=[100,0];
@@ -116,7 +117,8 @@ const incompleteTimestamp=()=>{
 class:selected={media.audioid==$audioid}>{_(media.performer,$tosim)}{idx&&media.audioid==$audioid?'♫':''}</span>
 
 {#if idx&&media.audioid==$audioid&& ($vip||incompleteTimestamp())}
-<button on:click={editTimestamp(media.folioid,media.audioid)}>{_("設置時間戳記")}</button>
+<a target='_new' href={timelineURL(media.folioid,media.audioid)}>{_("時間軸")}</a>
+{#if $timeline.contributor}By {$timeline.contributor}{/if}
 {/if}
 <br/>
 {:else}
