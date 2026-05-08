@@ -12,6 +12,7 @@ export const loadSettings=()=>{
     const textsize=parseInt(localStorage.getItem(AppPrefix+'textsize')||'150') ||150;
     const playrate=parseInt(localStorage.getItem(AppPrefix+'playrate')||'100') ||100;
     const vip=localStorage.getItem(AppPrefix+'vip')||'';
+    const user=localStorage.getItem(AppPrefix+'user')||'';
     const tosim=localStorage.getItem(AppPrefix+'tosim')||'0';
     let _favorites=localStorage.getItem(AppPrefix+'favorites')||'{}';
     let _preferaudio=localStorage.getItem(AppPrefix+'preferaudio')||'{}';
@@ -27,7 +28,7 @@ export const loadSettings=()=>{
         favorites={};
         preferaudio={}
     }
-    return {tosim,vip,activefolioid,heightratio,tofindhistory,playrate,showfavorite,
+    return {tosim,vip,user,activefolioid,heightratio,tofindhistory,playrate,showfavorite,
         textsize,showgallery,showyoutube,autodict,newbie,favorites,playnextjuan,
         preferaudio,showpunc};
 }

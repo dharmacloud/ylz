@@ -4,7 +4,7 @@ import { loadFolio } from './nav.js';
 import { downloadToCache} from 'ptk/platform/downloader.js'
 import {CacheName} from './constant.js'
 import {fetchFolioList} from './folio.js'
-import {thetab,activefolioid,downloading, vip,tosim,parallelFolios,stopAudio,folioincache,online,activepb, activePtk, showfavorite, showinggallery} from './store.js';
+import {thetab,activefolioid,downloading, vip,user,tosim,parallelFolios,stopAudio,folioincache,online,activepb, activePtk, showfavorite, showinggallery} from './store.js';
 import Endmarker from './endmarker.svelte';
 import {ptkInCache} from './folio.js'
 import {_} from './textout.js'
@@ -201,7 +201,7 @@ $: getFolioList(aptk);
 <span aria-hidden="true" class:dimmed={!$folioincache[folioid]} on:click={()=>selectfolio(nfolio)} 
     class:selecteditem={samesutra($activefolioid,folioid)} >{getFolioName(nfolio)}</span>
 
-{#if $vip && !$downloading && samesutra($activefolioid,folioid) 
+{#if $user && !$downloading && samesutra($activefolioid,folioid) 
 && hasDimJuan(folioid) }
 <button on:click={downloadBook(folioid)}>{_("下載本經所有卷")}</button>
 {/if}
@@ -229,7 +229,7 @@ $: getFolioList(aptk);
 {/key}
 {/each}
 {#key folios.length}
-{#if $vip && hasDimBook()}
+{#if $user && hasDimBook()}
 <button on:click={()=>downloadAll()}>{_("下載此頁首卷")}</button>
 {/if}
 {/key}

@@ -1,5 +1,5 @@
 <script>
-import {newbie,showfavorite,showpunc,showgallery,vip,heightratio,tosim, textsize, showinggallery} from './store.js'
+import {user,newbie,showfavorite,showpunc,showgallery,vip,heightratio,tosim, textsize, showinggallery} from './store.js'
 import {_} from './textout.js'
 import Switch from './3rd/switch.svelte';
 import Sponsors from './sponsors.svelte';
@@ -56,8 +56,10 @@ const onkeyup=(e)=>{
     timer=setTimeout(()=>{
         if (hasVip(ele.value)){
             vip.set(ele.value);
+            user.set(ele.value);
         } else {
             vip.set('')
+            user.set(ele.value);
         }
     },1000);
 }
@@ -104,7 +106,7 @@ const onkeyup=(e)=>{
 {#key $tosim}
 <br/>{_("漢字顯示")}：<StateBtn states={{0:"原貌",1:_("简體（「乾後發」等不變）"),2:"简体"}} storeid={tosim}/>
 <br/>版本 {APPVER}{getVip('title',$vip)||($vip?_("查無此碼"):"")} 
-<br/>{_("VIP碼 ")}<input 
+<br/>{_("用戶代碼 ")}<input 
 placeholder={_("沒有也可正常使用")} size=12 
 type="text" on:keyup={onkeyup} bind:value={vipcode}/>
 

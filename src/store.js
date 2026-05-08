@@ -33,6 +33,7 @@ export const tofindhistory=writable(settings.tofindhistory);
 export const heightratio=writable(settings.heightratio);
 export const textsize=writable(settings.textsize);
 export const vip=writable(settings.vip);
+export const user=writable(settings.user||settings.vip);
 export const tosim=writable(settings.tosim);
 export const palitrans=writable(0)
 export const hasupdate=writable(true)
