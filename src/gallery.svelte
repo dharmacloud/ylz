@@ -3,7 +3,7 @@ import {activefolioid,showgallery,showinggallery} from "./store.js"
 import {_} from './textout.js'
 import { fade } from 'svelte/transition';
 const srcs={
-    'pphs':"newbie.png",
+    'pphs':"newbie.jpg",
     'pph':"pphs_ulucitta.jpg",
     'ksitigarbha1':'ksitigarbha1.jpg',
     'ksitigarbha2':'ksitigarbha2.jpg',

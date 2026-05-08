@@ -12,4 +12,3 @@ import {_} from './textout.js'
 <br/>
 {_("中間下方：選擇音頻")}
 <br/>
-<img src="newbie.png" style="width:70%" alt=""/>

@@ -72,8 +72,8 @@ export const tapmark = writable(['1',0,0]);// folio*folioLines*folioChar+offset
 export const newbie=writable(settings.newbie);
 export const idlecount=writable(0);
 export const showpaiji=writable(false);
-export const ptks=['ylz-prjn','ylz-tg','ylz_sanskrit','ylz-rite','dc'];
-export const allptks=['ylz-prjn','ylz-tg','ylz-avts','ylz-svk','ylz-vny','ylz-rite','ylz_sanskrit','dc'];
+export const ptks=['ylz-prjn','ylz-tg','ylz_sanskrit','dc'];
+export const allptks=['ylz-prjn','ylz-tg','ylz-mpp','ylz-avts','ylz-svk','ylz-vny','ylz_sanskrit','dc'];
 
 
 export const reverseswipe=writable(false);
@@ -121,7 +121,8 @@ export const booknameOf= (folioid,ptk)=>{
     for (let i=0;i<ptks.length;i++) {
         let ptk=usePtk(ptks[i]);
         if (!ptk ) continue;
-        return ptk.bookNameById(bkid);
+        const n=ptk.bookNameById(bkid);
+        if (n) return n;
     }
     return '';
 }

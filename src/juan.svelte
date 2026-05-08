@@ -36,10 +36,10 @@ $: bookname=booknameOf($activefolioid,ptk)
 {#if juans.length==0}
 <span></span>
 {:else if juans.length<10}
-<Pager pages={juans} caption="卷" now={currentjuan} let:active let:caption  let:id  onselect={idx=>gojuan(idx+1)}>
-    <span aria-hidden="true" on:click={()=>gojuan(id)} class="clickable" class:selected={active}>{caption}</span>
+<Pager pages={juans} caption="卷" now={currentjuan-1} let:active let:caption  let:id  onselect={idx=>gojuan(idx+1)}>
+<span aria-hidden="true" on:click={()=>gojuan(id)} class="clickable" class:selected={active}>{caption}</span>
 </Pager>
 {:else}
-<button on:click={()=>gojuan(currentjuan+1)} disabled={currentjuan==juans[juans.length-1].caption}>下一卷</button><br/>
+<button on:click={()=>gojuan(currentjuan+1)} disabled={currentjuan==juans[juans.length-1].caption}>下卷</button>
 <input type="number" bind:value={currentjuan} name="juan" on:input={debounce(gotojuan,1000)} style="width:3em" />{juans[0].caption>1?(juans[0].caption+'至'):''}{juans[juans.length-1].caption}卷，
 {/if}

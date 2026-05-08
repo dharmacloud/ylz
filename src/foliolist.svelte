@@ -183,10 +183,10 @@ const installptk=async name=>{
 $: getFolioList(aptk);
 </script>
 <div class="tabs">
-    <span aria-hidden="true" class="clickable" class:selected={aptk=="ylz-prjn"}  on:click={()=>aptk="ylz-prjn"}>法性</span>
-    <span aria-hidden="true" class="clickable" class:selected={aptk=="ylz-tg"}  on:click={()=>aptk="ylz-tg"}>法界</span>
+    <span aria-hidden="true" class="clickable" class:selected={aptk=="ylz-prjn"}  on:click={()=>aptk="ylz-prjn"}>{_("常用",$tosim)}</span>
     <span aria-hidden="true" class="clickable" class:selected={aptk=="ylz-avts"}  on:click={()=>aptk="ylz-avts"}>{_("華嚴",$tosim)}</span>
-    <span aria-hidden="true" class="clickable" class:selected={aptk=="ylz-rite"}  on:click={()=>aptk="ylz-rite"}>{_("懺儀",$tosim)}</span>
+    <span aria-hidden="true" class="clickable" class:selected={aptk=="ylz-mpp"}  on:click={()=>aptk="ylz-mpp"}>般若</span>
+    <span aria-hidden="true" class="clickable" class:selected={aptk=="ylz-tg"}  on:click={()=>aptk="ylz-tg"}>淨土</span>
     <span aria-hidden="true" class="clickable" class:selected={aptk=="ylz-svk"}  on:click={()=>aptk="ylz-svk"}>{_("聲聞",$tosim)}</span>
     <span aria-hidden="true" class="clickable" class:selected={aptk=="ylz-vny"}  on:click={()=>aptk="ylz-vny"}>戒律</span>
 </div>
