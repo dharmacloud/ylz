@@ -1,9 +1,8 @@
 let ptk;
 import { CacheName } from "./constant.js";
 import { get } from "svelte/store";
-import { online } from "./store.js";
+import { online,silence } from "./store.js";
 
-export const silence={audioid:'',performer:'--停止播放--'};
 export const audiofolder='/baudio/'
 
 export const setTimestampPtk=_ptk=>{

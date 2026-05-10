@@ -2,7 +2,7 @@ import {updateSettings,settings} from './savestore.ts'
 import {fileInCache,bookByFolio,bsearchNumber, usePtk,makeAddress} from 'ptk'
 import {downloadToCache} from 'ptk/platform/downloader.js'
 import { get,writable } from 'svelte/store';
-import {silence} from './mediaurls.js'
+export const silence={audioid:'',performer:'--停止播放--'};
 import {CacheName,APPVER} from './constant.js'
 export const online=writable(navigator.onLine);
 export const thezip=writable(null)

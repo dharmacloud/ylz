@@ -127,7 +127,7 @@ setTimeout(init,500);
 
 
 {#if $showgallery=='on'}<Gallery/>{/if}
-<SwipeZipImage src={$activefolioid+".zip"} {onTapText} {onMainmenu} />
+<SwipeZipImage src={$activefolioid+".zip"} {onTapText}/>
 
 {#if $leftmode!=='folio'}
 <Left/>

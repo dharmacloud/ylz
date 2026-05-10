@@ -21,7 +21,7 @@ import { get } from 'svelte/store';
 import { fetchAudioList } from './mediaurls';
 import { AppPrefix } from './savestore';
 
-export let onMainmenu=()=>{}
+// export let onMainmenu=()=>{}
 
 export let src;
 

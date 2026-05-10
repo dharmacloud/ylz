@@ -1,6 +1,6 @@
 <script>
 import {online,player,audioid,activefolioid, playnextjuan, playrate,activePtk,timeline,user,
-     selectmedia,mediaurls, stopAudio, alltracks,tosim, showyoutube,maxfolio} from './store.js';
+     selectmedia,mediaurls, stopAudio, alltracks,tosim, showyoutube,maxfolio,vip} from './store.js';
 import {CacheName} from './constant.js'
 import Slider from './3rd/rangeslider.svelte';
 import Switch from './3rd/switch.svelte';
@@ -92,7 +92,7 @@ const timelineURL=(folioid,audioid)=>{
     const loc=window.location;
     let url=loc.protocol+'//'+loc.host+'/timeline/?src='+folioid;
     if (audioid!==folioid) url+='&mp3='+audioid;
-    if ($user) url+='&contributor='+$user;
+    if ($user && !$vip) url+='&contributor='+$user; //allow user but not vip to add timeline
     return url;
 }
 const speed1x=()=>{
@@ -115,7 +115,7 @@ const incompleteTimestamp=()=>{
 {#if media.incache || !media.audioid}
 <span aria-hidden="true" class="clickable" on:click={()=>!downloading&&selectmedia(media.audioid,true)} 
 class:selected={media.audioid==$audioid}>{_(media.performer,$tosim)}{idx&&media.audioid==$audioid?'♫':''}</span>
-{#if idx&&media.audioid==$audioid&& ($user&&$user==$timeline.contributor)}
+{#if idx&&media.audioid==$audioid&& (!$timeline.contributor||($timeline.contributor&&$user==$timeline.contributor))}
 <a target='_new' href={timelineURL(media.folioid,media.audioid)}>{_("時間軸")}</a>
 {/if}
 {#if $timeline.contributor&&idx&&media.audioid==$audioid}By {$timeline.contributor}{/if}
